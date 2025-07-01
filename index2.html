@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact CRUD Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        input, textarea, button { margin: 5px; padding: 8px; }
+        input, textarea { width: 200px; }
+        button { background: #007bff; color: white; border: none; cursor: pointer; border-radius: 3px; }
+        button:hover { background: #0056b3; }
+        .result { background: #f8f9fa; padding: 10px; margin: 10px 0; border-radius: 3px; }
+        .error { background: #f8d7da; color: #721c24; }
+        .success { background: #d1edff; color: #0c5460; }
+    </style>
+</head>
+<body>
+    <h1>Contact CRUD Test</h1>
+    
+    <!-- CREATE -->
+    <div class="section">
+        <h3>Create Contact</h3>
+        <input type="text" id="name" placeholder="Name" required>
+        <input type="email" id="email" placeholder="Email" required>
+        <textarea id="message" placeholder="Message" required></textarea>
+        <button onclick="createContact()">Create</button>
+        <div id="createResult" class="result"></div>
+    </div>
+
+    <!-- READ -->
+    <div class="section">
+        <h3>Get All Contacts</h3>
+        <button onclick="getContacts()">Get Contacts</button>
+        <div id="contactsList" class="result"></div>
+    </div>
+
+    <!-- UPDATE -->
+    <div class="section">
+        <h3>Update Contact</h3>
+        <input type="number" id="updateId" placeholder="Contact ID" required>
+        <input type="text" id="updateName" placeholder="Name" required>
+        <input type="email" id="updateEmail" placeholder="Email" required>
+        <textarea id="updateMessage" placeholder="Message" required></textarea>
+        <button onclick="updateContact()">Update</button>
+        <div id="updateResult" class="result"></div>
+    </div>
+
+    <!-- DELETE -->
+    <div class="section">
+        <h3>Delete Contact</h3>
+        <input type="number" id="deleteId" placeholder="Contact ID" required>
+        <button onclick="deleteContact()">Delete</button>
+        <div id="deleteResult" class="result"></div>
+    </div>
+
+    <script>
+        const API_BASE = '/api/contacts';
+
+        async function createContact() {
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const message = document.getElementById('message').value;
+            
+            if (!name || !email || !message) {
+                showResult('createResult', 'All fields required', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(API_BASE, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, message })
+                });
+                
+                const result = await response.json();
+                showResult('createResult', JSON.stringify(result, null, 2), response.ok ? 'success' : 'error');
+                
+                if (response.ok) {
+                    document.getElementById('name').value = '';
+                    document.getElementById('email').value = '';
+                    document.getElementById('message').value = '';
+                }
+            } catch (error) {
+                showResult('createResult', 'Error: ' + error.message, 'error');
+            }
+        }
+
+        async function getContacts() {
+            try {
+                const response = await fetch(API_BASE);
+                const result = await response.json();
+                
+                let html = `<strong>Found ${result.length} contacts:</strong><br>`;
+                result.forEach(contact => {
+                    html += `<div style="margin: 10px 0; padding: 10px; background: white; border: 1px solid #ccc;">
+                        <strong>ID:</strong> ${contact.id}<br>
+                        <strong>Name:</strong> ${contact.name}<br>
+                        <strong>Email:</strong> ${contact.email}<br>
+                        <strong>Message:</strong> ${contact.message}<br>
+                        <small>Created: ${contact.created_at}</small>
+                    </div>`;
+                });
+                
+                showResult('contactsList', html, 'success');
+            } catch (error) {
+                showResult('contactsList', 'Error: ' + error.message, 'error');
+            }
+        }
+
+        async function updateContact() {
+            const id = document.getElementById('updateId').value;
+            const name = document.getElementById('updateName').value;
+            const email = document.getElementById('updateEmail').value;
+            const message = document.getElementById('updateMessage').value;
+            
+            if (!id || !name || !email || !message) {
+                showResult('updateResult', 'All fields required', 'error');
+                return;
+            }
+
+            try {
+                showResult('updateResult', 'Updating...', 'success');
+                
+                const response = await fetch(`${API_BASE}/${id}`, {
+                    method: 'PUT',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ name, email, message })
+                });
+                
+                const responseText = await response.text();
+                
+                // Debug info
+                console.log('UPDATE DEBUG:', {
+                    url: `${API_BASE}/${id}`,
+                    status: response.status,
+                    statusText: response.statusText,
+                    headers: Object.fromEntries(response.headers.entries()),
+                    responseText: responseText
+                });
+                
+                if (!response.ok) {
+                    showResult('updateResult', `HTTP ${response.status}: ${response.statusText}\nResponse: ${responseText}`, 'error');
+                    return;
+                }
+                
+                if (!responseText || responseText.trim() === '') {
+                    showResult('updateResult', `Success but empty response (Status: ${response.status})`, 'success');
+                    return;
+                }
+                
+                let result;
+                try {
+                    result = JSON.parse(responseText);
+                    showResult('updateResult', JSON.stringify(result, null, 2), 'success');
+                    
+                    // Clear form on success
+                    document.getElementById('updateId').value = '';
+                    document.getElementById('updateName').value = '';
+                    document.getElementById('updateEmail').value = '';
+                    document.getElementById('updateMessage').value = '';
+                    
+                    // Refresh contacts
+                    setTimeout(getContacts, 500);
+                } catch (parseError) {
+                    showResult('updateResult', `Parse Error: ${parseError.message}\nRaw Response: ${responseText}`, 'error');
+                }
+                
+            } catch (error) {
+                console.error('Update error:', error);
+                showResult('updateResult', `Network Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function deleteContact() {
+            const id = document.getElementById('deleteId').value;
+            
+            if (!id) {
+                showResult('deleteResult', 'Contact ID required', 'error');
+                return;
+            }
+
+            if (!confirm(`Are you sure you want to delete contact ID ${id}?`)) {
+                return;
+            }
+
+            try {
+                showResult('deleteResult', 'Deleting...', 'success');
+                
+                const response = await fetch(`${API_BASE}/${id}`, {
+                    method: 'DELETE',
+                    headers: { 
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                const responseText = await response.text();
+                
+                // Debug info
+                console.log('DELETE DEBUG:', {
+                    url: `${API_BASE}/${id}`,
+                    status: response.status,
+                    statusText: response.statusText,
+                    headers: Object.fromEntries(response.headers.entries()),
+                    responseText: responseText
+                });
+                
+                if (!response.ok) {
+                    showResult('deleteResult', `HTTP ${response.status}: ${response.statusText}\nResponse: ${responseText}`, 'error');
+                    return;
+                }
+                
+                if (!responseText || responseText.trim() === '') {
+                    showResult('deleteResult', `Success but empty response (Status: ${response.status})`, 'success');
+                    document.getElementById('deleteId').value = '';
+                    setTimeout(getContacts, 500);
+                    return;
+                }
+                
+                let result;
+                try {
+                    result = JSON.parse(responseText);
+                    showResult('deleteResult', JSON.stringify(result, null, 2), 'success');
+                    
+                    // Clear form and refresh
+                    document.getElementById('deleteId').value = '';
+                    setTimeout(getContacts, 500);
+                } catch (parseError) {
+                    showResult('deleteResult', `Parse Error: ${parseError.message}\nRaw Response: ${responseText}`, 'error');
+                }
+                
+            } catch (error) {
+                console.error('Delete error:', error);
+                showResult('deleteResult', `Network Error: ${error.message}`, 'error');
+            }
+        }
+
+        function showResult(elementId, message, type) {
+            const element = document.getElementById(elementId);
+            element.innerHTML = message;
+            element.className = `result ${type}`;
+        }
+
+        // Load contacts on page load
+        window.onload = () => getContacts();
+    </script>
+</body>
+</html>
