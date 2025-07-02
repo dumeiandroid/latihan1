@@ -1,4 +1,4 @@
-// functions/api/contacts.js - Dynamic table version with auto-create
+// functions/api/contacts.js - Dynamic table version
 export async function onRequest(context) {
   const { request, env } = context;
   const { DB_LATIHAN1 } = env;
@@ -62,39 +62,7 @@ function isValidTableName(tableName) {
   return /^[a-zA-Z_][a-zA-Z0-9_]*$/.test(tableName) && tableName.length <= 50;
 }
 
-// Function to create table if not exists
-async function createTableIfNotExists(DB_LATIHAN1, tableName) {
-  const createTableQuery = `
-    CREATE TABLE IF NOT EXISTS ${tableName} (
-      id_x INTEGER PRIMARY KEY AUTOINCREMENT,
-      x_01 TEXT,
-      x_02 TEXT,
-      x_03 TEXT,
-      x_04 TEXT,
-      x_05 TEXT,
-      x_06 TEXT,
-      x_07 TEXT,
-      x_08 TEXT,
-      x_09 TEXT,
-      x_10 TEXT,
-      x_11 TEXT,
-      x_12 TEXT,
-      x_13 TEXT,
-      x_14 TEXT,
-      x_15 TEXT,
-      x_16 TEXT,
-      x_17 TEXT,
-      x_18 TEXT,
-      x_19 TEXT,
-      x_20 TEXT
-    )
-  `;
-  
-  await DB_LATIHAN1.prepare(createTableQuery).run();
-  console.log(`Table '${tableName}' created or already exists`);
-}
-
-// GET all contacts - Dynamic table version with auto-create
+// GET all contacts - Dynamic table version
 async function getContacts(DB_LATIHAN1, tableName, corsHeaders) {
   console.log(`Getting all data from table: ${tableName}...`);
   
@@ -105,8 +73,12 @@ async function getContacts(DB_LATIHAN1, tableName, corsHeaders) {
     `).bind(tableName).first();
     
     if (!tableCheck) {
-      console.log(`Table '${tableName}' does not exist, creating...`);
-      await createTableIfNotExists(DB_LATIHAN1, tableName);
+      return new Response(JSON.stringify({ 
+        error: `Table '${tableName}' does not exist` 
+      }), {
+        status: 404,
+        headers: { 'Content-Type': 'application/json', ...corsHeaders }
+      });
     }
     
     const query = `SELECT * FROM ${tableName} ORDER BY id_x DESC`;
@@ -132,7 +104,7 @@ async function getContacts(DB_LATIHAN1, tableName, corsHeaders) {
   }
 }
 
-// POST create contact - Dynamic table version with auto-create
+// POST create contact - Dynamic table version
 async function createContact(request, DB_LATIHAN1, tableName, corsHeaders) {
   console.log(`Creating new record in table: ${tableName}...`);
   
@@ -151,8 +123,12 @@ async function createContact(request, DB_LATIHAN1, tableName, corsHeaders) {
     `).bind(tableName).first();
     
     if (!tableCheck) {
-      console.log(`Table '${tableName}' does not exist, creating...`);
-      await createTableIfNotExists(DB_LATIHAN1, tableName);
+      return new Response(JSON.stringify({ 
+        error: `Table '${tableName}' does not exist` 
+      }), {
+        status: 404,
+        headers: { 'Content-Type': 'application/json', ...corsHeaders }
+      });
     }
     
     // Extract data for x_01 to x_20 columns
