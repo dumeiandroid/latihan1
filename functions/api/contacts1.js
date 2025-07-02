@@ -1,4 +1,4 @@
-// functions/api/contacts.js - Fixed for id_x structure
+// functions/api/contacts.js - Complete CRUD API
 export async function onRequest(context) {
   const { request, env } = context;
   const { DB_LATIHAN1 } = env;
@@ -43,10 +43,10 @@ export async function onRequest(context) {
   }
 }
 
-// GET all contacts - Fixed to use id_x
+// GET all contacts
 async function getContacts(DB_LATIHAN1, corsHeaders) {
   console.log('Getting all contacts...');
-  const { results } = await DB_LATIHAN1.prepare("SELECT * FROM contacts ORDER BY id_x DESC").all();
+  const { results } = await DB_LATIHAN1.prepare("SELECT * FROM contacts ORDER BY created_at DESC").all();
   console.log(`Found ${results.length} contacts`);
   
   return new Response(JSON.stringify(results), {
@@ -54,7 +54,7 @@ async function getContacts(DB_LATIHAN1, corsHeaders) {
   });
 }
 
-// POST create contact - Fixed for x_01, x_02, x_03... structure
+// POST create contact
 async function createContact(request, DB_LATIHAN1, corsHeaders) {
   console.log('Creating new contact...');
   
@@ -66,42 +66,28 @@ async function createContact(request, DB_LATIHAN1, corsHeaders) {
     throw new Error('Invalid JSON data');
   }
   
-  // Extract data for x_01 to x_20 columns
-  const columns = [];
-  const values = [];
-  const placeholders = [];
+  const { name, email, message } = requestData;
   
-  // Generate x_01 to x_20 columns dynamically
-  for (let i = 1; i <= 20; i++) {
-    const colNum = i.toString().padStart(2, '0');
-    const colName = `x_${colNum}`;
-    
-    if (requestData.hasOwnProperty(colName)) {
-      columns.push(colName);
-      values.push(requestData[colName]);
-      placeholders.push('?');
-    }
+  // Validation
+  if (!name || !email || !message) {
+    throw new Error('Name, email, and message are required');
   }
   
-  // Basic validation - require at least one field
-  if (columns.length === 0) {
-    throw new Error('At least one field (x_01 to x_20) is required');
+  if (!email.includes('@')) {
+    throw new Error('Invalid email format');
   }
   
   try {
-    const query = `INSERT INTO contacts (${columns.join(', ')}) VALUES (${placeholders.join(', ')})`;
-    console.log('Insert query:', query);
-    console.log('Values:', values);
+    const result = await DB_LATIHAN1.prepare(
+      "INSERT INTO contacts (name, email, message) VALUES (?, ?, ?)"
+    ).bind(name.trim(), email.trim(), message.trim()).run();
     
-    const result = await DB_LATIHAN1.prepare(query).bind(...values).run();
     console.log('Insert result:', result);
     
     return new Response(JSON.stringify({ 
       success: true, 
-      id_x: result.meta.last_row_id,
-      message: 'Contact created successfully',
-      insertedFields: columns,
-      insertedData: requestData
+      id: result.meta.last_row_id,
+      message: 'Contact created successfully'
     }), {
       headers: { 'Content-Type': 'application/json', ...corsHeaders }
     });

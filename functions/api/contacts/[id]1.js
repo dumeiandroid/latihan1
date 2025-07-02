@@ -1,4 +1,4 @@
-// functions/api/contacts/[id].js - Fixed for id_x structure
+// functions/api/contacts/[id].js - Simplified version for debugging
 export async function onRequest(context) {
   const { request, env, params } = context;
   const method = request.method;
@@ -41,9 +41,7 @@ export async function onRequest(context) {
   }
 
   try {
-    if (method === 'GET') {
-      return await handleGetSingle(env.DB_LATIHAN1, id, corsHeaders);
-    } else if (method === 'PUT') {
+    if (method === 'PUT') {
       return await handleUpdate(request, env.DB_LATIHAN1, id, corsHeaders);
     } else if (method === 'DELETE') {
       return await handleDelete(env.DB_LATIHAN1, id, corsHeaders);
@@ -66,42 +64,6 @@ export async function onRequest(context) {
   }
 }
 
-// GET single contact by id_x
-async function handleGetSingle(DB_LATIHAN1, id, corsHeaders) {
-  console.log(`--- GET single contact with id_x ${id} ---`);
-  
-  try {
-    const query = "SELECT * FROM contacts WHERE id_x = ?";
-    const result = await DB_LATIHAN1.prepare(query).bind(id).first();
-    console.log('Get single result:', result);
-
-    if (!result) {
-      return new Response(JSON.stringify({ error: 'Contact not found' }), {
-        status: 404,
-        headers: { 'Content-Type': 'application/json', ...corsHeaders }
-      });
-    }
-
-    return new Response(JSON.stringify({ 
-      success: true,
-      data: result
-    }), {
-      headers: { 'Content-Type': 'application/json', ...corsHeaders }
-    });
-
-  } catch (error) {
-    console.error('Get single error:', error);
-    return new Response(JSON.stringify({ 
-      error: `Get failed: ${error.message}`,
-      stack: error.stack
-    }), {
-      status: 400,
-      headers: { 'Content-Type': 'application/json', ...corsHeaders }
-    });
-  }
-}
-
-// UPDATE contact by id_x - Fixed for x_01 to x_20 structure
 async function handleUpdate(request, DB_LATIHAN1, id, corsHeaders) {
   console.log(`--- UPDATE contact ${id} ---`);
   
@@ -120,9 +82,16 @@ async function handleUpdate(request, DB_LATIHAN1, id, corsHeaders) {
     const data = JSON.parse(body);
     console.log('Parsed data:', data);
 
-    // Check if contact exists first using id_x
+    const { name, email, message } = data;
+
+    // Basic validation
+    if (!name || !email || !message) {
+      throw new Error('Missing required fields: name, email, message');
+    }
+
+    // Check if contact exists first
     console.log('Checking if contact exists...');
-    const existsQuery = "SELECT id_x FROM contacts WHERE id_x = ?";
+    const existsQuery = "SELECT id FROM contacts WHERE id = ?";
     const existsResult = await DB_LATIHAN1.prepare(existsQuery).bind(id).first();
     console.log('Exists check result:', existsResult);
 
@@ -133,43 +102,17 @@ async function handleUpdate(request, DB_LATIHAN1, id, corsHeaders) {
       });
     }
 
-    // Build dynamic update query for x_01 to x_20 columns
-    const updateFields = [];
-    const updateValues = [];
-    
-    for (let i = 1; i <= 20; i++) {
-      const colNum = i.toString().padStart(2, '0');
-      const colName = `x_${colNum}`;
-      
-      if (data.hasOwnProperty(colName)) {
-        updateFields.push(`${colName} = ?`);
-        updateValues.push(data[colName]);
-      }
-    }
-
-    // Basic validation - require at least one field to update
-    if (updateFields.length === 0) {
-      throw new Error('At least one field (x_01 to x_20) is required for update');
-    }
-
-    // Add id for WHERE clause
-    updateValues.push(id);
-
     // Update contact
     console.log('Updating contact...');
-    const updateQuery = `UPDATE contacts SET ${updateFields.join(', ')} WHERE id_x = ?`;
-    console.log('Update query:', updateQuery);
-    console.log('Update values:', updateValues);
-    
-    const updateResult = await DB_LATIHAN1.prepare(updateQuery).bind(...updateValues).run();
+    const updateQuery = "UPDATE contacts SET name = ?, email = ?, message = ? WHERE id = ?";
+    const updateResult = await DB_LATIHAN1.prepare(updateQuery).bind(name, email, message, id).run();
     console.log('Update result:', updateResult);
 
     return new Response(JSON.stringify({ 
       success: true,
       message: 'Contact updated successfully',
       changes: updateResult.changes,
-      updatedFields: updateFields.map(field => field.split(' = ')[0]),
-      updatedData: data
+      meta: updateResult.meta
     }), {
       headers: { 'Content-Type': 'application/json', ...corsHeaders }
     });
@@ -186,14 +129,13 @@ async function handleUpdate(request, DB_LATIHAN1, id, corsHeaders) {
   }
 }
 
-// DELETE contact by id_x
 async function handleDelete(DB_LATIHAN1, id, corsHeaders) {
   console.log(`--- DELETE contact ${id} ---`);
   
   try {
-    // Check if contact exists first using id_x
+    // Check if contact exists first
     console.log('Checking if contact exists...');
-    const existsQuery = "SELECT id_x, x_01, x_02, x_03 FROM contacts WHERE id_x = ?";
+    const existsQuery = "SELECT id, name FROM contacts WHERE id = ?";
     const existsResult = await DB_LATIHAN1.prepare(existsQuery).bind(id).first();
     console.log('Exists check result:', existsResult);
 
@@ -204,9 +146,9 @@ async function handleDelete(DB_LATIHAN1, id, corsHeaders) {
       });
     }
 
-    // Delete contact using id_x
+    // Delete contact
     console.log('Deleting contact...');
-    const deleteQuery = "DELETE FROM contacts WHERE id_x = ?";
+    const deleteQuery = "DELETE FROM contacts WHERE id = ?";
     const deleteResult = await DB_LATIHAN1.prepare(deleteQuery).bind(id).run();
     console.log('Delete result:', deleteResult);
 
@@ -214,6 +156,7 @@ async function handleDelete(DB_LATIHAN1, id, corsHeaders) {
       success: true,
       message: 'Contact deleted successfully',
       changes: deleteResult.changes,
+      meta: deleteResult.meta,
       deletedContact: existsResult
     }), {
       headers: { 'Content-Type': 'application/json', ...corsHeaders }
