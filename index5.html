@@ -3,400 +3,511 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tes Minat Bakat Profesional - Dr. Karina M Brahmana MPsi</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <title>Admin Panel - Pengawas Ujian</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        .hero-section { 
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
-            color: white; 
-            padding: 100px 0; 
-        }
-        .section-padding { padding: 80px 0; }
-        .card-custom { 
-            border: none; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
-            transition: transform 0.3s; 
-        }
-        .card-custom:hover { transform: translateY(-5px); }
-        .gradient-text { 
-            background: linear-gradient(135deg, #667eea, #764ba2); 
-            -webkit-background-clip: text; 
-            -webkit-text-fill-color: transparent; 
-        }
-        .risk-item { 
-            background: #ffebee; 
-            border-left: 4px solid #f44336; 
-            padding: 15px; 
-            margin: 10px 0; 
-        }
-        .benefit-item { 
-            background: #e8f5e8; 
-            border-left: 4px solid #4caf50; 
-            padding: 15px; 
-            margin: 10px 0; 
-        }
-        .profile-img { 
-            width: 200px; 
-            height: 200px; 
-            border-radius: 50%; 
-            object-fit: cover; 
-            border: 5px solid white; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2); 
-        }
-        .form-section { 
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); 
-        }
-        .spinner-border-sm { 
-            width: 1rem; 
-            height: 1rem; 
-        }
+        .video-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; }
+        .student-card { border: 2px solid #ddd; border-radius: 8px; overflow: hidden; }
+        .student-video { width: 100%; height: 200px; object-fit: cover; background: #000; }
+        .chat-box { height: 300px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; background: #f8f9fa; }
+        .admin-controls { position: fixed; bottom: 20px; right: 20px; z-index: 1000; }
+        .status-online { border-color: #28a745 !important; }
+        .status-warning { border-color: #ffc107 !important; }
+        .speaking { border-color: #dc3545 !important; animation: pulse 1s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
     </style>
 </head>
 <body>
-    <!-- Hero Section -->
-    <section class="hero-section text-center">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-6">
-                    <h1 class="display-4 fw-bold mb-4">Temukan Potensi Terbaik Anda dengan Tes Minat Bakat Profesional</h1>
-                    <p class="lead mb-4">Dipandu langsung oleh Dr. Karina M Brahmana MPsi, Psikolog berpengalaman untuk hasil yang akurat dan terpercaya</p>
-                    <a href="#daftar" class="btn btn-light btn-lg px-5 py-3">Mulai Tes Sekarang</a>
-                </div>
-                <div class="col-lg-6">
-                    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=500&h=400&fit=crop" class="img-fluid rounded-3 shadow-lg" alt="Tes Psikologi">
-                </div>
+    <nav class="navbar navbar-dark bg-dark">
+        <div class="container-fluid">
+            <span class="navbar-brand">Panel Pengawas Ujian Online</span>
+            <div class="navbar-text">
+                <span id="activeStudents" class="badge bg-success">0 Peserta Aktif</span>
+                <span id="currentTime" class="ms-3"></span>
             </div>
         </div>
-    </section>
+    </nav>
 
-    <!-- Profil Psikolog -->
-    <section class="section-padding">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-4 text-center mb-4">
-                    <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=300&h=300&fit=crop&crop=face" class="profile-img" alt="Dr. Karina M Brahmana">
-                </div>
-                <div class="col-lg-8">
-                    <h2 class="gradient-text fw-bold mb-4">Dr. Karina M Brahmana MPsi, Psikolog</h2>
-                    <p class="lead text-muted mb-4">Psikolog klinis bersertifikat dengan pengalaman lebih dari 15 tahun dalam bidang assessment psikologi dan pengembangan karir.</p>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="d-flex mb-3">
-                                <i class="fas fa-graduation-cap text-primary me-3 mt-1"></i>
-                                <div>
-                                    <h6 class="mb-1">Pendidikan</h6>
-                                    <small class="text-muted">S2 Psikologi Klinis, Universitas Indonesia</small>
-                                </div>
-                            </div>
+    <div class="container-fluid mt-3">
+        <div class="row">
+            <!-- Video Monitor -->
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h5>Monitor Peserta Ujian</h5>
+                        <div class="float-end">
+                            <button id="muteAll" class="btn btn-sm btn-warning">Bisukan Semua</button>
+                            <button id="recordAll" class="btn btn-sm btn-danger">Rekam Semua</button>
                         </div>
-                        <div class="col-md-6">
-                            <div class="d-flex mb-3">
-                                <i class="fas fa-certificate text-primary me-3 mt-1"></i>
-                                <div>
-                                    <h6 class="mb-1">Sertifikasi</h6>
-                                    <small class="text-muted">Lisensi Psikolog HIMPSI</small>
-                                </div>
-                            </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="studentGrid" class="video-grid">
+                            <!-- Student videos will be populated here -->
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
 
-    <!-- Mengapa Memilih Kami -->
-    <section class="section-padding bg-light">
-        <div class="container">
-            <div class="text-center mb-5">
-                <h2 class="gradient-text fw-bold">Mengapa Memilih Tes Berbayar Kami?</h2>
-                <p class="lead text-muted">Investasi terbaik untuk masa depan karir Anda</p>
-            </div>
-            <div class="row">
-                <div class="col-lg-4 mb-4">
-                    <div class="card card-custom h-100 text-center p-4">
-                        <i class="fas fa-user-md fa-3x text-primary mb-3"></i>
-                        <h5>Konsultasi Langsung dengan Psikolog</h5>
-                        <p class="text-muted">Interpretasi hasil dan sesi konseling personal untuk memahami potensi Anda secara mendalam</p>
+            <!-- Chat & Controls -->
+            <div class="col-md-4">
+                <!-- Global Chat -->
+                <div class="card mb-3">
+                    <div class="card-header bg-info text-white">
+                        <h6>Chat Global</h6>
+                        <small>Kirim pesan ke semua peserta</small>
+                    </div>
+                    <div class="card-body p-0">
+                        <div id="globalChat" class="chat-box"></div>
+                        <div class="input-group mt-2">
+                            <input type="text" id="globalMessage" class="form-control" placeholder="Pesan untuk semua...">
+                            <button id="sendGlobal" class="btn btn-info">Kirim</button>
+                        </div>
                     </div>
                 </div>
-                <div class="col-lg-4 mb-4">
-                    <div class="card card-custom h-100 text-center p-4">
-                        <i class="fas fa-chart-line fa-3x text-primary mb-3"></i>
-                        <h5>Laporan Komprehensif</h5>
-                        <p class="text-muted">Analisis detail dengan rekomendasi karir, pengembangan diri, dan roadmap pencapaian goals</p>
-                    </div>
-                </div>
-                <div class="col-lg-4 mb-4">
-                    <div class="card card-custom h-100 text-center p-4">
-                        <i class="fas fa-headset fa-3x text-primary mb-3"></i>
-                        <h5>Follow-up Support</h5>
-                        <p class="text-muted">Dukungan berkelanjutan selama 3 bulan untuk membantu implementasi hasil tes</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
 
-    <!-- Risiko Tes Gratis -->
-    <section class="section-padding">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-6">
-                    <h2 class="gradient-text fw-bold mb-4">Risiko Menggunakan Tes Gratis</h2>
-                    <div class="risk-item">
-                        <h6><i class="fas fa-exclamation-triangle me-2"></i>Hasil Tidak Akurat</h6>
-                        <p class="mb-0 small">Algoritma sederhana tanpa validasi ilmiah yang dapat memberikan hasil menyesatkan</p>
+                <!-- Individual Chat -->
+                <div class="card mb-3">
+                    <div class="card-header bg-success text-white">
+                        <h6>Chat Individual</h6>
+                        <select id="studentSelect" class="form-select form-select-sm mt-1">
+                            <option value="">Pilih peserta...</option>
+                        </select>
                     </div>
-                    <div class="risk-item">
-                        <h6><i class="fas fa-robot me-2"></i>Tanpa Interpretasi Profesional</h6>
-                        <p class="mb-0 small">Hasil mentah tanpa penjelasan kontekstual dari ahli psikologi</p>
-                    </div>
-                    <div class="risk-item">
-                        <h6><i class="fas fa-ban me-2"></i>Tidak Ada Tindak Lanjut</h6>
-                        <p class="mb-0 small">Setelah tes selesai, Anda dibiarkan sendirian tanpa panduan selanjutnya</p>
-                    </div>
-                    <div class="risk-item">
-                        <h6><i class="fas fa-shield-alt me-2"></i>Keamanan Data Diragukan</h6>
-                        <p class="mb-0 small">Informasi pribadi Anda mungkin tidak terlindungi atau dijual ke pihak ketiga</p>
+                    <div class="card-body p-0">
+                        <div id="individualChat" class="chat-box"></div>
+                        <div class="input-group mt-2">
+                            <input type="text" id="individualMessage" class="form-control" placeholder="Pesan individual...">
+                            <button id="sendIndividual" class="btn btn-success">Kirim</button>
+                        </div>
                     </div>
                 </div>
-                <div class="col-lg-6">
-                    <h2 class="text-success fw-bold mb-4">Keunggulan Tes Profesional Kami</h2>
-                    <div class="benefit-item">
-                        <h6><i class="fas fa-check-circle me-2"></i>Validitas Terjamin</h6>
-                        <p class="mb-0 small">Menggunakan instrumen psikologi terstandar internasional</p>
-                    </div>
-                    <div class="benefit-item">
-                        <h6><i class="fas fa-user-graduate me-2"></i>Interpretasi Ahli</h6>
-                        <p class="mb-0 small">Hasil dianalisis dan dijelaskan langsung oleh psikolog berpengalaman</p>
-                    </div>
-                    <div class="benefit-item">
-                        <h6><i class="fas fa-road me-2"></i>Action Plan Konkret</h6>
-                        <p class="mb-0 small">Rencana pengembangan karir yang dapat diimplementasikan</p>
-                    </div>
-                    <div class="benefit-item">
-                        <h6><i class="fas fa-lock me-2"></i>Kerahasiaan Terjamin</h6>
-                        <p class="mb-0 small">Data pribadi dilindungi sesuai kode etik psikologi</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
 
-    <!-- Testimoni -->
-    <section class="section-padding bg-light">
-        <div class="container">
-            <div class="text-center mb-5">
-                <h2 class="gradient-text fw-bold">Testimoni Klien</h2>
-                <p class="lead text-muted">Cerita sukses mereka yang telah menemukan passion</p>
-            </div>
-            <div class="row">
-                <div class="col-lg-4">
-                    <div class="card card-custom p-4">
-                        <div class="text-center mb-3">
-                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&h=80&fit=crop&crop=face" class="rounded-circle" width="60" height="60" alt="Testimoni">
-                        </div>
-                        <p class="text-muted">"Tes ini mengubah hidup saya! Sekarang saya bekerja di bidang yang benar-benar sesuai passion. Worth every penny!"</p>
-                        <div class="text-center">
-                            <strong>Ahmad Rizki</strong>
-                            <br><small class="text-muted">Software Engineer</small>
-                        </div>
+                <!-- Audio Controls -->
+                <div class="card">
+                    <div class="card-header bg-warning text-dark">
+                        <h6>Kontrol Audio</h6>
                     </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="card card-custom p-4">
-                        <div class="text-center mb-3">
-                            <img src="https://images.unsplash.com/photo-1494790108755-2616b332c31b?w=80&h=80&fit=crop&crop=face" class="rounded-circle" width="60" height="60" alt="Testimoni">
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label>Broadcast Audio:</label>
+                            <button id="broadcastBtn" class="btn btn-danger w-100">🎤 Mulai Broadcast</button>
                         </div>
-                        <p class="text-muted">"Dr. Karina sangat profesional. Hasil tesnya detail banget dan konsultasinya membantu saya memahami kekuatan diri."</p>
-                        <div class="text-center">
-                            <strong>Sari Permata</strong>
-                            <br><small class="text-muted">Marketing Manager</small>
+                        <div class="mb-3">
+                            <label>Volume Master:</label>
+                            <input type="range" id="masterVolume" class="form-range" min="0" max="100" value="50">
                         </div>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="card card-custom p-4">
-                        <div class="text-center mb-3">
-                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face" class="rounded-circle" width="60" height="60" alt="Testimoni">
-                        </div>
-                        <p class="text-muted">"Follow-up selama 3 bulan sangat membantu implementasi career plan. Investasi terbaik untuk masa depan!"</p>
-                        <div class="text-center">
-                            <strong>Budi Santoso</strong>
-                            <br><small class="text-muted">Business Analyst</small>
+                        <div>
+                            <button id="muteAllAudio" class="btn btn-secondary btn-sm">Mute All</button>
+                            <button id="unmuteAllAudio" class="btn btn-secondary btn-sm">Unmute All</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
 
-    <!-- Form Pendaftaran -->
-    <section id="daftar" class="section-padding form-section">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-8">
-                    <div class="card card-custom">
-                        <div class="card-body p-5">
-                            <div class="text-center mb-4">
-                                <h2 class="gradient-text fw-bold">Daftar Tes Minat Bakat</h2>
-                                <p class="text-muted">Investasi Rp 500.000 untuk masa depan karir yang cerah</p>
-                            </div>
-                            
-                            <div id="alert-container"></div>
-                            
-                            <form id="registrationForm">
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
-                                        <label for="name" class="form-label">Nama Lengkap *</label>
-                                        <input type="text" class="form-control" id="name" name="name" required>
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label for="email" class="form-label">Email *</label>
-                                        <input type="email" class="form-control" id="email" name="email" required>
-                                    </div>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="message" class="form-label">Pesan / Ekspektasi dari Tes *</label>
-                                    <textarea class="form-control" id="message" name="message" rows="4" placeholder="Ceritakan situasi karir Anda saat ini dan apa yang ingin Anda capai melalui tes ini..." required></textarea>
-                                </div>
-                                <div class="mb-3">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="agreement" required>
-                                        <label class="form-check-label" for="agreement">
-                                            <small>Saya setuju dengan <a href="#" class="text-decoration-none">syarat dan ketentuan</a> serta <a href="#" class="text-decoration-none">kebijakan privasi</a></small>
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="text-center">
-                                    <button type="submit" class="btn btn-primary btn-lg px-5" id="submitBtn">
-                                        <span id="submitText">Daftar Sekarang - Rp 500.000</span>
-                                        <span id="submitSpinner" class="d-none">
-                                            <span class="spinner-border spinner-border-sm me-2" role="status"></span>
-                                            Memproses...
-                                        </span>
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <!-- Floating Controls -->
+    <div class="admin-controls">
+        <div class="btn-group-vertical">
+            <button id="emergencyStop" class="btn btn-danger btn-sm">⚠️ Stop Ujian</button>
+            <button id="addTime" class="btn btn-warning btn-sm">⏱️ +10 Menit</button>
+            <button id="viewStats" class="btn btn-info btn-sm">📊 Statistik</button>
         </div>
-    </section>
+    </div>
 
-    <!-- Footer -->
-    <footer class="bg-dark text-white py-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-6">
-                    <h5>Dr. Karina M Brahmana MPsi</h5>
-                    <p class="text-light">Psikolog Profesional - Spesialis Assessment & Career Development</p>
-                    <div>
-                        <i class="fas fa-phone me-2"></i> +62 821-xxxx-xxxx<br>
-                        <i class="fas fa-envelope me-2"></i> dr.karina@psikolog.com<br>
-                        <i class="fas fa-map-marker-alt me-2"></i> Jakarta, Indonesia
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <h6>Layanan Kami</h6>
-                    <ul class="list-unstyled">
-                        <li>• Tes Minat Bakat</li>
-                        <li>• Konseling Karir</li>
-                        <li>• Assessment Kepribadian</li>
-                        <li>• Coaching & Mentoring</li>
-                    </ul>
-                </div>
-            </div>
-            <hr class="my-4">
-            <div class="text-center">
-                <p class="mb-0">&copy; 2025 Dr. Karina M Brahmana MPsi. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script>
-        $(document).ready(function() {
-            // Form submission
-            $('#registrationForm').on('submit', function(e) {
-                e.preventDefault();
-                
-                const formData = {
-                    name: $('#name').val().trim(),
-                    email: $('#email').val().trim(),
-                    message: $('#message').val().trim()
+        let students = {};
+        let selectedStudent = null;
+        let broadcastRecorder = null;
+        let isBroadcasting = false;
+        let globalMessages = [];
+        let individualMessages = {};
+
+        // Dummy student data
+        const dummyStudents = [
+            {id: 'std001', name: 'Ahmad Rizki', status: 'online'},
+            {id: 'std002', name: 'Siti Nurhaliza', status: 'online'},
+            {id: 'std003', name: 'Budi Santoso', status: 'warning'},
+            {id: 'std004', name: 'Lisa Permata', status: 'online'},
+            {id: 'std005', name: 'Doni Setiawan', status: 'online'}
+        ];
+
+        function initializeStudents() {
+            dummyStudents.forEach(student => {
+                students[student.id] = {
+                    ...student,
+                    videoStream: null,
+                    audioStream: null,
+                    isMuted: false,
+                    isRecording: false,
+                    lastActivity: new Date(),
+                    answers: {},
+                    suspiciousCount: 0
                 };
                 
-                // Validation
-                if (!formData.name || !formData.email || !formData.message) {
-                    showAlert('danger', 'Semua field wajib diisi!');
-                    return;
-                }
+                // Add to select dropdown
+                $('#studentSelect').append(`<option value="${student.id}">${student.name}</option>`);
                 
-                if (!$('#agreement').is(':checked')) {
-                    showAlert('danger', 'Harap setujui syarat dan ketentuan!');
-                    return;
-                }
-                
-                // Show loading
-                $('#submitText').addClass('d-none');
-                $('#submitSpinner').removeClass('d-none');
-                $('#submitBtn').prop('disabled', true);
-                
-                // Submit data
-                $.ajax({
-                    url: '/api/contacts',
-                    type: 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify(formData),
-                    success: function(response) {
-                        showAlert('success', 'Pendaftaran berhasil! Tim kami akan menghubungi Anda dalam 24 jam.');
-                        $('#registrationForm')[0].reset();
-                    },
-                    error: function(xhr) {
-                        let errorMsg = 'Terjadi kesalahan. Silakan coba lagi.';
-                        if (xhr.responseJSON && xhr.responseJSON.error) {
-                            errorMsg = xhr.responseJSON.error;
-                        }
-                        showAlert('danger', errorMsg);
-                    },
-                    complete: function() {
-                        // Hide loading
-                        $('#submitText').removeClass('d-none');
-                        $('#submitSpinner').addClass('d-none');
-                        $('#submitBtn').prop('disabled', false);
-                    }
-                });
+                // Initialize individual chat
+                individualMessages[student.id] = [];
             });
             
-            function showAlert(type, message) {
-                const alertHtml = `
-                    <div class="alert alert-${type} alert-dismissible fade show" role="alert">
-                        ${message}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            updateStudentGrid();
+            updateActiveCount();
+        }
+
+        function updateStudentGrid() {
+            const grid = $('#studentGrid');
+            grid.empty();
+            
+            Object.values(students).forEach(student => {
+                const statusClass = student.status === 'online' ? 'status-online' : 
+                                   student.status === 'warning' ? 'status-warning' : '';
+                
+                const cardHtml = `
+                    <div class="student-card ${statusClass}" data-student="${student.id}">
+                        <video class="student-video" autoplay muted 
+                               style="background: linear-gradient(45deg, #333, #666);">
+                        </video>
+                        <div class="p-2">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <strong>${student.name}</strong>
+                                <div class="btn-group btn-group-sm">
+                                    <button class="btn btn-outline-primary btn-sm chat-btn" 
+                                            data-student="${student.id}" title="Chat">💬</button>
+                                    <button class="btn btn-outline-warning btn-sm mute-btn" 
+                                            data-student="${student.id}" title="Mute">🔇</button>
+                                    <button class="btn btn-outline-danger btn-sm warn-btn" 
+                                            data-student="${student.id}" title="Peringatan">⚠️</button>
+                                </div>
+                            </div>
+                            <small class="text-muted">
+                                Status: <span class="badge ${student.status === 'online' ? 'bg-success' : 'bg-warning'}">${student.status}</span>
+                                Aktivitas: ${student.suspiciousCount > 0 ? `${student.suspiciousCount} peringatan` : 'Normal'}
+                            </small>
+                        </div>
                     </div>
                 `;
-                $('#alert-container').html(alertHtml);
-                
-                // Auto hide after 5 seconds
-                setTimeout(function() {
-                    $('.alert').alert('close');
-                }, 5000);
-            }
+                grid.append(cardHtml);
+            });
+        }
+
+        function updateActiveCount() {
+            const activeCount = Object.values(students).filter(s => s.status === 'online').length;
+            $('#activeStudents').text(activeCount + ' Peserta Aktif');
+        }
+
+        function addGlobalMessage(message) {
+            const time = new Date().toLocaleTimeString();
+            const messageHtml = `
+                <div class="mb-2">
+                    <small class="text-muted">${time}</small><br>
+                    <strong class="text-danger">Admin:</strong> ${message}
+                </div>
+            `;
+            $('#globalChat').append(messageHtml);
+            $('#globalChat').scrollTop($('#globalChat')[0].scrollHeight);
+            globalMessages.push({sender: 'Admin', message, time});
+        }
+
+        function addIndividualMessage(studentId, message, isFromStudent = false) {
+            if (!selectedStudent || selectedStudent !== studentId) return;
             
-            // Smooth scrolling
-            $('a[href^="#"]').on('click', function(e) {
-                e.preventDefault();
-                const target = $($(this).attr('href'));
-                if (target.length) {
-                    $('html, body').animate({
-                        scrollTop: target.offset().top - 70
-                    }, 800);
+            const time = new Date().toLocaleTimeString();
+            const sender = isFromStudent ? students[studentId].name : 'Admin';
+            const messageClass = isFromStudent ? 'text-primary' : 'text-danger';
+            
+            const messageHtml = `
+                <div class="mb-2">
+                    <small class="text-muted">${time}</small><br>
+                    <strong class="${messageClass}">${sender}:</strong> ${message}
+                </div>
+            `;
+            $('#individualChat').append(messageHtml);
+            $('#individualChat').scrollTop($('#individualChat')[0].scrollHeight);
+            
+            if (!individualMessages[studentId]) individualMessages[studentId] = [];
+            individualMessages[studentId].push({sender, message, time, isFromStudent});
+        }
+
+        function loadIndividualChat(studentId) {
+            $('#individualChat').empty();
+            if (individualMessages[studentId]) {
+                individualMessages[studentId].forEach(msg => {
+                    const messageClass = msg.isFromStudent ? 'text-primary' : 'text-danger';
+                    const messageHtml = `
+                        <div class="mb-2">
+                            <small class="text-muted">${msg.time}</small><br>
+                            <strong class="${messageClass}">${msg.sender}:</strong> ${msg.message}
+                        </div>
+                    `;
+                    $('#individualChat').append(messageHtml);
+                });
+                $('#individualChat').scrollTop($('#individualChat')[0].scrollHeight);
+            }
+        }
+
+        // Initialize broadcast audio
+        async function initBroadcast() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                broadcastRecorder = new MediaRecorder(stream);
+                broadcastRecorder.ondataavailable = (event) => {
+                    if (event.data.size > 0) {
+                        // Send audio to all students
+                        console.log('Broadcasting audio to all students');
+                    }
+                };
+            } catch (err) {
+                console.error('Error accessing microphone:', err);
+            }
+        }
+
+        // Simulate student activities
+        function simulateStudentActivities() {
+            // Simulate random suspicious activities
+            setInterval(() => {
+                const studentIds = Object.keys(students);
+                const randomStudent = studentIds[Math.floor(Math.random() * studentIds.length)];
+                
+                if (Math.random() < 0.1) { // 10% chance
+                    students[randomStudent].suspiciousCount++;
+                    students[randomStudent].status = 'warning';
+                    updateStudentGrid();
+                    
+                    addGlobalMessage(`⚠️ Aktivitas mencurigakan terdeteksi dari ${students[randomStudent].name}`);
+                }
+            }, 30000);
+
+            // Simulate student messages
+            setInterval(() => {
+                const studentIds = Object.keys(students);
+                const randomStudent = studentIds[Math.floor(Math.random() * studentIds.length)];
+                const messages = [
+                    'Pak, boleh minta bantuan?',
+                    'Koneksi saya agak lambat',
+                    'Terima kasih pak',
+                    'Apakah masih ada waktu?',
+                    'Maaf pak, ada masalah teknis'
+                ];
+                const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+                
+                if (Math.random() < 0.2) { // 20% chance
+                    addIndividualMessage(randomStudent, randomMessage, true);
+                }
+            }, 45000);
+        }
+
+        // Event listeners
+        $(document).ready(function() {
+            initializeStudents();
+            initBroadcast();
+            simulateStudentActivities();
+
+            // Update time
+            setInterval(() => {
+                $('#currentTime').text(new Date().toLocaleTimeString());
+            }, 1000);
+
+            // Global chat
+            $('#sendGlobal').click(function() {
+                const message = $('#globalMessage').val().trim();
+                if (message) {
+                    addGlobalMessage(message);
+                    $('#globalMessage').val('');
                 }
             });
+
+            $('#globalMessage').keypress(function(e) {
+                if (e.which === 13) $('#sendGlobal').click();
+            });
+
+            // Individual chat
+            $('#studentSelect').change(function() {
+                selectedStudent = $(this).val();
+                if (selectedStudent) {
+                    loadIndividualChat(selectedStudent);
+                } else {
+                    $('#individualChat').empty();
+                }
+            });
+
+            $('#sendIndividual').click(function() {
+                const message = $('#individualMessage').val().trim();
+                if (message && selectedStudent) {
+                    addIndividualMessage(selectedStudent, message, false);
+                    $('#individualMessage').val('');
+                }
+            });
+
+            $('#individualMessage').keypress(function(e) {
+                if (e.which === 13) $('#sendIndividual').click();
+            });
+
+            // Broadcast controls
+            $('#broadcastBtn').click(function() {
+                if (!isBroadcasting) {
+                    broadcastRecorder.start();
+                    $(this).text('🔴 Stop Broadcast').removeClass('btn-danger').addClass('btn-success');
+                    isBroadcasting = true;
+                    addGlobalMessage('🎤 Admin sedang melakukan broadcast audio');
+                } else {
+                    broadcastRecorder.stop();
+                    $(this).text('🎤 Mulai Broadcast').removeClass('btn-success').addClass('btn-danger');
+                    isBroadcasting = false;
+                }
+            });
+
+            // Student controls
+            $(document).on('click', '.chat-btn', function() {
+                const studentId = $(this).data('student');
+                $('#studentSelect').val(studentId).trigger('change');
+            });
+
+            $(document).on('click', '.mute-btn', function() {
+                const studentId = $(this).data('student');
+                students[studentId].isMuted = !students[studentId].isMuted;
+                const btn = $(this);
+                
+                if (students[studentId].isMuted) {
+                    btn.removeClass('btn-outline-warning').addClass('btn-warning').html('🔇');
+                    addGlobalMessage(`${students[studentId].name} telah di-mute`);
+                } else {
+                    btn.removeClass('btn-warning').addClass('btn-outline-warning').html('🔊');
+                    addGlobalMessage(`${students[studentId].name} sudah tidak di-mute`);
+                }
+            });
+
+            $(document).on('click', '.warn-btn', function() {
+                const studentId = $(this).data('student');
+                students[studentId].suspiciousCount++;
+                students[studentId].status = 'warning';
+                
+                const warningMessages = [
+                    'Harap fokus pada ujian Anda',
+                    'Jangan melihat ke tempat lain',
+                    'Pastikan hanya Anda yang ada di depan kamera',
+                    'Peringatan: aktivitas mencurigakan terdeteksi'
+                ];
+                const randomWarning = warningMessages[Math.floor(Math.random() * warningMessages.length)];
+                
+                addIndividualMessage(studentId, `⚠️ PERINGATAN: ${randomWarning}`, false);
+                updateStudentGrid();
+            });
+
+            // Control buttons
+            $('#muteAll').click(function() {
+                Object.keys(students).forEach(id => {
+                    students[id].isMuted = true;
+                });
+                addGlobalMessage('Semua peserta telah di-mute');
+                updateStudentGrid();
+            });
+
+            $('#recordAll').click(function() {
+                Object.keys(students).forEach(id => {
+                    students[id].isRecording = !students[id].isRecording;
+                });
+                const isRecording = Object.values(students)[0].isRecording;
+                addGlobalMessage(isRecording ? 'Mulai merekam semua peserta' : 'Berhenti merekam semua peserta');
+                $(this).text(isRecording ? 'Stop Rekam' : 'Rekam Semua')
+                       .toggleClass('btn-danger btn-secondary');
+            });
+
+            $('#muteAllAudio').click(function() {
+                $('#masterVolume').val(0);
+                addGlobalMessage('Audio semua peserta di-mute');
+            });
+
+            $('#unmuteAllAudio').click(function() {
+                $('#masterVolume').val(50);
+                addGlobalMessage('Audio semua peserta di-unmute');
+            });
+
+            // Emergency controls
+            $('#emergencyStop').click(function() {
+                if (confirm('Yakin ingin menghentikan ujian untuk semua peserta?')) {
+                    addGlobalMessage('🚨 UJIAN DIHENTIKAN OLEH ADMIN 🚨');
+                    alert('Ujian telah dihentikan untuk semua peserta');
+                }
+            });
+
+            $('#addTime').click(function() {
+                addGlobalMessage('⏰ Waktu ujian diperpanjang 10 menit');
+                alert('Waktu ujian diperpanjang 10 menit untuk semua peserta');
+            });
+
+            $('#viewStats').click(function() {
+                const stats = {
+                    totalStudents: Object.keys(students).length,
+                    activeStudents: Object.values(students).filter(s => s.status === 'online').length,
+                    warningStudents: Object.values(students).filter(s => s.status === 'warning').length,
+                    totalWarnings: Object.values(students).reduce((sum, s) => sum + s.suspiciousCount, 0),
+                    totalMessages: globalMessages.length + Object.values(individualMessages).flat().length
+                };
+                
+                alert(`Statistik Ujian:
+- Total Peserta: ${stats.totalStudents}
+- Peserta Aktif: ${stats.activeStudents}
+- Peserta dengan Peringatan: ${stats.warningStudents}
+- Total Peringatan: ${stats.totalWarnings}
+- Total Pesan Chat: ${stats.totalMessages}`);
+            });
+
+            // Volume control
+            $('#masterVolume').on('input', function() {
+                const volume = $(this).val();
+                console.log('Master volume set to:', volume + '%');
+            });
+
+            // Auto-scroll chat when new messages arrive
+            const chatObserver = new MutationObserver(function() {
+                $('#globalChat').scrollTop($('#globalChat')[0].scrollHeight);
+                $('#individualChat').scrollTop($('#individualChat')[0].scrollHeight);
+            });
+
+            chatObserver.observe(document.getElementById('globalChat'), {childList: true});
+            chatObserver.observe(document.getElementById('individualChat'), {childList: true});
+
+            // Initial welcome message
+            setTimeout(() => {
+                addGlobalMessage('Selamat datang di sistem pengawasan ujian online. Semua peserta sedang dipantau.');
+            }, 2000);
+        });
+
+        // Auto-refresh student status
+        setInterval(() => {
+            // Simulate connection status changes
+            Object.keys(students).forEach(id => {
+                if (Math.random() < 0.05) { // 5% chance
+                    const currentStatus = students[id].status;
+                    students[id].status = currentStatus === 'online' ? 'warning' : 'online';
+                }
+            });
+            updateStudentGrid();
+            updateActiveCount();
+        }, 10000);
+
+        // Keyboard shortcuts
+        $(document).keydown(function(e) {
+            if (e.ctrlKey) {
+                switch(e.which) {
+                    case 77: // Ctrl+M - Mute all
+                        e.preventDefault();
+                        $('#muteAll').click();
+                        break;
+                    case 82: // Ctrl+R - Record all
+                        e.preventDefault();
+                        $('#recordAll').click();
+                        break;
+                    case 66: // Ctrl+B - Broadcast
+                        e.preventDefault();
+                        $('#broadcastBtn').click();
+                        break;
+                }
+            }
         });
     </script>
 </body>

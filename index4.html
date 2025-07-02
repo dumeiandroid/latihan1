@@ -1,345 +1,293 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TechSolutions - Your Digital Partner</title>
+    <title>Ujian Online - Peserta</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
     <style>
-        .hero-section {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            color: white;
-        }
-        .feature-icon {
-            font-size: 3rem;
-            color: #667eea;
-        }
-        .contact-section {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-        }
-        .btn-custom {
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            border: none;
-            color: white;
-            padding: 12px 30px;
-            border-radius: 25px;
-            transition: all 0.3s ease;
-        }
-        .btn-custom:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            color: white;
-        }
-        .card-hover {
-            transition: transform 0.3s ease;
-        }
-        .card-hover:hover {
-            transform: translateY(-10px);
-        }
+        .chat-box { height: 200px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; background: #f8f9fa; }
+        .video-container { position: fixed; top: 10px; right: 10px; width: 200px; height: 150px; z-index: 1000; }
+        #studentVideo { width: 100%; height: 100%; object-fit: cover; border: 2px solid #007bff; border-radius: 5px; }
+        .exam-container { margin-right: 220px; }
     </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="#"><i class="fas fa-rocket"></i> TechSolutions</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#services">Services</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
-                </ul>
-            </div>
+    <div class="container-fluid">
+        <!-- Video Peserta -->
+        <div class="video-container">
+            <video id="studentVideo" autoplay muted></video>
+            <audio id="studentAudio"></audio>
         </div>
-    </nav>
 
-    <!-- Hero Section -->
-    <section id="home" class="hero-section d-flex align-items-center">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-6" data-aos="fade-right">
-                    <h1 class="display-4 fw-bold mb-4">Build Your Digital Future</h1>
-                    <p class="lead mb-4">We create innovative solutions that transform your business and drive growth in the digital age.</p>
-                    <a href="#contact" class="btn btn-custom btn-lg me-3">Get Started</a>
-                    <a href="#about" class="btn btn-outline-light btn-lg">Learn More</a>
-                </div>
-                <div class="col-lg-6" data-aos="fade-left">
-                    <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
-                         class="img-fluid rounded shadow-lg" alt="Digital Solutions">
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- About Section -->
-    <section id="about" class="py-5">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-6" data-aos="fade-right">
-                    <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
-                         class="img-fluid rounded shadow" alt="Team Collaboration">
-                </div>
-                <div class="col-lg-6" data-aos="fade-left">
-                    <h2 class="display-5 fw-bold mb-4">About TechSolutions</h2>
-                    <p class="lead text-muted mb-4">With over 10 years of experience, we specialize in delivering cutting-edge technology solutions that help businesses thrive in the digital landscape.</p>
-                    <div class="row">
-                        <div class="col-6">
-                            <h3 class="text-primary">500+</h3>
-                            <p>Projects Completed</p>
-                        </div>
-                        <div class="col-6">
-                            <h3 class="text-primary">50+</h3>
-                            <p>Happy Clients</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Services Section -->
-    <section id="services" class="py-5 bg-light">
-        <div class="container">
-            <div class="text-center mb-5" data-aos="fade-up">
-                <h2 class="display-5 fw-bold">Our Services</h2>
-                <p class="lead text-muted">Comprehensive solutions for your digital needs</p>
-            </div>
+        <div class="exam-container">
             <div class="row">
-                <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="100">
-                    <div class="card h-100 shadow-sm card-hover">
-                        <div class="card-body text-center p-4">
-                            <i class="fas fa-code feature-icon mb-3"></i>
-                            <h4>Web Development</h4>
-                            <p class="text-muted">Custom websites and web applications built with modern technologies.</p>
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header bg-primary text-white">
+                            <h4>Ujian Online</h4>
+                            <div id="timer" class="float-end">Waktu: 30:00</div>
                         </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="200">
-                    <div class="card h-100 shadow-sm card-hover">
-                        <div class="card-body text-center p-4">
-                            <i class="fas fa-mobile-alt feature-icon mb-3"></i>
-                            <h4>Mobile Apps</h4>
-                            <p class="text-muted">Native and cross-platform mobile applications for iOS and Android.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="300">
-                    <div class="card h-100 shadow-sm card-hover">
-                        <div class="card-body text-center p-4">
-                            <i class="fas fa-cloud feature-icon mb-3"></i>
-                            <h4>Cloud Solutions</h4>
-                            <p class="text-muted">Scalable cloud infrastructure and deployment solutions.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="400">
-                    <div class="card h-100 shadow-sm card-hover">
-                        <div class="card-body text-center p-4">
-                            <i class="fas fa-shield-alt feature-icon mb-3"></i>
-                            <h4>Cybersecurity</h4>
-                            <p class="text-muted">Protect your business with advanced security solutions.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="500">
-                    <div class="card h-100 shadow-sm card-hover">
-                        <div class="card-body text-center p-4">
-                            <i class="fas fa-chart-line feature-icon mb-3"></i>
-                            <h4>Digital Marketing</h4>
-                            <p class="text-muted">Grow your online presence with data-driven marketing strategies.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="600">
-                    <div class="card h-100 shadow-sm card-hover">
-                        <div class="card-body text-center p-4">
-                            <i class="fas fa-cog feature-icon mb-3"></i>
-                            <h4>Consulting</h4>
-                            <p class="text-muted">Strategic technology consulting to optimize your business processes.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+                        <div class="card-body">
+                            <form id="examForm">
+                                <div class="question mb-4">
+                                    <h5>1. Apa kepanjangan dari HTML?</h5>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="q1" value="a" id="q1a">
+                                        <label class="form-check-label" for="q1a">HyperText Markup Language</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="q1" value="b" id="q1b">
+                                        <label class="form-check-label" for="q1b">High Tech Modern Language</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="q1" value="c" id="q1c">
+                                        <label class="form-check-label" for="q1c">Home Tool Markup Language</label>
+                                    </div>
+                                </div>
 
-    <!-- Contact Section -->
-    <section id="contact" class="py-5 contact-section text-white">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-6" data-aos="fade-right">
-                    <h2 class="display-5 fw-bold mb-4">Get In Touch</h2>
-                    <p class="lead mb-4">Ready to start your digital transformation? Contact us today and let's discuss how we can help your business grow.</p>
-                    <div class="d-flex align-items-center mb-3">
-                        <i class="fas fa-phone fa-2x me-3"></i>
-                        <div>
-                            <h5 class="mb-0">Phone</h5>
-                            <p class="mb-0">+1 (555) 123-4567</p>
-                        </div>
-                    </div>
-                    <div class="d-flex align-items-center mb-3">
-                        <i class="fas fa-envelope fa-2x me-3"></i>
-                        <div>
-                            <h5 class="mb-0">Email</h5>
-                            <p class="mb-0">info@techsolutions.com</p>
-                        </div>
-                    </div>
-                    <div class="d-flex align-items-center mb-3">
-                        <i class="fas fa-map-marker-alt fa-2x me-3"></i>
-                        <div>
-                            <h5 class="mb-0">Address</h5>
-                            <p class="mb-0">123 Tech Street, Digital City</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6" data-aos="fade-left">
-                    <div class="card shadow-lg">
-                        <div class="card-body p-4">
-                            <h4 class="text-dark mb-4">Send us a Message</h4>
-                            <form id="contactForm">
-                                <div class="mb-3">
-                                    <label for="name" class="form-label text-dark">Name *</label>
-                                    <input type="text" class="form-control" id="name" required>
+                                <div class="question mb-4">
+                                    <h5>2. Tag HTML mana yang digunakan untuk membuat paragraf?</h5>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="q2" value="a" id="q2a">
+                                        <label class="form-check-label" for="q2a">&lt;p&gt;</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="q2" value="b" id="q2b">
+                                        <label class="form-check-label" for="q2b">&lt;paragraph&gt;</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="q2" value="c" id="q2c">
+                                        <label class="form-check-label" for="q2c">&lt;text&gt;</label>
+                                    </div>
                                 </div>
-                                <div class="mb-3">
-                                    <label for="email" class="form-label text-dark">Email *</label>
-                                    <input type="email" class="form-control" id="email" required>
+
+                                <div class="question mb-4">
+                                    <h5>3. CSS singkatan dari?</h5>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="q3" value="a" id="q3a">
+                                        <label class="form-check-label" for="q3a">Cascading Style Sheets</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="q3" value="b" id="q3b">
+                                        <label class="form-check-label" for="q3b">Computer Style Sheets</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="q3" value="c" id="q3c">
+                                        <label class="form-check-label" for="q3c">Creative Style Sheets</label>
+                                    </div>
                                 </div>
-                                <div class="mb-3">
-                                    <label for="message" class="form-label text-dark">Message *</label>
-                                    <textarea class="form-control" id="message" rows="4" required placeholder="Tell us about your project..."></textarea>
+
+                                <div class="question mb-4">
+                                    <h5>4. JavaScript digunakan untuk?</h5>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="q4" value="a" id="q4a">
+                                        <label class="form-check-label" for="q4a">Membuat halaman web interaktif</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="q4" value="b" id="q4b">
+                                        <label class="form-check-label" for="q4b">Mendesain database</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="q4" value="c" id="q4c">
+                                        <label class="form-check-label" for="q4c">Membuat server</label>
+                                    </div>
                                 </div>
-                                <button type="submit" class="btn btn-custom w-100" id="submitBtn">
-                                    <i class="fas fa-paper-plane"></i> Send Message
-                                </button>
+
+                                <div class="question mb-4">
+                                    <h5>5. Bootstrap adalah?</h5>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="q5" value="a" id="q5a">
+                                        <label class="form-check-label" for="q5a">Framework CSS</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="q5" value="b" id="q5b">
+                                        <label class="form-check-label" for="q5b">Bahasa pemrograman</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="q5" value="c" id="q5c">
+                                        <label class="form-check-label" for="q5c">Database</label>
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="btn btn-success">Selesai Ujian</button>
                             </form>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </section>
 
-    <!-- Footer -->
-    <footer class="bg-dark text-white py-4">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-                    <h5><i class="fas fa-rocket"></i> TechSolutions</h5>
-                    <p class="mb-0">Building the future, one solution at a time.</p>
-                </div>
-                <div class="col-md-6 text-md-end">
-                    <div class="social-links">
-                        <a href="#" class="text-white me-3"><i class="fab fa-facebook fa-2x"></i></a>
-                        <a href="#" class="text-white me-3"><i class="fab fa-twitter fa-2x"></i></a>
-                        <a href="#" class="text-white me-3"><i class="fab fa-linkedin fa-2x"></i></a>
-                        <a href="#" class="text-white"><i class="fab fa-instagram fa-2x"></i></a>
+                <div class="col-md-4">
+                    <!-- Chat -->
+                    <div class="card">
+                        <div class="card-header bg-info text-white">
+                            <h6>Chat dengan Pengawas</h6>
+                        </div>
+                        <div class="card-body p-0">
+                            <div id="chatMessages" class="chat-box"></div>
+                            <div class="input-group mt-2">
+                                <input type="text" id="messageInput" class="form-control" placeholder="Ketik pesan...">
+                                <button id="sendMessage" class="btn btn-info">Kirim</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Audio dari Admin -->
+                    <div class="card mt-3">
+                        <div class="card-header bg-warning text-dark">
+                            <h6>Audio Pengawas</h6>
+                        </div>
+                        <div class="card-body text-center">
+                            <audio id="adminAudio" controls style="width: 100%;"></audio>
+                            <div class="mt-2">
+                                <button id="micBtn" class="btn btn-primary">🎤 Bicara</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <hr class="my-3">
-            <div class="text-center">
-                <p class="mb-0">&copy; 2024 TechSolutions. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Toast Notification -->
-    <div class="toast-container position-fixed top-0 end-0 p-3">
-        <div id="toast" class="toast" role="alert">
-            <div class="toast-header">
-                <i class="fas fa-info-circle text-primary me-2"></i>
-                <strong class="me-auto">Notification</strong>
-                <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
-            </div>
-            <div class="toast-body" id="toastMessage"></div>
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Initialize AOS (Animate On Scroll)
-        AOS.init({
-            duration: 800,
-            once: true
-        });
+        let timeLeft = 1800; // 30 menit
+        let mediaRecorder;
+        let isRecording = false;
+        let chatMessages = [];
 
-        // Smooth scrolling for navigation links
-        $('a[href^="#"]').on('click', function(e) {
-            e.preventDefault();
-            const target = $(this.getAttribute('href'));
-            if (target.length) {
-                $('html, body').animate({
-                    scrollTop: target.offset().top - 70
-                }, 1000);
-            }
-        });
-
-        // Contact form submission
-        $('#contactForm').on('submit', function(e) {
-            e.preventDefault();
+        // Timer
+        function updateTimer() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            $('#timer').text(`Waktu: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`);
             
-            const name = $('#name').val().trim();
-            const email = $('#email').val().trim();
-            const message = $('#message').val().trim();
-            
-            if (!name || !email || !message) {
-                showToast('Please fill all required fields', 'error');
+            if (timeLeft <= 0) {
+                alert('Waktu ujian habis!');
+                $('#examForm').submit();
                 return;
             }
+            timeLeft--;
+        }
 
-            // Disable submit button and show loading
-            $('#submitBtn').prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Sending...');
+        // Inisialisasi media
+        async function initMedia() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                $('#studentVideo')[0].srcObject = stream;
+                
+                mediaRecorder = new MediaRecorder(stream);
+                mediaRecorder.ondataavailable = (event) => {
+                    if (event.data.size > 0) {
+                        // Kirim data audio ke admin (simulasi)
+                        console.log('Audio data sent to admin');
+                    }
+                };
+            } catch (err) {
+                console.error('Error accessing media:', err);
+                alert('Tidak dapat mengakses kamera/mikrofon. Ujian tidak dapat dilanjutkan.');
+            }
+        }
 
-            // Send to API
-            $.ajax({
-                url: '/api/contacts',
-                method: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify({ name, email, message })
-            })
-            .done(function(response) {
-                showToast('Thank you! Your message has been sent successfully.', 'success');
-                $('#contactForm')[0].reset();
-            })
-            .fail(function(xhr) {
-                const errorMsg = xhr.responseJSON?.error || 'Failed to send message. Please try again.';
-                showToast(errorMsg, 'error');
-            })
-            .always(function() {
-                $('#submitBtn').prop('disabled', false).html('<i class="fas fa-paper-plane"></i> Send Message');
+        // Chat functions
+        function addMessage(sender, message, isAdmin = false) {
+            const time = new Date().toLocaleTimeString();
+            const messageClass = isAdmin ? 'text-danger' : 'text-primary';
+            const messageHtml = `
+                <div class="mb-2">
+                    <small class="text-muted">${time}</small><br>
+                    <strong class="${messageClass}">${sender}:</strong> ${message}
+                </div>
+            `;
+            $('#chatMessages').append(messageHtml);
+            $('#chatMessages').scrollTop($('#chatMessages')[0].scrollHeight);
+            chatMessages.push({sender, message, time, isAdmin});
+        }
+
+        // Simulasi pesan dari admin
+        function simulateAdminMessages() {
+            setTimeout(() => {
+                addMessage('Pengawas', 'Selamat mengerjakan ujian. Jika ada pertanyaan, silakan chat.', true);
+            }, 5000);
+            
+            setTimeout(() => {
+                addMessage('Pengawas', 'Pastikan kamera tetap menyala selama ujian.', true);
+            }, 30000);
+        }
+
+        // Event listeners
+        $(document).ready(function() {
+            initMedia();
+            setInterval(updateTimer, 1000);
+            simulateAdminMessages();
+
+            // Send chat message
+            $('#sendMessage').click(function() {
+                const message = $('#messageInput').val().trim();
+                if (message) {
+                    addMessage('Anda', message);
+                    $('#messageInput').val('');
+                    
+                    // Simulasi balasan admin
+                    setTimeout(() => {
+                        const replies = [
+                            'Terima kasih atas pertanyaannya.',
+                            'Silakan lanjutkan mengerjakan.',
+                            'Baik, saya mengerti.',
+                            'Fokus pada ujian Anda.'
+                        ];
+                        const randomReply = replies[Math.floor(Math.random() * replies.length)];
+                        addMessage('Pengawas', randomReply, true);
+                    }, 1000 + Math.random() * 3000);
+                }
+            });
+
+            $('#messageInput').keypress(function(e) {
+                if (e.which === 13) {
+                    $('#sendMessage').click();
+                }
+            });
+
+            // Microphone button
+            $('#micBtn').click(function() {
+                if (!isRecording) {
+                    mediaRecorder.start();
+                    $(this).text('🔴 Berhenti').removeClass('btn-primary').addClass('btn-danger');
+                    isRecording = true;
+                } else {
+                    mediaRecorder.stop();
+                    $(this).text('🎤 Bicara').removeClass('btn-danger').addClass('btn-primary');
+                    isRecording = false;
+                }
+            });
+
+            // Submit exam
+            $('#examForm').submit(function(e) {
+                e.preventDefault();
+                const answers = {};
+                $('input[type="radio"]:checked').each(function() {
+                    answers[$(this).attr('name')] = $(this).val();
+                });
+                
+                const results = {
+                    answers: answers,
+                    chatHistory: chatMessages,
+                    timeUsed: 1800 - timeLeft
+                };
+                
+                console.log('Exam results:', results);
+                alert('Ujian selesai! Hasil telah disimpan.');
             });
         });
 
-        // Show toast notification
-        function showToast(message, type = 'info') {
-            const iconClass = type === 'error' ? 'fas fa-exclamation-triangle text-danger' : 
-                             type === 'success' ? 'fas fa-check-circle text-success' : 
-                             'fas fa-info-circle text-primary';
-            
-            $('#toast .toast-header i').attr('class', iconClass + ' me-2');
-            $('#toastMessage').text(message);
-            
-            const toast = new bootstrap.Toast(document.getElementById('toast'));
-            toast.show();
-        }
+        // Prevent tab switching/closing
+        $(window).on('beforeunload', function() {
+            return 'Ujian sedang berlangsung. Yakin ingin keluar?';
+        });
 
-        // Update navbar on scroll
-        $(window).scroll(function() {
-            if ($(window).scrollTop() > 50) {
-                $('.navbar').addClass('bg-dark');
-            } else {
-                $('.navbar').removeClass('bg-dark');
-            }
+        // Prevent right click
+        $(document).on('contextmenu', function() {
+            return false;
         });
     </script>
 </body>
