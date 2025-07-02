@@ -3,201 +3,574 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CRUD Data Latihan</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <title>Dynamic Table Manager</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .table-selector {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border: 2px solid #e9ecef;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        input, select, button {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        input:focus, select:focus {
+            border-color: #667eea;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .btn-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .records-section {
+            margin-top: 30px;
+        }
+        
+        .record-form {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 2px solid #e9ecef;
+        }
+        
+        .field-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .records-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .records-table th, .records-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .records-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: bold;
+        }
+        
+        .records-table tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .action-btn {
+            padding: 5px 10px;
+            margin: 2px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .edit-btn { background: #28a745; color: white; }
+        .delete-btn { background: #dc3545; color: white; }
+        
+        .status {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        
+        .current-table {
+            font-size: 18px;
+            font-weight: bold;
+            color: #667eea;
+            text-align: center;
+            margin: 20px 0;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+    </style>
 </head>
 <body>
-    <div class="container mt-4">
-        <h2>CRUD Data Latihan</h2>
+    <div class="container">
+        <h1>🗄️ Dynamic Table Manager</h1>
         
-        <!-- Form Input -->
-        <div class="card mb-4">
-            <div class="card-body">
-                <form id="dataForm">
-                    <input type="hidden" id="editId">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <input type="text" class="form-control" id="name" placeholder="Nama" required>
-                        </div>
-                        <div class="col-md-4">
-                            <input type="email" class="form-control" id="email" placeholder="Email" required>
-                        </div>
-                        <div class="col-md-4">
-                            <input type="text" class="form-control" id="message" placeholder="Pesan" required>
-                        </div>
-                    </div>
-                    <div class="mt-3">
-                        <button type="submit" id="submitBtn" class="btn btn-primary">Tambah Data</button>
-                        <button type="button" id="cancelBtn" class="btn btn-secondary d-none">Batal</button>
-                    </div>
-                </form>
+        <!-- Table Selection -->
+        <div class="table-selector">
+            <h3>Select Table</h3>
+            <div class="form-group">
+                <label for="tableName">Table Name:</label>
+                <select id="tableName">
+                    <option value="contacts">contacts</option>
+                    <option value="students">students</option>
+                    <option value="products">products</option>
+                    <option value="employees">employees</option>
+                    <option value="customers">customers</option>
+                    <option value="latihan">latihan</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="customTable">Or enter custom table name:</label>
+                <input type="text" id="customTable" placeholder="Enter table name...">
+            </div>
+            
+            <button onclick="setCurrentTable()">Set Current Table</button>
+        </div>
+        
+        <div class="current-table" id="currentTableDisplay">
+            Current Table: contacts
+        </div>
+        
+        <!-- Action Buttons -->
+        <div class="btn-group">
+            <button onclick="loadRecords()">📋 Load Records</button>
+            <button onclick="toggleAddForm()">➕ Add Record</button>
+            <button onclick="clearAll()">🗑️ Clear All</button>
+        </div>
+        
+        <!-- Add/Edit Form -->
+        <div class="record-form" id="recordForm" style="display: none;">
+            <h3 id="formTitle">Add New Record</h3>
+            <div class="field-grid" id="fieldGrid">
+                <!-- Fields will be generated dynamically -->
+            </div>
+            <div class="btn-group">
+                <button onclick="saveRecord()" id="saveBtn">💾 Save Record</button>
+                <button onclick="cancelEdit()">❌ Cancel</button>
             </div>
         </div>
-
-        <!-- Data Table -->
-        <div class="card">
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Nama</th>
-                                <th>Email</th>
-                                <th>Pesan</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody id="dataTable">
-                            <!-- Data akan dimuat di sini -->
-                        </tbody>
-                    </table>
-                </div>
+        
+        <!-- Status Messages -->
+        <div id="statusMessages"></div>
+        
+        <!-- Records Table -->
+        <div class="records-section">
+            <h3>Records</h3>
+            <div id="recordsContainer">
+                <p>Click "Load Records" to display data from the current table.</p>
             </div>
         </div>
     </div>
 
     <script>
-        const TABLE_NAME = 'data_latihan'; // Nama tabel yang akan di-CRUD
-        const API_BASE = '/api/contacts'; // Endpoint API yang dinamis
-        let editMode = false;
+        let currentTable = 'contacts';
+        let editingId = null;
+        const apiBase = '/api/contacts';
 
-        // Load data saat halaman dimuat
-        $(document).ready(function() {
-            loadData();
-        });
-
-        // Load semua data
-        function loadData() {
-            $.ajax({
-                url: API_BASE,
-                method: 'GET',
-                headers: {
-                    'X-Table-Name': TABLE_NAME
-                }
-            })
-                .done(function(data) {
-                    let html = '';
-                    data.forEach(function(item) {
-                        html += `
-                            <tr>
-                                <td>${item.id}</td>
-                                <td>${item.name}</td>
-                                <td>${item.email}</td>
-                                <td>${item.message}</td>
-                                <td>
-                                    <button class="btn btn-sm btn-warning" onclick="editData(${item.id}, '${item.name}', '${item.email}', '${item.message}')">Edit</button>
-                                    <button class="btn btn-sm btn-danger" onclick="deleteData(${item.id})">Hapus</button>
-                                </td>
-                            </tr>
-                        `;
-                    });
-                    $('#dataTable').html(html);
-                })
-                .fail(function() {
-                    alert('Gagal memuat data');
-                });
-        }
-
-        // Submit form (Create/Update)
-        $('#dataForm').submit(function(e) {
-            e.preventDefault();
+        // Set current table
+        function setCurrentTable() {
+            const selectValue = document.getElementById('tableName').value;
+            const customValue = document.getElementById('customTable').value.trim();
             
-            const data = {
-                name: $('#name').val(),
-                email: $('#email').val(),
-                message: $('#message').val(),
-                table: TABLE_NAME
-            };
-
-            if (editMode) {
-                // Update
-                const id = $('#editId').val();
-                $.ajax({
-                    url: `${API_BASE}/${id}`,
-                    method: 'PUT',
-                    contentType: 'application/json',
-                    headers: {
-                        'X-Table-Name': TABLE_NAME
-                    },
-                    data: JSON.stringify(data)
-                })
-                .done(function() {
-                    alert('Data berhasil diupdate');
-                    resetForm();
-                    loadData();
-                })
-                .fail(function() {
-                    alert('Gagal mengupdate data');
-                });
-            } else {
-                // Create
-                $.ajax({
-                    url: API_BASE,
-                    method: 'POST',
-                    contentType: 'application/json',
-                    headers: {
-                        'X-Table-Name': TABLE_NAME
-                    },
-                    data: JSON.stringify(data)
-                })
-                .done(function() {
-                    alert('Data berhasil ditambahkan');
-                    resetForm();
-                    loadData();
-                })
-                .fail(function() {
-                    alert('Gagal menambahkan data');
-                });
-            }
-        });
-
-        // Edit data
-        function editData(id, name, email, message) {
-            editMode = true;
-            $('#editId').val(id);
-            $('#name').val(name);
-            $('#email').val(email);
-            $('#message').val(message);
-            $('#submitBtn').text('Update Data').removeClass('btn-primary').addClass('btn-warning');
-            $('#cancelBtn').removeClass('d-none');
+            currentTable = customValue || selectValue;
+            
+            document.getElementById('currentTableDisplay').textContent = `Current Table: ${currentTable}`;
+            document.getElementById('customTable').value = '';
+            
+            showStatus(`Switched to table: ${currentTable}`, 'info');
+            
+            // Hide form and clear records when switching tables
+            document.getElementById('recordForm').style.display = 'none';
+            document.getElementById('recordsContainer').innerHTML = '<p>Click "Load Records" to display data from the new table.</p>';
         }
 
-        // Delete data
-        function deleteData(id) {
-            if (confirm('Yakin ingin menghapus data ini?')) {
-                $.ajax({
-                    url: `${API_BASE}/${id}`,
-                    method: 'DELETE',
-                    headers: {
-                        'X-Table-Name': TABLE_NAME
-                    }
-                })
-                .done(function() {
-                    alert('Data berhasil dihapus');
-                    loadData();
-                })
-                .fail(function() {
-                    alert('Gagal menghapus data');
-                });
+        // Generate form fields (x_01 to x_20)
+        function generateFormFields() {
+            const fieldGrid = document.getElementById('fieldGrid');
+            fieldGrid.innerHTML = '';
+            
+            for (let i = 1; i <= 20; i++) {
+                const colNum = i.toString().padStart(2, '0');
+                const colName = `x_${colNum}`;
+                
+                const div = document.createElement('div');
+                div.className = 'form-group';
+                div.innerHTML = `
+                    <label for="${colName}">Field ${colNum}:</label>
+                    <input type="text" id="${colName}" name="${colName}" placeholder="Enter ${colName}...">
+                `;
+                fieldGrid.appendChild(div);
+            }
+        }
+
+        // Show/hide add form
+        function toggleAddForm() {
+            const form = document.getElementById('recordForm');
+            const isVisible = form.style.display !== 'none';
+            
+            if (isVisible) {
+                form.style.display = 'none';
+            } else {
+                generateFormFields();
+                clearForm();
+                editingId = null;
+                document.getElementById('formTitle').textContent = 'Add New Record';
+                document.getElementById('saveBtn').textContent = '💾 Save Record';
+                form.style.display = 'block';
+            }
+        }
+
+        // Clear form
+        function clearForm() {
+            for (let i = 1; i <= 20; i++) {
+                const colNum = i.toString().padStart(2, '0');
+                const field = document.getElementById(`x_${colNum}`);
+                if (field) field.value = '';
             }
         }
 
         // Cancel edit
-        $('#cancelBtn').click(function() {
-            resetForm();
-        });
-
-        // Reset form
-        function resetForm() {
-            editMode = false;
-            $('#dataForm')[0].reset();
-            $('#editId').val('');
-            $('#submitBtn').text('Tambah Data').removeClass('btn-warning').addClass('btn-primary');
-            $('#cancelBtn').addClass('d-none');
+        function cancelEdit() {
+            document.getElementById('recordForm').style.display = 'none';
+            editingId = null;
+            clearForm();
         }
+
+        // Show status message
+        function showStatus(message, type) {
+            const container = document.getElementById('statusMessages');
+            const div = document.createElement('div');
+            div.className = `status ${type}`;
+            div.textContent = message;
+            container.appendChild(div);
+            
+            setTimeout(() => {
+                div.remove();
+            }, 5000);
+        }
+
+        // Make API request with table parameter
+        async function makeApiRequest(endpoint, options = {}) {
+            const url = new URL(endpoint, window.location.origin);
+            url.searchParams.set('table', currentTable);
+            
+            const defaultOptions = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Table-Name': currentTable
+                }
+            };
+            
+            const mergedOptions = {
+                ...defaultOptions,
+                ...options,
+                headers: {
+                    ...defaultOptions.headers,
+                    ...options.headers
+                }
+            };
+            
+            return fetch(url.toString(), mergedOptions);
+        }
+
+        // Load all records
+        async function loadRecords() {
+            try {
+                showStatus(`Loading records from table: ${currentTable}...`, 'info');
+                
+                const response = await makeApiRequest(apiBase);
+                const result = await response.json();
+                
+                if (result.success) {
+                    displayRecords(result.data);
+                    showStatus(`Loaded ${result.count} records from ${result.table}`, 'success');
+                } else {
+                    throw new Error(result.error || 'Failed to load records');
+                }
+            } catch (error) {
+                console.error('Load error:', error);
+                showStatus(`Error loading records: ${error.message}`, 'error');
+                document.getElementById('recordsContainer').innerHTML = '<p>Error loading records. Check console for details.</p>';
+            }
+        }
+
+        // Display records in table
+        function displayRecords(records) {
+            const container = document.getElementById('recordsContainer');
+            
+            if (!records || records.length === 0) {
+                container.innerHTML = `<p>No records found in table "${currentTable}".</p>`;
+                return;
+            }
+            
+            // Create table
+            let html = `
+                <table class="records-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+            `;
+            
+            // Add column headers for x_01 to x_20
+            for (let i = 1; i <= 20; i++) {
+                const colNum = i.toString().padStart(2, '0');
+                html += `<th>x_${colNum}</th>`;
+            }
+            
+            html += `
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            // Add rows
+            records.forEach(record => {
+                html += `
+                    <tr>
+                        <td>${record.id_x}</td>
+                `;
+                
+                // Add data columns
+                for (let i = 1; i <= 20; i++) {
+                    const colNum = i.toString().padStart(2, '0');
+                    const colName = `x_${colNum}`;
+                    const value = record[colName] || '';
+                    html += `<td>${escapeHtml(value)}</td>`;
+                }
+                
+                html += `
+                        <td>
+                            <button class="action-btn edit-btn" onclick="editRecord(${record.id_x})">Edit</button>
+                            <button class="action-btn delete-btn" onclick="deleteRecord(${record.id_x})">Delete</button>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            html += `
+                    </tbody>
+                </table>
+            `;
+            
+            container.innerHTML = html;
+        }
+
+        // Escape HTML to prevent XSS
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Save record (create or update)
+        async function saveRecord() {
+            try {
+                // Collect form data
+                const data = {};
+                let hasData = false;
+                
+                for (let i = 1; i <= 20; i++) {
+                    const colNum = i.toString().padStart(2, '0');
+                    const colName = `x_${colNum}`;
+                    const field = document.getElementById(colName);
+                    
+                    if (field && field.value.trim()) {
+                        data[colName] = field.value.trim();
+                        hasData = true;
+                    }
+                }
+                
+                if (!hasData) {
+                    showStatus('Please enter at least one field', 'error');
+                    return;
+                }
+                
+                let response;
+                if (editingId) {
+                    // Update existing record
+                    showStatus(`Updating record ${editingId} in table ${currentTable}...`, 'info');
+                    response = await makeApiRequest(`${apiBase}/${editingId}`, {
+                        method: 'PUT',
+                        body: JSON.stringify(data)
+                    });
+                } else {
+                    // Create new record
+                    showStatus(`Creating new record in table ${currentTable}...`, 'info');
+                    response = await makeApiRequest(apiBase, {
+                        method: 'POST',
+                        body: JSON.stringify(data)
+                    });
+                }
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    const action = editingId ? 'updated' : 'created';
+                    showStatus(`Record ${action} successfully in ${result.table}!`, 'success');
+                    cancelEdit();
+                    loadRecords(); // Reload the table
+                } else {
+                    throw new Error(result.error || 'Failed to save record');
+                }
+                
+            } catch (error) {
+                console.error('Save error:', error);
+                showStatus(`Error saving record: ${error.message}`, 'error');
+            }
+        }
+
+        // Edit record
+        async function editRecord(id) {
+            try {
+                showStatus(`Loading record ${id} for editing...`, 'info');
+                
+                const response = await makeApiRequest(`${apiBase}/${id}`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    // Populate form with existing data
+                    generateFormFields();
+                    
+                    const record = result.data;
+                    for (let i = 1; i <= 20; i++) {
+                        const colNum = i.toString().padStart(2, '0');
+                        const colName = `x_${colNum}`;
+                        const field = document.getElementById(colName);
+                        
+                        if (field && record[colName]) {
+                            field.value = record[colName];
+                        }
+                    }
+                    
+                    editingId = id;
+                    document.getElementById('formTitle').textContent = `Edit Record ${id}`;
+                    document.getElementById('saveBtn').textContent = '💾 Update Record';
+                    document.getElementById('recordForm').style.display = 'block';
+                    
+                    showStatus(`Editing record ${id} from ${result.table}`, 'info');
+                } else {
+                    throw new Error(result.error || 'Failed to load record');
+                }
+                
+            } catch (error) {
+                console.error('Edit error:', error);
+                showStatus(`Error loading record: ${error.message}`, 'error');
+            }
+        }
+
+        // Delete record
+        async function deleteRecord(id) {
+            if (!confirm(`Are you sure you want to delete record ${id} from table "${currentTable}"?`)) {
+                return;
+            }
+            
+            try {
+                showStatus(`Deleting record ${id} from table ${currentTable}...`, 'info');
+                
+                const response = await makeApiRequest(`${apiBase}/${id}`, {
+                    method: 'DELETE'
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showStatus(`Record ${id} deleted successfully from ${result.table}!`, 'success');
+                    loadRecords(); // Reload the table
+                } else {
+                    throw new Error(result.error || 'Failed to delete record');
+                }
+                
+            } catch (error) {
+                console.error('Delete error:', error);
+                showStatus(`Error deleting record: ${error.message}`, 'error');
+            }
+        }
+
+        // Clear all data
+        function clearAll() {
+            document.getElementById('recordsContainer').innerHTML = '<p>Click "Load Records" to display data from the current table.</p>';
+            document.getElementById('recordForm').style.display = 'none';
+            editingId = null;
+            clearForm();
+            showStatus('Display cleared', 'info');
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            generateFormFields();
+            setCurrentTable();
+            showStatus('Dynamic Table Manager loaded successfully!', 'success');
+        });
     </script>
 </body>
 </html>
