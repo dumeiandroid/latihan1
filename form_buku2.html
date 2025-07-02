@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Konsultasi - Penerbit LIdan</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .consultation-wrapper {
+            background: #1a1a2e;
+            padding: 80px 0;
+            position: relative;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .consultation-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 50%, #16213e 0%, transparent 50%), 
+                        radial-gradient(circle at 80% 20%, #0f3460 0%, transparent 50%),
+                        radial-gradient(circle at 40% 80%, #533483 0%, transparent 50%);
+            opacity: 0.4;
+        }
+        .floating-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+        }
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #00d4ff;
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: float 6s ease-in-out infinite;
+        }
+        .particle:nth-child(1) { top: 20%; left: 20%; animation-delay: 0s; }
+        .particle:nth-child(2) { top: 60%; left: 80%; animation-delay: 2s; }
+        .particle:nth-child(3) { top: 80%; left: 40%; animation-delay: 4s; }
+        .particle:nth-child(4) { top: 40%; left: 70%; animation-delay: 1s; }
+        .particle:nth-child(5) { top: 30%; left: 10%; animation-delay: 3s; }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            33% { transform: translateY(-20px) rotate(120deg); }
+            66% { transform: translateY(10px) rotate(240deg); }
+        }
+        
+        .main-title {
+            color: #ffffff;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            margin-bottom: 50px;
+        }
+        .main-title h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        .main-title .subtitle {
+            font-size: 1.1rem;
+            color: #b8c5d6;
+            font-weight: 300;
+        }
+        
+        .form-card {
+            background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+            border-radius: 25px;
+            padding: 50px 40px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15),
+                        0 0 0 1px rgba(255,255,255,0.1);
+            position: relative;
+            z-index: 2;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .form-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .form-header h3 {
+            color: #2c3e50;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .form-header p {
+            color: #6c757d;
+            margin: 0;
+        }
+        
+        .input-group-custom {
+            position: relative;
+            margin-bottom: 25px;
+        }
+        .input-group-custom label {
+            color: #495057;
+            font-weight: 500;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+        .input-group-custom label i {
+            width: 20px;
+            color: #0d6efd;
+        }
+        
+        .form-control-modern {
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 15px 20px;
+            font-size: 16px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: #ffffff;
+        }
+        .form-control-modern:focus {
+            border-color: #0d6efd;
+            box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .select-modern {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 12px center;
+            background-repeat: no-repeat;
+            background-size: 16px;
+            padding-right: 50px;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            padding: 18px 40px;
+            border-radius: 50px;
+            color: white;
+            font-weight: 600;
+            font-size: 18px;
+            width: 100%;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+            color: white;
+        }
+        .submit-btn:disabled {
+            opacity: 0.7;
+            transform: none;
+        }
+        
+        .btn-loading {
+            display: none;
+        }
+        
+        .alert-modern {
+            border: none;
+            border-radius: 15px;
+            padding: 20px 25px;
+            margin-top: 25px;
+            font-weight: 500;
+        }
+        .alert-success {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+        .alert-danger {
+            background: linear-gradient(135deg, #f8d7da 0%, #f1aeb5 100%);
+            color: #721c24;
+            border-left: 4px solid #dc3545;
+        }
+        
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .consultation-wrapper { padding: 60px 0; }
+            .form-card { padding: 30px 20px; }
+            .main-title h2 { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+    <section class="consultation-wrapper">
+        <div class="floating-particles">
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+        </div>
+        
+        <div class="container">
+            <div class="main-title">
+                <h2><i class="fas fa-brain me-3"></i>Konsultasi Psikologi & Self Development</h2>
+                <p class="subtitle">Penerbit LIdan - Temukan jawaban untuk pertumbuhan mental dan spiritual Anda</p>
+            </div>
+            
+            <div class="row justify-content-center">
+                <div class="col-lg-8 col-xl-7">
+                    <div class="form-card">
+                        <div class="form-header">
+                            <h3><i class="fas fa-comments text-primary me-2"></i>Mulai Konsultasi Anda</h3>
+                            <p>Dapatkan panduan personal dari ahli psikologi dan pengembangan diri</p>
+                        </div>
+                        
+                        <form id="consultationForm">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="input-group-custom">
+                                        <label for="x_01"><i class="fas fa-user-circle me-2"></i>Nama Lengkap *</label>
+                                        <input type="text" class="form-control form-control-modern" id="x_01" name="x_01" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="input-group-custom">
+                                        <label for="x_02"><i class="fas fa-at me-2"></i>Alamat Email *</label>
+                                        <input type="email" class="form-control form-control-modern" id="x_02" name="x_02" required>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="input-group-custom">
+                                        <label for="x_03"><i class="fab fa-whatsapp me-2"></i>WhatsApp</label>
+                                        <input type="tel" class="form-control form-control-modern" id="x_03" name="x_03" placeholder="08xxxxxxxxxx">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="input-group-custom">
+                                        <label for="x_04"><i class="fas fa-layer-group me-2"></i>Area Konsultasi</label>
+                                        <select class="form-control form-control-modern select-modern" id="x_04" name="x_04">
+                                            <option value="">-- Pilih Area --</option>
+                                            <option value="Anxiety & Stress">Kecemasan & Stres</option>
+                                            <option value="Self Confidence">Kepercayaan Diri</option>
+                                            <option value="Relationship">Hubungan & Komunikasi</option>
+                                            <option value="Career Development">Pengembangan Karir</option>
+                                            <option value="Mental Wellness">Kesejahteraan Mental</option>
+                                            <option value="Parenting">Parenting & Keluarga</option>
+                                            <option value="Personal Growth">Pertumbuhan Personal</option>
+                                            <option value="Spiritual Development">Pengembangan Spiritual</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="input-group-custom">
+                                <label for="x_05"><i class="fas fa-bookmark me-2"></i>Referensi Buku LIdan (Opsional)</label>
+                                <input type="text" class="form-control form-control-modern" id="x_05" name="x_05" placeholder="Tuliskan judul buku yang Anda baca atau tertarik">
+                            </div>
+                            
+                            <div class="input-group-custom">
+                                <label for="x_06"><i class="fas fa-pen-alt me-2"></i>Detail Konsultasi *</label>
+                                <textarea class="form-control form-control-modern" id="x_06" name="x_06" rows="5" required placeholder="Ceritakan situasi, tantangan, atau pertanyaan yang ingin Anda konsultasikan. Semakin detail, semakin baik panduan yang bisa kami berikan..."></textarea>
+                            </div>
+                            
+                            <input type="hidden" id="x_07" name="x_07">
+                            
+                            <button type="submit" class="submit-btn">
+                                <span class="btn-text">
+                                    <i class="fas fa-rocket me-2"></i>Kirim Konsultasi
+                                </span>
+                                <span class="btn-loading">
+                                    <i class="fas fa-spinner fa-spin me-2"></i>Memproses...
+                                </span>
+                            </button>
+                        </form>
+                        
+                        <div id="responseAlert"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Set initial timestamp
+            $('#x_07').val(new Date().toISOString());
+            
+            // Form submission
+            $('#consultationForm').on('submit', function(e) {
+                e.preventDefault();
+                
+                // Update timestamp
+                $('#x_07').val(new Date().toISOString());
+                
+                // Toggle loading state
+                $('.btn-text').hide();
+                $('.btn-loading').show();
+                $(this).find('button[type="submit"]').prop('disabled', true);
+                
+                // Prepare data
+                const formData = {
+                    x_01: $('#x_01').val().trim(),
+                    x_02: $('#x_02').val().trim(),
+                    x_03: $('#x_03').val().trim(),
+                    x_04: $('#x_04').val(),
+                    x_05: $('#x_05').val().trim(),
+                    x_06: $('#x_06').val().trim(),
+                    x_07: $('#x_07').val()
+                };
+                
+                // API submission
+                $.ajax({
+                    url: '/api/contacts',
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Table-Name': 'lidan_consultations'
+                    },
+                    data: JSON.stringify(formData),
+                    success: function(response) {
+                        $('#responseAlert').html(`
+                            <div class="alert alert-success alert-modern alert-dismissible fade show" role="alert">
+                                <i class="fas fa-check-circle me-2"></i>
+                                <strong>Konsultasi Berhasil Dikirim!</strong><br>
+                                Tim ahli LIdan akan merespons dalam 24-48 jam ke email Anda. 
+                                Terima kasih telah mempercayai kami untuk mendampingi perjalanan pengembangan diri Anda.
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        `);
+                        $('#consultationForm')[0].reset();
+                        
+                        // Smooth scroll to alert
+                        $('html, body').animate({
+                            scrollTop: $('#responseAlert').offset().top - 100
+                        }, 800);
+                    },
+                    error: function(xhr, status, error) {
+                        let errorMessage = 'Terjadi kendala teknis. Mohon coba beberapa saat lagi.';
+                        
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            errorMessage = xhr.responseJSON.message;
+                        } else if (xhr.status === 0) {
+                            errorMessage = 'Koneksi internet bermasalah. Periksa koneksi Anda.';
+                        }
+                        
+                        $('#responseAlert').html(`
+                            <div class="alert alert-danger alert-modern alert-dismissible fade show" role="alert">
+                                <i class="fas fa-exclamation-circle me-2"></i>
+                                <strong>Oops! Ada Kendala</strong><br>
+                                ${errorMessage}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        `);
+                    },
+                    complete: function() {
+                        $('.btn-text').show();
+                        $('.btn-loading').hide();
+                        $('#consultationForm').find('button[type="submit"]').prop('disabled', false);
+                    }
+                });
+            });
+            
+            // Enhanced form interactions
+            $('.form-control-modern').on('focus', function() {
+                $(this).parent().addClass('focused');
+            }).on('blur', function() {
+                $(this).parent().removeClass('focused');
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Konsultasi Konten Buku - Penerbit LIdan</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .book-section {
+            background: linear-gradient(to bottom, #f8f9fa 0%, #e9ecef 100%);
+            padding: 4rem 0;
+        }
+        .card-header {
+            background: linear-gradient(135deg, #0d6efd 0%, #6610f2 100%);
+            border: none;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: #0d6efd;
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #0d6efd 0%, #6610f2 100%);
+            border: none;
+        }
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #0b5ed7 0%, #520dc2 100%);
+        }
+        .spinner-border-sm {
+            width: 1rem;
+            height: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <section class="book-section">
+        <div class="container">
+            <div class="row justify-content-center mb-5">
+                <div class="col-lg-8 text-center">
+                    <h2 class="display-5 fw-bold text-dark mb-3">
+                        <i class="fas fa-book-reader text-primary me-3"></i>
+                        Konsultasi Konten Buku Psikologi
+                    </h2>
+                    <p class="lead text-muted">
+                        Penerbit LIdan - Dapatkan panduan mendalam tentang konten buku psikologi dan pengembangan diri
+                    </p>
+                </div>
+            </div>
+            
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="card shadow-lg border-0">
+                        <div class="card-header text-white text-center py-4">
+                            <h4 class="card-title mb-2">
+                                <i class="fas fa-comments me-2"></i>
+                                Form Konsultasi Konten Buku
+                            </h4>
+                            <p class="card-text mb-0">Tanyakan tentang isi, aplikasi, dan rekomendasi buku</p>
+                        </div>
+                        
+                        <div class="card-body p-4">
+                            <form id="consultationForm">
+                                <!-- Informasi Personal -->
+                                <div class="mb-4">
+                                    <h6 class="text-primary fw-bold mb-3">
+                                        <i class="fas fa-user me-2"></i>Informasi Personal
+                                    </h6>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="x_01" class="form-label">
+                                                <i class="fas fa-id-card me-2 text-primary"></i>Nama Lengkap *
+                                            </label>
+                                            <input type="text" class="form-control form-control-lg" id="x_01" name="x_01" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="x_02" class="form-label">
+                                                <i class="fas fa-envelope me-2 text-primary"></i>Email *
+                                            </label>
+                                            <input type="email" class="form-control form-control-lg" id="x_02" name="x_02" required>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="x_03" class="form-label">
+                                                <i class="fab fa-whatsapp me-2 text-success"></i>WhatsApp
+                                            </label>
+                                            <input type="tel" class="form-control form-control-lg" id="x_03" name="x_03" placeholder="08xxxxxxxxxx">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="x_04" class="form-label">
+                                                <i class="fas fa-graduation-cap me-2 text-primary"></i>Latar Belakang
+                                            </label>
+                                            <select class="form-select form-select-lg" id="x_04" name="x_04">
+                                                <option value="">Pilih latar belakang...</option>
+                                                <option value="Mahasiswa Psikologi">Mahasiswa Psikologi</option>
+                                                <option value="Praktisi Psikologi">Praktisi Psikologi</option>
+                                                <option value="Konselor">Konselor</option>
+                                                <option value="Guru/Pendidik">Guru/Pendidik</option>
+                                                <option value="Coach">Life Coach/Business Coach</option>
+                                                <option value="Pekerja">Pekerja Profesional</option>
+                                                <option value="Ibu Rumah Tangga">Ibu Rumah Tangga</option>
+                                                <option value="Pelajar">Pelajar/Siswa</option>
+                                                <option value="Lainnya">Lainnya</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Konsultasi Konten Buku -->
+                                <div class="mb-4">
+                                    <h6 class="text-primary fw-bold mb-3">
+                                        <i class="fas fa-book-open me-2"></i>Konsultasi Konten Buku
+                                    </h6>
+                                    <div class="mb-3">
+                                        <label for="x_05" class="form-label">
+                                            <i class="fas fa-bookmark me-2 text-warning"></i>Judul Buku yang Ingin Dikonsultasikan
+                                        </label>
+                                        <input type="text" class="form-control form-control-lg" id="x_05" name="x_05" 
+                                               placeholder="Contoh: Terapi Kognitif Perilaku untuk Kecemasan">
+                                        <div class="form-text">
+                                            <small class="text-muted">
+                                                <i class="fas fa-info-circle me-1"></i>
+                                                Sebutkan judul buku LIdan yang sudah dibaca atau ingin dipahami lebih dalam
+                                            </small>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="x_06" class="form-label">
+                                            <i class="fas fa-question-circle me-2 text-info"></i>Pertanyaan tentang Konten Buku *
+                                        </label>
+                                        <textarea class="form-control" id="x_06" name="x_06" rows="6" required
+                                                  placeholder="Contoh pertanyaan:
+• Bagaimana cara mengaplikasikan teknik CBT dari buku ini dalam kehidupan sehari-hari?
+• Apakah ada studi kasus spesifik yang bisa membantu memahami konsep mindfulness?
+• Bagaimana cara mengatasi resistensi klien saat menerapkan terapi dari buku ini?
+• Adakah rekomendasi buku lanjutan yang sejalan dengan topik ini?"></textarea>
+                                        <div class="form-text">
+                                            <small class="text-muted">
+                                                <i class="fas fa-lightbulb me-1"></i>
+                                                Jelaskan secara detail: konsep yang ingin dipahami, cara aplikasi, studi kasus, atau rekomendasi buku sejenis
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <input type="hidden" id="x_07" name="x_07">
+                                
+                                <!-- Submit Button -->
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary btn-lg py-3">
+                                        <span class="submit-text">
+                                            <i class="fas fa-paper-plane me-2"></i>
+                                            Kirim Konsultasi Konten Buku
+                                        </span>
+                                        <span class="loading-text d-none">
+                                            <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                                            Mengirim Konsultasi...
+                                        </span>
+                                    </button>
+                                </div>
+                            </form>
+                            
+                            <div id="responseAlert" class="mt-4"></div>
+                        </div>
+                        
+                        <div class="card-footer bg-light text-center">
+                            <small class="text-muted">
+                                <i class="fas fa-clock me-1"></i>
+                                Tim ahli konten LIdan akan merespons dalam 1-2 hari kerja
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Info Cards -->
+            <div class="row mt-5">
+                <div class="col-md-4 mb-3">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <i class="fas fa-brain fa-2x text-primary mb-3"></i>
+                            <h6 class="card-title">Analisis Konten</h6>
+                            <p class="card-text small text-muted">Pembahasan mendalam tentang konsep psikologi dalam buku</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <i class="fas fa-tools fa-2x text-success mb-3"></i>
+                            <h6 class="card-title">Panduan Aplikasi</h6>
+                            <p class="card-text small text-muted">Cara praktis menerapkan teori dalam kehidupan nyata</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <i class="fas fa-books fa-2x text-warning mb-3"></i>
+                            <h6 class="card-title">Rekomendasi</h6>
+                            <p class="card-text small text-muted">Saran buku lanjutan sesuai minat dan kebutuhan</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Set timestamp
+            $('#x_07').val(new Date().toISOString());
+            
+            // Form submission
+            $('#consultationForm').on('submit', function(e) {
+                e.preventDefault();
+                
+                // Update timestamp
+                $('#x_07').val(new Date().toISOString());
+                
+                // Show loading state
+                $('.submit-text').addClass('d-none');
+                $('.loading-text').removeClass('d-none');
+                $(this).find('button[type="submit"]').prop('disabled', true);
+                
+                // Collect form data
+                const formData = {
+                    x_01: $('#x_01').val().trim(),
+                    x_02: $('#x_02').val().trim(),
+                    x_03: $('#x_03').val().trim(),
+                    x_04: $('#x_04').val(),
+                    x_05: $('#x_05').val().trim(),
+                    x_06: $('#x_06').val().trim(),
+                    x_07: $('#x_07').val()
+                };
+                
+                // AJAX submission
+                $.ajax({
+                    url: '/api/contacts',
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Table-Name': 'lidan_book_consultations'
+                    },
+                    data: JSON.stringify(formData),
+                    success: function(response) {
+                        $('#responseAlert').html(`
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                <h6 class="alert-heading">
+                                    <i class="fas fa-check-circle"></i> Konsultasi Berhasil Dikirim!
+                                </h6>
+                                <p class="mb-0">
+                                    Terima kasih atas konsultasi konten buku Anda. Tim ahli LIdan akan menganalisis 
+                                    pertanyaan Anda dan memberikan panduan komprehensif melalui email dalam 1-2 hari kerja.
+                                </p>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        `);
+                        
+                        // Reset form
+                        $('#consultationForm')[0].reset();
+                        
+                        // Scroll to alert
+                        $('html, body').animate({
+                            scrollTop: $('#responseAlert').offset().top - 100
+                        }, 500);
+                    },
+                    error: function(xhr, status, error) {
+                        let errorMessage = 'Terjadi kesalahan sistem. Mohon coba lagi nanti.';
+                        
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            errorMessage = xhr.responseJSON.message;
+                        }
+                        
+                        $('#responseAlert').html(`
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <h6 class="alert-heading">
+                                    <i class="fas fa-exclamation-triangle"></i> Konsultasi Gagal Dikirim
+                                </h6>
+                                <p class="mb-0">${errorMessage}</p>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        `);
+                    },
+                    complete: function() {
+                        // Reset button state
+                        $('.submit-text').removeClass('d-none');
+                        $('.loading-text').addClass('d-none');
+                        $('#consultationForm').find('button[type="submit"]').prop('disabled', false);
+                    }
+                });
+            });
+            
+            // Bootstrap form validation feedback
+            $('.form-control, .form-select').on('blur', function() {
+                if ($(this).prop('required') && !$(this).val()) {
+                    $(this).addClass('is-invalid');
+                } else {
+                    $(this).removeClass('is-invalid').addClass('is-valid');
+                }
+            });
+            
+            // Remove validation classes on input
+            $('.form-control, .form-select').on('input change', function() {
+                $(this).removeClass('is-invalid is-valid');
+            });
+        });
+    </script>
+</body>
+</html>
