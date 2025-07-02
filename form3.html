@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tes Psikologi Online - Mulai Sekarang</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { background: #f8f9fa; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .hero-section { background: linear-gradient(45deg, #28a745, #20c997); color: white; padding: 60px 0; }
+        .form-container { background: white; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin-top: -50px; position: relative; z-index: 10; }
+        .form-control { border: 1px solid #dee2e6; border-radius: 8px; padding: 12px 15px; }
+        .form-control:focus { border-color: #28a745; box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25); }
+        .btn-success { background: #28a745; border-color: #28a745; border-radius: 8px; padding: 12px 30px; font-weight: 600; }
+        .btn-success:hover { background: #218838; transform: translateY(-1px); }
+        .step-indicator { background: #e9ecef; border-radius: 20px; padding: 8px 16px; font-size: 14px; color: #6c757d; }
+        .required-field::after { content: "*"; color: #dc3545; margin-left: 4px; }
+        .privacy-note { background: #f8f9fa; border-left: 4px solid #28a745; padding: 15px; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <div class="hero-section">
+        <div class="container text-center">
+            <h1 class="display-5 fw-bold mb-3">
+                <i class="fas fa-user-md me-3"></i>Tes Psikologi Online Gratis
+            </h1>
+            <p class="lead mb-0">Kenali kepribadian dan potensi diri Anda hanya dalam 5 menit</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10">
+                <div class="form-container p-5">
+                    <div class="text-center mb-4">
+                        <div class="step-indicator d-inline-block mb-3">
+                            <i class="fas fa-clipboard-check me-2"></i>Langkah 1 dari 2 - Informasi Dasar
+                        </div>
+                        <h3 class="text-dark">Mulai Tes Psikologi Anda</h3>
+                        <p class="text-muted">Isi data di bawah untuk memulai tes kepribadian yang akurat</p>
+                    </div>
+
+                    <form id="visitorForm">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="x_01" class="form-label required-field">Nama Depan</label>
+                                <input type="text" class="form-control" id="x_01" name="x_01" 
+                                       placeholder="Masukkan nama depan Anda" required>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="x_02" class="form-label">Usia</label>
+                                <select class="form-select" id="x_02" name="x_02" required>
+                                    <option value="">Pilih rentang usia</option>
+                                    <option value="16-20">16-20 tahun</option>
+                                    <option value="21-30">21-30 tahun</option>
+                                    <option value="31-40">31-40 tahun</option>
+                                    <option value="41-50">41-50 tahun</option>
+                                    <option value="50+">50+ tahun</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="x_03" class="form-label required-field">Email</label>
+                                <input type="email" class="form-control" id="x_03" name="x_03" 
+                                       placeholder="email@contoh.com" required>
+                                <div class="form-text">Hasil tes akan dikirim ke email ini</div>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="x_04" class="form-label">Status</label>
+                                <select class="form-select" id="x_04" name="x_04" required>
+                                    <option value="">Pilih status Anda</option>
+                                    <option value="pelajar">Pelajar/Mahasiswa</option>
+                                    <option value="pekerja">Pekerja/Karyawan</option>
+                                    <option value="wirausaha">Wirausaha</option>
+                                    <option value="ibu_rumah_tangga">Ibu Rumah Tangga</option>
+                                    <option value="pencari_kerja">Pencari Kerja</option>
+                                    <option value="lainnya">Lainnya</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="x_05" class="form-label">Tujuan Tes</label>
+                                <select class="form-select" id="x_05" name="x_05" required>
+                                    <option value="">Apa tujuan Anda?</option>
+                                    <option value="mengenal_diri">Mengenal Diri Sendiri</option>
+                                    <option value="karir">Pengembangan Karir</option>
+                                    <option value="hubungan">Memperbaiki Hubungan</option>
+                                    <option value="akademik">Keperluan Akademik</option>
+                                    <option value="iseng">Sekedar Ingin Tahu</option>
+                                </select>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="x_06" class="form-label">Dari Mana Anda Tahu?</label>
+                                <select class="form-select" id="x_06" name="x_06">
+                                    <option value="">Pilih sumber informasi</option>
+                                    <option value="google">Pencarian Google</option>
+                                    <option value="sosmed">Media Sosial</option>
+                                    <option value="teman">Rekomendasi Teman</option>
+                                    <option value="iklan">Iklan Online</option>
+                                    <option value="artikel">Artikel/Blog</option>
+                                    <option value="lainnya">Lainnya</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="privacy-note mb-4">
+                            <h6 class="mb-2"><i class="fas fa-shield-alt text-success me-2"></i>Privasi Terjamin</h6>
+                            <small class="text-muted">
+                                Data Anda akan digunakan hanya untuk keperluan tes dan analisis. 
+                                Kami tidak akan membagikan informasi pribadi Anda kepada pihak ketiga.
+                            </small>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="fas fa-play-circle me-2"></i>
+                                Mulai Tes Sekarang - GRATIS!
+                            </button>
+                            <p class="text-center text-muted mt-2 mb-0">
+                                <small><i class="fas fa-clock me-1"></i>Estimasi waktu: 5-10 menit</small>
+                            </p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-5 mb-5">
+        <div class="row text-center">
+            <div class="col-md-4 mb-3">
+                <div class="p-3">
+                    <i class="fas fa-medal text-warning fa-3x mb-3"></i>
+                    <h5>Akurat & Terpercaya</h5>
+                    <p class="text-muted">Menggunakan metode psikologi terkini</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="p-3">
+                    <i class="fas fa-lock text-success fa-3x mb-3"></i>
+                    <h5>100% Privasi</h5>
+                    <p class="text-muted">Data Anda aman dan rahasia</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="p-3">
+                    <i class="fas fa-mobile-alt text-primary fa-3x mb-3"></i>
+                    <h5>Akses Mudah</h5>
+                    <p class="text-muted">Bisa diakses kapan saja, dimana saja</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Form validation and user experience
+            $('.form-control, .form-select').on('input change', function() {
+                if ($(this).val()) {
+                    $(this).addClass('is-valid').removeClass('is-invalid');
+                } else if ($(this).prop('required')) {
+                    $(this).addClass('is-invalid').removeClass('is-valid');
+                }
+            });
+
+            // Track form progress
+            let completedFields = 0;
+            const totalFields = $('input[required], select[required]').length;
+            
+            $('input[required], select[required]').on('input change', function() {
+                completedFields = $('input[required]:valid, select[required]:valid').length;
+                const progress = Math.round((completedFields / totalFields) * 100);
+                
+                if (progress > 0) {
+                    $('.step-indicator').html(`
+                        <i class="fas fa-spinner fa-spin me-2"></i>
+                        Progress: ${progress}% (${completedFields}/${totalFields})
+                    `);
+                }
+                
+                if (progress === 100) {
+                    $('.step-indicator').html(`
+                        <i class="fas fa-check-circle text-success me-2"></i>
+                        Siap untuk memulai tes!
+                    `).removeClass('bg-light').addClass('bg-success text-white');
+                }
+            });
+
+            $('#visitorForm').on('submit', function(e) {
+                e.preventDefault();
+                
+                const submitBtn = $('button[type="submit"]');
+                const originalText = submitBtn.html();
+                
+                // Loading state
+                submitBtn.html('<i class="fas fa-spinner fa-spin me-2"></i>Memproses...');
+                submitBtn.prop('disabled', true);
+                
+                const formData = {
+                    x_01: $('#x_01').val(),
+                    x_02: $('#x_02').val(),
+                    x_03: $('#x_03').val(),
+                    x_04: $('#x_04').val(),
+                    x_05: $('#x_05').val(),
+                    x_06: $('#x_06').val()
+                };
+                
+                // Simulate API submission
+                setTimeout(() => {
+                    $.ajax({
+                        url: '/api/contacts',
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Table-Name': 'psikologi_test'
+                        },
+                        data: JSON.stringify(formData),
+                        success: function(response) {
+                            // Success - redirect to test page
+                            $('.form-container').html(`
+                                <div class="text-center py-5">
+                                    <i class="fas fa-check-circle text-success fa-4x mb-4"></i>
+                                    <h3 class="text-success mb-3">Pendaftaran Berhasil!</h3>
+                                    <p class="text-muted mb-4">
+                                        Selamat datang ${formData.x_01}! Anda akan diarahkan ke halaman tes dalam beberapa detik.
+                                    </p>
+                                    <div class="spinner-border text-success" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                </div>
+                            `);
+                            
+                            // Simulate redirect to test page
+                            setTimeout(() => {
+                                window.location.href = '/tes-psikologi';
+                            }, 3000);
+                        },
+                        error: function() {
+                            alert('Terjadi kesalahan. Silakan refresh halaman dan coba lagi.');
+                            submitBtn.html(originalText);
+                            submitBtn.prop('disabled', false);
+                        }
+                    });
+                }, 1500);
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Konsultasi Psikologi Profesional</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { background: #f5f7fa; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .header-section { background: linear-gradient(135deg, #2c3e50, #3498db); color: white; padding: 80px 0; }
+        .professional-badge { background: rgba(255,255,255,0.1); padding: 8px 20px; border-radius: 50px; display: inline-block; margin-bottom: 20px; }
+        .form-wrapper { background: white; border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.1); padding: 50px; margin-top: -80px; position: relative; z-index: 10; }
+        .form-control, .form-select { border: 2px solid #e8ecf0; border-radius: 12px; padding: 15px 20px; font-size: 16px; transition: all 0.3s ease; }
+        .form-control:focus, .form-select:focus { border-color: #3498db; box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.15); }
+        .btn-primary { background: linear-gradient(135deg, #3498db, #2980b9); border: none; border-radius: 12px; padding: 15px 40px; font-weight: 600; font-size: 16px; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(52, 152, 219, 0.3); }
+        .trust-indicator { background: linear-gradient(135deg, #27ae60, #2ecc71); color: white; padding: 20px; border-radius: 15px; text-align: center; }
+        .price-tag { background: #e74c3c; color: white; padding: 5px 15px; border-radius: 20px; font-size: 14px; font-weight: 600; }
+        .form-label { font-weight: 600; color: #2c3e50; margin-bottom: 8px; }
+        .certification-badge { background: #f39c12; color: white; padding: 10px 15px; border-radius: 8px; font-size: 12px; margin: 5px; display: inline-block; }
+    </style>
+</head>
+<body>
+    <div class="header-section">
+        <div class="container text-center">
+            <div class="professional-badge">
+                <i class="fas fa-certificate me-2"></i>Psikolog Berlisensi & Berpengalaman
+            </div>
+            <h1 class="display-4 fw-bold mb-4">
+                Konsultasi Psikologi Profesional
+            </h1>
+            <p class="lead mb-0">Dapatkan bantuan dari psikolog klinis terpercaya dengan pengalaman 10+ tahun</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-9 col-md-11">
+                <div class="form-wrapper">
+                    <div class="row mb-5">
+                        <div class="col-md-8">
+                            <h3 class="text-primary mb-3">Formulir Konsultasi Klien</h3>
+                            <p class="text-muted">Kami menjaga kerahasiaan informasi Anda sesuai dengan kode etik psikologi Indonesia</p>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <div class="trust-indicator">
+                                <i class="fas fa-shield-alt fa-2x mb-2"></i>
+                                <h6 class="mb-0">100% Terpercaya</h6>
+                                <small>Terakreditasi HIMPSI</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form id="consultationForm">
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <label for="x_01" class="form-label">
+                                    <i class="fas fa-user-circle text-primary me-2"></i>Nama Lengkap Klien
+                                </label>
+                                <input type="text" class="form-control" id="x_01" name="x_01" 
+                                       placeholder="Contoh: Dr. Ahmad Budiman" required>
+                            </div>
+                            
+                            <div class="col-md-6 mb-4">
+                                <label for="x_02" class="form-label">
+                                    <i class="fas fa-phone-alt text-primary me-2"></i>Nomor Telepon Aktif
+                                </label>
+                                <input type="tel" class="form-control" id="x_02" name="x_02" 
+                                       placeholder="+62 812-3456-7890" required>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <label for="x_03" class="form-label">
+                                    <i class="fas fa-envelope text-primary me-2"></i>Email Profesional
+                                </label>
+                                <input type="email" class="form-control" id="x_03" name="x_03" 
+                                       placeholder="nama@perusahaan.com" required>
+                            </div>
+                            
+                            <div class="col-md-6 mb-4">
+                                <label for="x_04" class="form-label">
+                                    <i class="fas fa-briefcase text-primary me-2"></i>Jenis Layanan
+                                </label>
+                                <select class="form-select" id="x_04" name="x_04" required>
+                                    <option value="">Pilih layanan yang dibutuhkan</option>
+                                    <option value="konsultasi_individu">Konsultasi Individu - Rp 500K/sesi</option>
+                                    <option value="konsultasi_keluarga">Konsultasi Keluarga - Rp 750K/sesi</option>
+                                    <option value="asesmen_klinis">Asesmen Klinis Lengkap - Rp 1.2JT</option>
+                                    <option value="terapi_kognitif">Terapi Kognitif Perilaku - Rp 600K/sesi</option>
+                                    <option value="konsultasi_perusahaan">Konsultasi Perusahaan - Rp 2JT/hari</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <label for="x_05" class="form-label">
+                                    <i class="fas fa-calendar-check text-primary me-2"></i>Waktu Konsultasi Preferred
+                                </label>
+                                <input type="datetime-local" class="form-control" id="x_05" name="x_05" required>
+                                <small class="form-text text-muted">Jam operasional: Senin-Jumat 09:00-17:00</small>
+                            </div>
+                            
+                            <div class="col-md-6 mb-4">
+                                <label for="x_06" class="form-label">
+                                    <i class="fas fa-user-md text-primary me-2"></i>Preferensi Psikolog
+                                </label>
+                                <select class="form-select" id="x_06" name="x_06" required>
+                                    <option value="">Pilih psikolog yang diinginkan</option>
+                                    <option value="dr_sarah">Dr. Sarah Wijaya, M.Psi - Klinis Dewasa</option>
+                                    <option value="dr_budi">Dr. Budi Santoso, M.Psi - Klinis Anak</option>
+                                    <option value="dr_maya">Dr. Maya Sari, M.Psi - Konseling Keluarga</option>
+                                    <option value="dr_rini">Dr. Rini Handayani, M.Psi - Psikologi Industri</option>
+                                    <option value="any">Psikolog Manapun yang Tersedia</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12 mb-4">
+                                <div class="card border-primary">
+                                    <div class="card-header bg-primary text-white">
+                                        <h6 class="mb-0"><i class="fas fa-certificate me-2"></i>Kredensial Profesional</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="certification-badge">Lisensi HIMPSI Active</div>
+                                        <div class="certification-badge">Sertifikat Klinis Terakreditasi</div>
+                                        <div class="certification-badge">Member APA International</div>
+                                        <div class="certification-badge">10+ Tahun Pengalaman</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12 mb-4">
+                                <div class="alert alert-info">
+                                    <h6 class="alert-heading">
+                                        <i class="fas fa-info-circle me-2"></i>Informasi Penting
+                                    </h6>
+                                    <hr>
+                                    <p class="mb-0">
+                                        • Konsultasi dilakukan secara tatap muka atau online (Zoom/Teams)<br>
+                                        • Pembayaran dapat dilakukan via transfer bank atau kartu kredit<br>
+                                        • Reschedule maksimal 24 jam sebelum jadwal konsultasi<br>
+                                        • Semua informasi dijamin kerahasiaannya sesuai kode etik profesi
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-3">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-calendar-plus me-2"></i>
+                                Jadwalkan Konsultasi Sekarang
+                            </button>
+                            <div class="text-center">
+                                <small class="text-muted">
+                                    <i class="fas fa-clock me-1"></i>Tim kami akan menghubungi Anda dalam 2-4 jam kerja
+                                </small>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-5 mb-5">
+        <div class="row">
+            <div class="col-md-3 text-center mb-4">
+                <i class="fas fa-award text-warning fa-3x mb-3"></i>
+                <h5>Terakreditasi</h5>
+                <p class="text-muted">Lisensi resmi HIMPSI & Kemkes RI</p>
+            </div>
+            <div class="col-md-3 text-center mb-4">
+                <i class="fas fa-user-shield text-success fa-3x mb-3"></i>
+                <h5>Kerahasiaan Terjamin</h5>
+                <p class="text-muted">Sesuai kode etik psikologi Indonesia</p>
+            </div>
+            <div class="col-md-3 text-center mb-4">
+                <i class="fas fa-medal text-primary fa-3x mb-3"></i>
+                <h5>Berpengalaman</h5>
+                <p class="text-muted">Tim psikolog dengan 10+ tahun praktik</p>
+            </div>
+            <div class="col-md-3 text-center mb-4">
+                <i class="fas fa-headset text-info fa-3x mb-3"></i>
+                <h5>Support 24/7</h5>
+                <p class="text-muted">Tim customer service siap membantu</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Set minimum datetime to business hours
+            const now = new Date();
+            const tomorrow = new Date(now);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            tomorrow.setHours(9, 0, 0, 0);
+            
+            const minDateTime = tomorrow.toISOString().slice(0, 16);
+            $('#x_05').attr('min', minDateTime);
+            
+            // Professional form validation
+            $('.form-control, .form-select').on('blur', function() {
+                const field = $(this);
+                const value = field.val().trim();
+                
+                if (field.prop('required') && !value) {
+                    field.addClass('is-invalid');
+                } else {
+                    field.removeClass('is-invalid').addClass('is-valid');
+                }
+            });
+            
+            // Phone number formatting
+            $('#x_02').on('input', function() {
+                let value = $(this).val().replace(/\D/g, '');
+                if (value.startsWith('62')) {
+                    value = '+' + value;
+                } else if (value.startsWith('0')) {
+                    value = '+62' + value.substring(1);
+                }
+                $(this).val(value);
+            });
+            
+            // Form submission
+            $('#consultationForm').on('submit', function(e) {
+                e.preventDefault();
+                
+                const submitBtn = $('button[type="submit"]');
+                const originalText = submitBtn.html();
+                
+                // Professional loading state
+                submitBtn.html('<i class="fas fa-spinner fa-spin me-2"></i>Memproses Permintaan...');
+                submitBtn.prop('disabled', true);
+                
+                const formData = {
+                    x_01: $('#x_01').val(),
+                    x_02: $('#x_02').val(),
+                    x_03: $('#x_03').val(),
+                    x_04: $('#x_04').val(),
+                    x_05: $('#x_05').val(),
+                    x_06: $('#x_06').val()
+                };
+                
+                // Simulate professional API call
+                setTimeout(() => {
+                    $.ajax({
+                        url: '/api/contacts',
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Table-Name': 'psikologi_test'
+                        },
+                        data: JSON.stringify(formData),
+                        success: function(response) {
+                            $('.form-wrapper').html(`
+                                <div class="text-center py-5">
+                                    <i class="fas fa-check-circle text-success fa-5x mb-4"></i>
+                                    <h2 class="text-success mb-4">Konsultasi Berhasil Dijadwalkan!</h2>
+                                    <div class="alert alert-success">
+                                        <h5><i class="fas fa-calendar-check me-2"></i>Konfirmasi Jadwal</h5>
+                                        <p class="mb-0">
+                                            Terima kasih ${formData.x_01}. Tim profesional kami akan menghubungi Anda 
+                                            dalam 2-4 jam kerja untuk konfirmasi jadwal dan detail pembayaran.
+                                        </p>
+                                    </div>
+                                    <div class="mt-4">
+                                        <h6 class="text-muted">Nomor Referensi: #PSY${Date.now()}</h6>
+                                        <p class="text-muted">Simpan nomor ini untuk referensi konsultasi Anda</p>
+                                    </div>
+                                </div>
+                            `);
+                        },
+                        error: function() {
+                            alert('Terjadi kesalahan sistem. Tim IT kami akan segera memperbaiki. Silakan hubungi customer service untuk bantuan langsung.');
+                            submitBtn.html(originalText);
+                            submitBtn.prop('disabled', false);
+                        }
+                    });
+                }, 2000);
+            });
+        });
+    </script>
+</body>
+</html>

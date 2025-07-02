@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrasi Tes Psikologi</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; }
+        .card { border: none; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
+        .card-header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 20px 20px 0 0; }
+        .form-control, .form-select { border-radius: 10px; border: 2px solid #e9ecef; transition: all 0.3s; }
+        .form-control:focus, .form-select:focus { border-color: #667eea; box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25); }
+        .btn-gradient { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; border-radius: 10px; }
+        .btn-gradient:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3); }
+        .input-group-text { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; }
+        .form-label { font-weight: 600; color: #495057; }
+    </style>
+</head>
+<body>
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-7 col-md-9">
+                <div class="card">
+                    <div class="card-header text-center py-4">
+                        <h3 class="mb-0"><i class="fas fa-brain me-2"></i>Registrasi Tes Psikologi</h3>
+                        <p class="mb-0 mt-2 opacity-75">Mulai perjalanan mengenal diri Anda lebih dalam</p>
+                    </div>
+                    <div class="card-body p-5">
+                        <form id="registrationForm">
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <label for="x_01" class="form-label"><i class="fas fa-user text-primary me-2"></i>Nama Peserta</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                        <input type="text" class="form-control" id="x_01" name="x_01" placeholder="Masukkan nama lengkap Anda" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6 mb-4">
+                                    <label for="x_02" class="form-label"><i class="fas fa-envelope text-primary me-2"></i>Alamat Email</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                        <input type="email" class="form-control" id="x_02" name="x_02" placeholder="contoh@email.com" required>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <label for="x_03" class="form-label"><i class="fas fa-phone text-primary me-2"></i>Nomor WhatsApp</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fab fa-whatsapp"></i></span>
+                                        <input type="tel" class="form-control" id="x_03" name="x_03" placeholder="08xxxxxxxxxx" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6 mb-4">
+                                    <label for="x_04" class="form-label"><i class="fas fa-clipboard-list text-primary me-2"></i>Paket Tes</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-tasks"></i></span>
+                                        <select class="form-select" id="x_04" name="x_04" required>
+                                            <option value="">-- Pilih Paket Tes --</option>
+                                            <option value="basic">Basic - Tes Kepribadian (Rp 150K)</option>
+                                            <option value="standard">Standard - IQ + Kepribadian (Rp 250K)</option>
+                                            <option value="premium">Premium - Lengkap + Konsultasi (Rp 400K)</option>
+                                            <option value="career">Career - Minat Bakat Karir (Rp 300K)</option>
+                                            <option value="clinical">Clinical - Tes Klinis (Rp 500K)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <label for="x_05" class="form-label"><i class="fas fa-calendar-alt text-primary me-2"></i>Waktu Tes</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-clock"></i></span>
+                                        <input type="datetime-local" class="form-control" id="x_05" name="x_05" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6 mb-4">
+                                    <label for="x_06" class="form-label"><i class="fas fa-info-circle text-primary me-2"></i>Referensi Informasi</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-share-alt"></i></span>
+                                        <select class="form-select" id="x_06" name="x_06" required>
+                                            <option value="">Dari mana Anda tahu?</option>
+                                            <option value="instagram">Instagram</option>
+                                            <option value="facebook">Facebook</option>
+                                            <option value="google">Google Search</option>
+                                            <option value="teman">Referensi Teman</option>
+                                            <option value="website">Website Resmi</option>
+                                            <option value="lainnya">Lainnya</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="d-grid gap-3 mt-4">
+                                <button type="submit" class="btn btn-gradient btn-lg py-3">
+                                    <i class="fas fa-paper-plane me-2"></i>Daftar Sekarang
+                                </button>
+                                <button type="reset" class="btn btn-outline-secondary">
+                                    <i class="fas fa-redo me-2"></i>Reset Form
+                                </button>
+                            </div>
+                        </form>
+                        
+                        <div class="text-center mt-4">
+                            <small class="text-muted">
+                                <i class="fas fa-shield-alt me-1"></i>
+                                Data Anda akan dijaga kerahasiaannya sesuai kode etik psikologi
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Set minimum datetime to now
+            const now = new Date();
+            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+            $('#x_05').attr('min', now.toISOString().slice(0, 16));
+            
+            // Animate form elements on load
+            $('.form-control, .form-select').on('focus', function() {
+                $(this).parent().addClass('shadow-sm');
+            }).on('blur', function() {
+                $(this).parent().removeClass('shadow-sm');
+            });
+            
+            $('#registrationForm').on('submit', function(e) {
+                e.preventDefault();
+                
+                // Show loading state
+                const submitBtn = $('button[type="submit"]');
+                const originalText = submitBtn.html();
+                submitBtn.html('<i class="fas fa-spinner fa-spin me-2"></i>Mendaftar...');
+                submitBtn.prop('disabled', true);
+                
+                const formData = {
+                    x_01: $('#x_01').val(),
+                    x_02: $('#x_02').val(),
+                    x_03: $('#x_03').val(),
+                    x_04: $('#x_04').val(),
+                    x_05: $('#x_05').val(),
+                    x_06: $('#x_06').val()
+                };
+                
+                // Simulate API call
+                setTimeout(() => {
+                    $.ajax({
+                        url: '/api/contacts',
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Table-Name': 'psikologi_test'
+                        },
+                        data: JSON.stringify(formData),
+                        success: function(response) {
+                            // Success animation
+                            $('body').prepend(`
+                                <div class="alert alert-success alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3" style="z-index: 9999;">
+                                    <i class="fas fa-check-circle me-2"></i>
+                                    <strong>Berhasil!</strong> Registrasi Anda telah diterima. Tim kami akan menghubungi Anda segera.
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                </div>
+                            `);
+                            $('#registrationForm')[0].reset();
+                            
+                            // Auto hide alert after 5 seconds
+                            setTimeout(() => {
+                                $('.alert').alert('close');
+                            }, 5000);
+                        },
+                        error: function() {
+                            $('body').prepend(`
+                                <div class="alert alert-danger alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3" style="z-index: 9999;">
+                                    <i class="fas fa-exclamation-triangle me-2"></i>
+                                    <strong>Oops!</strong> Terjadi kesalahan sistem. Silakan coba lagi atau hubungi kami.
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                </div>
+                            `);
+                        },
+                        complete: function() {
+                            // Restore button state
+                            submitBtn.html(originalText);
+                            submitBtn.prop('disabled', false);
+                        }
+                    });
+                }, 1000);
+            });
+        });
+    </script>
+</body>
+</html>
