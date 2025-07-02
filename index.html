@@ -1,96 +1,328 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-    <title>Contacts Data</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Services - Solusi Kecerdasan Buatan Terdepan</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        table { border-collapse: collapse; width: 100%; }
-        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
-        th { background-color: #f2f2f2; }
-        .error { color: red; padding: 10px; background: #ffe6e6; margin: 10px 0; }
-        .loading { color: blue; padding: 10px; }
+        .hero-section{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);min-height:100vh;color:white}
+        .service-card{transition:transform 0.3s;border:none;box-shadow:0 4px 15px rgba(0,0,0,0.1)}
+        .service-card:hover{transform:translateY(-10px)}
+        .about-section{background:#f8f9fa}
+        .portfolio-img{height:250px;object-fit:cover}
+        .contact-form{background:white;border-radius:15px;box-shadow:0 10px 30px rgba(0,0,0,0.1)}
+        footer{background:#2c3e50;color:white}
+        .gradient-text{background:linear-gradient(45deg,#667eea,#764ba2);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
     </style>
 </head>
 <body>
-    <h1>Contacts Data</h1>
-    <div id="status" class="loading">Loading contacts...</div>
-    <table border="1">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Message</th>
-                <th>Created At</th>
-            </tr>
-        </thead>
-        <tbody id="contactsTable">
-            <tr><td colspan="5">Loading...</td></tr>
-        </tbody>
-    </table>
+    <!-- Header -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="background:rgba(0,0,0,0.9)">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#"><i class="fas fa-robot"></i> AI Services</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#services">Layanan</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#about">Tentang</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#portfolio">Portfolio</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#testimonials">Testimoni</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#contact">Kontak</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
+    <!-- Section 1: Hero -->
+    <section id="home" class="hero-section d-flex align-items-center">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h1 class="display-4 fw-bold mb-4">Revolusi Digital dengan <span class="text-warning">Kecerdasan Buatan</span></h1>
+                    <p class="lead mb-4">Transformasikan bisnis Anda dengan solusi AI terdepan. Dari chatbot hingga analisis data, kami hadirkan teknologi masa depan untuk kesuksesan Anda.</p>
+                    <button class="btn btn-warning btn-lg me-3">Mulai Sekarang</button>
+                    <button class="btn btn-outline-light btn-lg">Pelajari Lebih</button>
+                </div>
+                <div class="col-lg-6 text-center">
+                    <img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?w=600&h=400&fit=crop&crop=center" alt="AI Technology" class="img-fluid rounded-3 shadow-lg">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 2: Services -->
+    <section id="services" class="py-5">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="display-5 fw-bold gradient-text">Layanan Unggulan Kami</h2>
+                <p class="lead text-muted">Solusi AI komprehensif untuk berbagai kebutuhan bisnis</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card service-card h-100 text-center p-4">
+                        <div class="mb-3"><i class="fas fa-comments fa-3x text-primary"></i></div>
+                        <h4>AI Chatbot</h4>
+                        <p>Chatbot cerdas untuk customer service 24/7 dengan pemahaman natural language yang canggih.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card service-card h-100 text-center p-4">
+                        <div class="mb-3"><i class="fas fa-chart-line fa-3x text-success"></i></div>
+                        <h4>Analisis Data</h4>
+                        <p>Insight mendalam dari data bisnis Anda dengan machine learning dan predictive analytics.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card service-card h-100 text-center p-4">
+                        <div class="mb-3"><i class="fas fa-eye fa-3x text-danger"></i></div>
+                        <h4>Computer Vision</h4>
+                        <p>Teknologi pengenalan gambar untuk otomasi quality control dan keamanan.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 3: About -->
+    <section id="about" class="about-section py-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <img src="https://images.unsplash.com/photo-1551434678-e076c223a692?w=600&h=400&fit=crop&crop=center" alt="Our Team" class="img-fluid rounded-3">
+                </div>
+                <div class="col-lg-6">
+                    <h2 class="display-5 fw-bold mb-4">Tentang AI Services</h2>
+                    <p class="mb-4">Dengan pengalaman lebih dari 5 tahun di bidang AI dan machine learning, kami telah membantu 500+ perusahaan mengoptimalkan operasional mereka menggunakan teknologi kecerdasan buatan.</p>
+                    <div class="row g-3">
+                        <div class="col-6"><div class="text-center"><h3 class="text-primary">500+</h3><p>Klien Puas</p></div></div>
+                        <div class="col-6"><div class="text-center"><h3 class="text-success">50+</h3><p>Proyek Selesai</p></div></div>
+                        <div class="col-6"><div class="text-center"><h3 class="text-warning">24/7</h3><p>Support</p></div></div>
+                        <div class="col-6"><div class="text-center"><h3 class="text-danger">99%</h3><p>Akurasi AI</p></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 4: Portfolio -->
+    <section id="portfolio" class="py-5">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="display-5 fw-bold gradient-text">Portfolio Proyek</h2>
+                <p class="lead text-muted">Lihat hasil karya terbaik kami</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <img src="https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=400&h=250&fit=crop&crop=center" alt="E-commerce AI" class="card-img-top portfolio-img">
+                        <div class="card-body">
+                            <h5>E-commerce Recommendation</h5>
+                            <p>Sistem rekomendasi produk yang meningkatkan penjualan hingga 35%.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=400&h=250&fit=crop&crop=center" alt="Medical AI" class="card-img-top portfolio-img">
+                        <div class="card-body">
+                            <h5>Medical Diagnosis AI</h5>
+                            <p>Sistem diagnostik medis dengan akurasi 98% untuk deteksi dini penyakit.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <img src="https://images.unsplash.com/photo-1518186285589-2f7649de83e0?w=400&h=250&fit=crop&crop=center" alt="Smart City" class="card-img-top portfolio-img">
+                        <div class="card-body">
+                            <h5>Smart City Traffic</h5>
+                            <p>Optimalisasi lalu lintas kota dengan AI, mengurangi kemacetan 40%.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 5: Testimonials -->
+    <section id="testimonials" class="about-section py-5">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="display-5 fw-bold gradient-text">Testimoni Klien</h2>
+                <p class="lead text-muted">Apa kata mereka tentang layanan kami</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card h-100 text-center p-4">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face" alt="Client 1" class="rounded-circle mx-auto mb-3" width="80" height="80">
+                        <blockquote class="mb-3">"AI Services mengubah cara kami berinteraksi dengan pelanggan. ROI meningkat 200%!"</blockquote>
+                        <footer class="text-muted"><strong>Budi Santoso</strong><br>CEO, TechCorp</footer>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 text-center p-4">
+                        <img src="https://images.unsplash.com/photo-1494790108755-2616b612b547?w=100&h=100&fit=crop&crop=face" alt="Client 2" class="rounded-circle mx-auto mb-3" width="80" height="80">
+                        <blockquote class="mb-3">"Implementasi yang mudah dan hasil yang luar biasa. Highly recommended!"</blockquote>
+                        <footer class="text-muted"><strong>Sari Dewi</strong><br>CTO, InnovateLab</footer>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 text-center p-4">
+                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face" alt="Client 3" class="rounded-circle mx-auto mb-3" width="80" height="80">
+                        <blockquote class="mb-3">"Support team yang responsif dan solusi AI yang benar-benar powerful."</blockquote>
+                        <footer class="text-muted"><strong>Ahmad Rahman</strong><br>Director, SmartSolutions</footer>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 6: Contact Form -->
+    <section id="contact" class="py-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="contact-form p-5">
+                        <div class="text-center mb-4">
+                            <h2 class="display-5 fw-bold gradient-text">Hubungi Kami</h2>
+                            <p class="lead text-muted">Siap memulai transformasi AI? Konsultasi gratis sekarang!</p>
+                        </div>
+                        <form id="contactForm">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Nama Lengkap</label>
+                                    <input type="text" name="nama_lengkap" class="form-control" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Email</label>
+                                    <input type="email" name="email" class="form-control" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Perusahaan</label>
+                                    <input type="text" name="perusahaan" class="form-control" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">No. Telepon</label>
+                                    <input type="tel" name="telepon" class="form-control" required>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label">Kebutuhan AI Anda</label>
+                                    <textarea name="kebutuhan" class="form-control" rows="4" placeholder="Ceritakan tentang proyek AI yang Anda butuhkan..." required></textarea>
+                                </div>
+                                <div class="col-12 text-center">
+                                    <button type="submit" class="btn btn-primary btn-lg px-5">
+                                        <i class="fas fa-paper-plane me-2"></i>Kirim Pesan
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                        <div id="formMessage" class="mt-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-5">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <h4><i class="fas fa-robot"></i> AI Services</h4>
+                    <p>Mewujudkan masa depan bisnis dengan teknologi kecerdasan buatan terdepan.</p>
+                    <div>
+                        <a href="#" class="text-white me-3"><i class="fab fa-facebook fa-2x"></i></a>
+                        <a href="#" class="text-white me-3"><i class="fab fa-twitter fa-2x"></i></a>
+                        <a href="#" class="text-white me-3"><i class="fab fa-linkedin fa-2x"></i></a>
+                        <a href="#" class="text-white"><i class="fab fa-instagram fa-2x"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                    <h5>Layanan</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-light">AI Chatbot</a></li>
+                        <li><a href="#" class="text-light">Data Analytics</a></li>
+                        <li><a href="#" class="text-light">Computer Vision</a></li>
+                        <li><a href="#" class="text-light">ML Consulting</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2">
+                    <h5>Perusahaan</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-light">Tentang Kami</a></li>
+                        <li><a href="#" class="text-light">Tim</a></li>
+                        <li><a href="#" class="text-light">Karir</a></li>
+                        <li><a href="#" class="text-light">Blog</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4">
+                    <h5>Kontak Info</h5>
+                    <p><i class="fas fa-map-marker-alt me-2"></i>Jl. Teknologi No. 123, Jakarta</p>
+                    <p><i class="fas fa-phone me-2"></i>+62 21 1234 5678</p>
+                    <p><i class="fas fa-envelope me-2"></i>info@aiservices.com</p>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="text-center">
+                <p>&copy; 2025 AI Services. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
     <script>
-        async function loadContacts() {
-            const statusDiv = document.getElementById('status');
-            const tbody = document.getElementById('contactsTable');
-            
-            try {
-                statusDiv.textContent = 'Fetching data from API...';
-                console.log('Fetching from:', '/api/contacts');
+        $(document).ready(function(){
+            // Smooth scrolling
+            $('a[href^="#"]').on('click', function(e) {
+                e.preventDefault();
+                var target = this.hash;
+                $('html, body').animate({scrollTop: $(target).offset().top - 70}, 800);
+            });
+
+            // Form submission
+            $('#contactForm').on('submit', function(e) {
+                e.preventDefault();
                 
-                const response = await fetch('/api/contacts');
-                console.log('Response status:', response.status);
-                console.log('Response headers:', response.headers);
-                
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    throw new Error(`HTTP ${response.status}: ${errorText}`);
-                }
-                
-                const contacts = await response.json();
-                console.log('Contacts data:', contacts);
-                
-                if (!Array.isArray(contacts)) {
-                    throw new Error('Expected array but got: ' + typeof contacts);
-                }
-                
-                tbody.innerHTML = '';
-                statusDiv.style.display = 'none';
-                
-                if (contacts.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="5">No contacts found</td></tr>';
-                    return;
-                }
-                
-                contacts.forEach(contact => {
-                    tbody.innerHTML += `
-                        <tr>
-                            <td>${contact.id || 'N/A'}</td>
-                            <td>${contact.name || 'N/A'}</td>
-                            <td>${contact.email || 'N/A'}</td>
-                            <td>${contact.message || 'N/A'}</td>
-                            <td>${contact.created_at || 'N/A'}</td>
-                        </tr>
-                    `;
+                const formData = {
+                    x_01: $(this).find('input[name="nama_lengkap"]').val(),
+                    x_02: $(this).find('input[name="email"]').val(),
+                    x_03: $(this).find('input[name="perusahaan"]').val(),
+                    x_04: $(this).find('input[name="telepon"]').val(),
+                    x_05: $(this).find('textarea[name="kebutuhan"]').val()
+                };
+
+                $.ajax({
+                    url: '/api/contacts?table=data_latihan',
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Table-Name': 'data_latihan'
+                    },
+                    data: JSON.stringify(formData),
+                    success: function(response) {
+                        $('#formMessage').html('<div class="alert alert-success"><i class="fas fa-check me-2"></i>Terima kasih! Pesan Anda telah dikirim. Tim kami akan segera menghubungi Anda.</div>');
+                        $('#contactForm')[0].reset();
+                    },
+                    error: function() {
+                        $('#formMessage').html('<div class="alert alert-danger"><i class="fas fa-exclamation-triangle me-2"></i>Maaf, terjadi kesalahan. Silakan coba lagi atau hubungi kami langsung.</div>');
+                    }
                 });
-                
-            } catch (error) {
-                console.error('Error loading contacts:', error);
-                statusDiv.className = 'error';
-                statusDiv.innerHTML = `
-                    <strong>Error loading contacts:</strong><br>
-                    ${error.message}<br>
-                    <small>Check browser console for more details</small>
-                `;
-                tbody.innerHTML = '<tr><td colspan="5">Error loading data - see message above</td></tr>';
-            }
-        }
-        
-        // Load contacts when page loads
-        document.addEventListener('DOMContentLoaded', loadContacts);
-        
-        // Also try to load immediately
-        loadContacts();
+            });
+
+            // Navbar background on scroll
+            $(window).scroll(function(){
+                if($(this).scrollTop() > 50) {
+                    $('.navbar').addClass('scrolled');
+                } else {
+                    $('.navbar').removeClass('scrolled');
+                }
+            });
+        });
     </script>
 </body>
 </html>
