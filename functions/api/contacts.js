@@ -1,4 +1,4 @@
-// functions/api/contacts.js - Dynamic CRUD API
+// functions/api/contacts.js - Fixed for id_x structure
 export async function onRequest(context) {
   const { request, env } = context;
   const { DB_LATIHAN1 } = env;
@@ -8,7 +8,7 @@ export async function onRequest(context) {
   const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type, X-Table-Name',
+    'Access-Control-Allow-Headers': 'Content-Type',
   };
   
   // Handle preflight
@@ -16,18 +16,15 @@ export async function onRequest(context) {
     return new Response(null, { headers: corsHeaders });
   }
   
-  // Get table name from header or body
-  let tableName = request.headers.get('X-Table-Name') || 'contacts';
-  
   // Debug logging
-  console.log(`API ${method} request to /api/contacts for table: ${tableName}`);
+  console.log(`API ${method} request to /api/contacts`);
   
   try {
     switch (method) {
       case 'GET':
-        return await getContacts(DB_LATIHAN1, corsHeaders, tableName);
+        return await getContacts(DB_LATIHAN1, corsHeaders);
       case 'POST':
-        return await createContact(request, DB_LATIHAN1, corsHeaders, tableName);
+        return await createContact(request, DB_LATIHAN1, corsHeaders);
       default:
         return new Response(JSON.stringify({ error: `Method ${method} not allowed` }), { 
           status: 405, 
@@ -46,78 +43,70 @@ export async function onRequest(context) {
   }
 }
 
-// GET all contacts from dynamic table
-async function getContacts(DB_LATIHAN1, corsHeaders, tableName) {
-  console.log(`Getting all data from table: ${tableName}`);
+// GET all contacts - Fixed to use id_x
+async function getContacts(DB_LATIHAN1, corsHeaders) {
+  console.log('Getting all contacts...');
+  const { results } = await DB_LATIHAN1.prepare("SELECT * FROM contacts ORDER BY id_x DESC").all();
+  console.log(`Found ${results.length} contacts`);
   
-  // Sanitize table name (basic security)
-  if (!/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(tableName)) {
-    throw new Error('Invalid table name');
-  }
-  
-  try {
-    const query = `SELECT * FROM ${tableName} ORDER BY id DESC`;
-    const { results } = await DB_LATIHAN1.prepare(query).all();
-    console.log(`Found ${results.length} records from ${tableName}`);
-    
-    return new Response(JSON.stringify(results), {
-      headers: { 'Content-Type': 'application/json', ...corsHeaders }
-    });
-  } catch (error) {
-    console.error(`Error reading from table ${tableName}:`, error);
-    throw new Error(`Failed to read from table ${tableName}`);
-  }
+  return new Response(JSON.stringify(results), {
+    headers: { 'Content-Type': 'application/json', ...corsHeaders }
+  });
 }
 
-// POST create contact in dynamic table
-async function createContact(request, DB_LATIHAN1, corsHeaders, tableName) {
-  console.log(`Creating new record in table: ${tableName}`);
-  
-  // Sanitize table name (basic security)
-  if (!/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(tableName)) {
-    throw new Error('Invalid table name');
-  }
+// POST create contact - Fixed for x_01, x_02, x_03... structure
+async function createContact(request, DB_LATIHAN1, corsHeaders) {
+  console.log('Creating new contact...');
   
   let requestData;
   try {
     requestData = await request.json();
     console.log('Request data:', requestData);
-    
-    // Remove table name from data if it exists
-    delete requestData.table;
   } catch (error) {
     throw new Error('Invalid JSON data');
   }
   
-  const { name, email, message } = requestData;
+  // Extract data for x_01 to x_20 columns
+  const columns = [];
+  const values = [];
+  const placeholders = [];
   
-  // Validation
-  if (!name || !email || !message) {
-    throw new Error('Name, email, and message are required');
+  // Generate x_01 to x_20 columns dynamically
+  for (let i = 1; i <= 20; i++) {
+    const colNum = i.toString().padStart(2, '0');
+    const colName = `x_${colNum}`;
+    
+    if (requestData.hasOwnProperty(colName)) {
+      columns.push(colName);
+      values.push(requestData[colName]);
+      placeholders.push('?');
+    }
   }
   
-  if (!email.includes('@')) {
-    throw new Error('Invalid email format');
+  // Basic validation - require at least one field
+  if (columns.length === 0) {
+    throw new Error('At least one field (x_01 to x_20) is required');
   }
   
   try {
-    const query = `INSERT INTO ${tableName} (name, email, message) VALUES (?, ?, ?)`;
-    const result = await DB_LATIHAN1.prepare(query)
-      .bind(name.trim(), email.trim(), message.trim())
-      .run();
+    const query = `INSERT INTO contacts (${columns.join(', ')}) VALUES (${placeholders.join(', ')})`;
+    console.log('Insert query:', query);
+    console.log('Values:', values);
     
+    const result = await DB_LATIHAN1.prepare(query).bind(...values).run();
     console.log('Insert result:', result);
     
     return new Response(JSON.stringify({ 
       success: true, 
-      id: result.meta.last_row_id,
-      message: `Record created successfully in ${tableName}`,
-      table: tableName
+      id_x: result.meta.last_row_id,
+      message: 'Contact created successfully',
+      insertedFields: columns,
+      insertedData: requestData
     }), {
       headers: { 'Content-Type': 'application/json', ...corsHeaders }
     });
   } catch (dbError) {
     console.error('Database error:', dbError);
-    throw new Error(`Failed to save record to table ${tableName}`);
+    throw new Error('Failed to save contact to database');
   }
 }
