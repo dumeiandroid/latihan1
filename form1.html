@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Layanan Tes Psikologi</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="mb-0">Form Layanan Tes Psikologi</h4>
+                    </div>
+                    <div class="card-body">
+                        <form id="psikologiForm">
+                            <div class="mb-3">
+                                <label for="x_01" class="form-label">Nama Lengkap</label>
+                                <input type="text" class="form-control" id="x_01" name="x_01" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="x_02" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="x_02" name="x_02" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="x_03" class="form-label">No. Telepon</label>
+                                <input type="tel" class="form-control" id="x_03" name="x_03" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="x_04" class="form-label">Jenis Layanan</label>
+                                <select class="form-select" id="x_04" name="x_04" required>
+                                    <option value="">Pilih Layanan</option>
+                                    <option value="konsultasi">Konsultasi Psikologi</option>
+                                    <option value="tes_minat_bakat">Tes Minat & Bakat</option>
+                                    <option value="tes_kepribadian">Tes Kepribadian</option>
+                                    <option value="tes_iq">Tes IQ</option>
+                                    <option value="tes_stres">Tes Tingkat Stres</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="x_05" class="form-label">Jadwal Preferensi</label>
+                                <input type="datetime-local" class="form-control" id="x_05" name="x_05" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="x_06" class="form-label">Catatan Tambahan</label>
+                                <textarea class="form-control" id="x_06" name="x_06" rows="3" placeholder="Jelaskan keluhan atau kebutuhan khusus (opsional)"></textarea>
+                            </div>
+                            
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary">Daftar Layanan</button>
+                                <button type="reset" class="btn btn-outline-secondary">Reset Form</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#psikologiForm').on('submit', function(e) {
+                e.preventDefault();
+                
+                const formData = {
+                    x_01: $('#x_01').val(),
+                    x_02: $('#x_02').val(),
+                    x_03: $('#x_03').val(),
+                    x_04: $('#x_04').val(),
+                    x_05: $('#x_05').val(),
+                    x_06: $('#x_06').val()
+                };
+                
+                // Kirim data ke API
+                $.ajax({
+                    url: '/api/contacts',
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Table-Name': 'psikologi_test'
+                    },
+                    data: JSON.stringify(formData),
+                    success: function(response) {
+                        alert('Pendaftaran berhasil! Kami akan menghubungi Anda segera.');
+                        $('#psikologiForm')[0].reset();
+                    },
+                    error: function() {
+                        alert('Terjadi kesalahan. Silakan coba lagi.');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
