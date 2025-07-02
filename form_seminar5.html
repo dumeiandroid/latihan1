@@ -78,7 +78,7 @@
             
             $.post({
                 url: '/api/contacts',
-                headers: {'X-Table-Name': 'seminar_discussion'},
+                headers: {'X-Table-Name': 'form_seminar'},
                 data: JSON.stringify(payload),
                 contentType: 'application/json'
             }).done(() => {
