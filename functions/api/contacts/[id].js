@@ -1,19 +1,16 @@
-// functions/api/contacts/[id].js - Fixed for id_x structure
+// functions/api/contacts/[id].js - Dynamic version
 export async function onRequest(context) {
   const { request, env, params } = context;
   const method = request.method;
   const id = params.id;
 
   console.log(`=== API [${method}] /api/contacts/${id} ===`);
-  console.log('Request URL:', request.url);
-  console.log('Params:', params);
-  console.log('Method:', method);
 
   // CORS headers
   const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'GET, PUT, DELETE, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Headers': 'Content-Type, X-Table-Name',
   };
 
   // Handle preflight
@@ -21,6 +18,10 @@ export async function onRequest(context) {
     console.log('Handling OPTIONS request');
     return new Response(null, { headers: corsHeaders });
   }
+
+  // Get table name from header
+  let tableName = request.headers.get('X-Table-Name') || 'contacts';
+  console.log('Table name:', tableName);
 
   // Check if we have DB_LATIHAN1
   if (!env.DB_LATIHAN1) {
@@ -40,13 +41,19 @@ export async function onRequest(context) {
     });
   }
 
+  // Sanitize table name (basic security)
+  if (!/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(tableName)) {
+    return new Response(JSON.stringify({ error: 'Invalid table name' }), {
+      status: 400,
+      headers: { 'Content-Type': 'application/json', ...corsHeaders }
+    });
+  }
+
   try {
-    if (method === 'GET') {
-      return await handleGetSingle(env.DB_LATIHAN1, id, corsHeaders);
-    } else if (method === 'PUT') {
-      return await handleUpdate(request, env.DB_LATIHAN1, id, corsHeaders);
+    if (method === 'PUT') {
+      return await handleUpdate(request, env.DB_LATIHAN1, id, corsHeaders, tableName);
     } else if (method === 'DELETE') {
-      return await handleDelete(env.DB_LATIHAN1, id, corsHeaders);
+      return await handleDelete(env.DB_LATIHAN1, id, corsHeaders, tableName);
     } else {
       console.log('Method not allowed:', method);
       return new Response(JSON.stringify({ error: `Method ${method} not allowed` }), {
@@ -66,44 +73,8 @@ export async function onRequest(context) {
   }
 }
 
-// GET single contact by id_x
-async function handleGetSingle(DB_LATIHAN1, id, corsHeaders) {
-  console.log(`--- GET single contact with id_x ${id} ---`);
-  
-  try {
-    const query = "SELECT * FROM contacts WHERE id_x = ?";
-    const result = await DB_LATIHAN1.prepare(query).bind(id).first();
-    console.log('Get single result:', result);
-
-    if (!result) {
-      return new Response(JSON.stringify({ error: 'Contact not found' }), {
-        status: 404,
-        headers: { 'Content-Type': 'application/json', ...corsHeaders }
-      });
-    }
-
-    return new Response(JSON.stringify({ 
-      success: true,
-      data: result
-    }), {
-      headers: { 'Content-Type': 'application/json', ...corsHeaders }
-    });
-
-  } catch (error) {
-    console.error('Get single error:', error);
-    return new Response(JSON.stringify({ 
-      error: `Get failed: ${error.message}`,
-      stack: error.stack
-    }), {
-      status: 400,
-      headers: { 'Content-Type': 'application/json', ...corsHeaders }
-    });
-  }
-}
-
-// UPDATE contact by id_x - Fixed for x_01 to x_20 structure
-async function handleUpdate(request, DB_LATIHAN1, id, corsHeaders) {
-  console.log(`--- UPDATE contact ${id} ---`);
+async function handleUpdate(request, DB_LATIHAN1, id, corsHeaders, tableName) {
+  console.log(`--- UPDATE record ${id} in table ${tableName} ---`);
   
   try {
     // Get request body
@@ -120,56 +91,41 @@ async function handleUpdate(request, DB_LATIHAN1, id, corsHeaders) {
     const data = JSON.parse(body);
     console.log('Parsed data:', data);
 
-    // Check if contact exists first using id_x
-    console.log('Checking if contact exists...');
-    const existsQuery = "SELECT id_x FROM contacts WHERE id_x = ?";
+    // Remove table name from data if it exists
+    delete data.table;
+
+    const { name, email, message } = data;
+
+    // Basic validation
+    if (!name || !email || !message) {
+      throw new Error('Missing required fields: name, email, message');
+    }
+
+    // Check if record exists first
+    console.log('Checking if record exists...');
+    const existsQuery = `SELECT id FROM ${tableName} WHERE id = ?`;
     const existsResult = await DB_LATIHAN1.prepare(existsQuery).bind(id).first();
     console.log('Exists check result:', existsResult);
 
     if (!existsResult) {
-      return new Response(JSON.stringify({ error: 'Contact not found' }), {
+      return new Response(JSON.stringify({ error: 'Record not found' }), {
         status: 404,
         headers: { 'Content-Type': 'application/json', ...corsHeaders }
       });
     }
 
-    // Build dynamic update query for x_01 to x_20 columns
-    const updateFields = [];
-    const updateValues = [];
-    
-    for (let i = 1; i <= 20; i++) {
-      const colNum = i.toString().padStart(2, '0');
-      const colName = `x_${colNum}`;
-      
-      if (data.hasOwnProperty(colName)) {
-        updateFields.push(`${colName} = ?`);
-        updateValues.push(data[colName]);
-      }
-    }
-
-    // Basic validation - require at least one field to update
-    if (updateFields.length === 0) {
-      throw new Error('At least one field (x_01 to x_20) is required for update');
-    }
-
-    // Add id for WHERE clause
-    updateValues.push(id);
-
-    // Update contact
-    console.log('Updating contact...');
-    const updateQuery = `UPDATE contacts SET ${updateFields.join(', ')} WHERE id_x = ?`;
-    console.log('Update query:', updateQuery);
-    console.log('Update values:', updateValues);
-    
-    const updateResult = await DB_LATIHAN1.prepare(updateQuery).bind(...updateValues).run();
+    // Update record
+    console.log('Updating record...');
+    const updateQuery = `UPDATE ${tableName} SET name = ?, email = ?, message = ? WHERE id = ?`;
+    const updateResult = await DB_LATIHAN1.prepare(updateQuery).bind(name, email, message, id).run();
     console.log('Update result:', updateResult);
 
     return new Response(JSON.stringify({ 
       success: true,
-      message: 'Contact updated successfully',
+      message: `Record updated successfully in ${tableName}`,
       changes: updateResult.changes,
-      updatedFields: updateFields.map(field => field.split(' = ')[0]),
-      updatedData: data
+      meta: updateResult.meta,
+      table: tableName
     }), {
       headers: { 'Content-Type': 'application/json', ...corsHeaders }
     });
@@ -186,35 +142,36 @@ async function handleUpdate(request, DB_LATIHAN1, id, corsHeaders) {
   }
 }
 
-// DELETE contact by id_x
-async function handleDelete(DB_LATIHAN1, id, corsHeaders) {
-  console.log(`--- DELETE contact ${id} ---`);
+async function handleDelete(DB_LATIHAN1, id, corsHeaders, tableName) {
+  console.log(`--- DELETE record ${id} from table ${tableName} ---`);
   
   try {
-    // Check if contact exists first using id_x
-    console.log('Checking if contact exists...');
-    const existsQuery = "SELECT id_x, x_01, x_02, x_03 FROM contacts WHERE id_x = ?";
+    // Check if record exists first
+    console.log('Checking if record exists...');
+    const existsQuery = `SELECT id, name FROM ${tableName} WHERE id = ?`;
     const existsResult = await DB_LATIHAN1.prepare(existsQuery).bind(id).first();
     console.log('Exists check result:', existsResult);
 
     if (!existsResult) {
-      return new Response(JSON.stringify({ error: 'Contact not found' }), {
+      return new Response(JSON.stringify({ error: 'Record not found' }), {
         status: 404,
         headers: { 'Content-Type': 'application/json', ...corsHeaders }
       });
     }
 
-    // Delete contact using id_x
-    console.log('Deleting contact...');
-    const deleteQuery = "DELETE FROM contacts WHERE id_x = ?";
+    // Delete record
+    console.log('Deleting record...');
+    const deleteQuery = `DELETE FROM ${tableName} WHERE id = ?`;
     const deleteResult = await DB_LATIHAN1.prepare(deleteQuery).bind(id).run();
     console.log('Delete result:', deleteResult);
 
     return new Response(JSON.stringify({ 
       success: true,
-      message: 'Contact deleted successfully',
+      message: `Record deleted successfully from ${tableName}`,
       changes: deleteResult.changes,
-      deletedContact: existsResult
+      meta: deleteResult.meta,
+      deletedRecord: existsResult,
+      table: tableName
     }), {
       headers: { 'Content-Type': 'application/json', ...corsHeaders }
     });

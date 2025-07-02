@@ -60,7 +60,8 @@
     </div>
 
     <script>
-        const API_BASE = '/api/contacts'; // Ganti dengan endpoint yang sesuai
+        const TABLE_NAME = 'data_latihan'; // Nama tabel yang akan di-CRUD
+        const API_BASE = '/api/contacts'; // Endpoint API yang dinamis
         let editMode = false;
 
         // Load data saat halaman dimuat
@@ -70,7 +71,13 @@
 
         // Load semua data
         function loadData() {
-            $.get(API_BASE)
+            $.ajax({
+                url: API_BASE,
+                method: 'GET',
+                headers: {
+                    'X-Table-Name': TABLE_NAME
+                }
+            })
                 .done(function(data) {
                     let html = '';
                     data.forEach(function(item) {
@@ -101,7 +108,8 @@
             const data = {
                 name: $('#name').val(),
                 email: $('#email').val(),
-                message: $('#message').val()
+                message: $('#message').val(),
+                table: TABLE_NAME
             };
 
             if (editMode) {
@@ -111,6 +119,9 @@
                     url: `${API_BASE}/${id}`,
                     method: 'PUT',
                     contentType: 'application/json',
+                    headers: {
+                        'X-Table-Name': TABLE_NAME
+                    },
                     data: JSON.stringify(data)
                 })
                 .done(function() {
@@ -127,6 +138,9 @@
                     url: API_BASE,
                     method: 'POST',
                     contentType: 'application/json',
+                    headers: {
+                        'X-Table-Name': TABLE_NAME
+                    },
                     data: JSON.stringify(data)
                 })
                 .done(function() {
@@ -156,7 +170,10 @@
             if (confirm('Yakin ingin menghapus data ini?')) {
                 $.ajax({
                     url: `${API_BASE}/${id}`,
-                    method: 'DELETE'
+                    method: 'DELETE',
+                    headers: {
+                        'X-Table-Name': TABLE_NAME
+                    }
                 })
                 .done(function() {
                     alert('Data berhasil dihapus');
