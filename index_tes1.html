@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tes Kecerdasan Umum - Ukur Potensi Anda!</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --accent: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; overflow-x: hidden; }
+        
+        .hero-section {
+            background: var(--primary);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+        
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=1200') center/cover;
+            opacity: 0.1;
+        }
+        
+        .floating-brain {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .section-gradient {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+            border: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        }
+        
+        .btn-gradient {
+            background: var(--secondary);
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-gradient:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+        
+        .pulse-icon {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .form-floating input, .form-floating select {
+            border-radius: 15px;
+            border: 2px solid #e0e6ed;
+            transition: all 0.3s ease;
+        }
+        
+        .form-floating input:focus, .form-floating select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+        
+        .stats-counter {
+            font-size: 3rem;
+            font-weight: 800;
+            background: var(--accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Header -->
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="background: rgba(102, 126, 234, 0.95); backdrop-filter: blur(10px);">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="#"><i class="fas fa-brain me-2"></i>IntelliTest</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="#about">Tentang</a></li>
+                <li class="nav-item"><a class="nav-link" href="#features">Fitur</a></li>
+                <li class="nav-item"><a class="nav-link" href="#test">Tes Sekarang</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Section 1: ATTENTION - Hero -->
+<section class="hero-section text-white">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-3 fw-bold mb-4">Temukan Potensi <span style="background: var(--accent); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Kecerdasan</span> Anda!</h1>
+                <p class="lead mb-4">Ukur kemampuan kognitif Anda dengan tes kecerdasan umum yang komprehensif dan akurat. Dapatkan hasil instan!</p>
+                <a href="#test" class="btn btn-gradient text-white btn-lg me-3">Mulai Tes Gratis</a>
+                <a href="#about" class="btn btn-outline-light btn-lg">Pelajari Lebih</a>
+            </div>
+            <div class="col-lg-6 text-center">
+                <div class="floating-brain">
+                    <img src="https://images.unsplash.com/photo-1559757175-0eb30cd8c063?w=500" alt="Brain" class="img-fluid rounded-circle" style="max-width: 400px; filter: brightness(1.2) contrast(1.1);">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section 2: INTEREST - Statistik -->
+<section class="py-5 section-gradient">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-3">
+                <div class="stats-counter">25K+</div>
+                <h5>Peserta Tes</h5>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-counter">98%</div>
+                <h5>Akurasi</h5>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-counter">4.9</div>
+                <h5>Rating</h5>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-counter">24/7</div>
+                <h5>Tersedia</h5>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section 3: INTEREST - Tentang -->
+<section id="about" class="py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600" alt="Intelligence Test" class="img-fluid rounded shadow-lg">
+            </div>
+            <div class="col-lg-6">
+                <h2 class="display-5 fw-bold mb-4">Apa itu Kecerdasan Umum?</h2>
+                <p class="lead">Kecerdasan umum adalah kemampuan kognitif seseorang untuk memproses informasi, memecahkan masalah, dan beradaptasi dengan situasi baru.</p>
+                <p>Tes ini mengukur berbagai aspek kecerdasan yang fundamental untuk kesuksesan dalam berbagai bidang kehidupan, baik akademis maupun profesional.</p>
+                <div class="d-flex align-items-center mt-4">
+                    <i class="fas fa-certificate text-primary me-3 pulse-icon" style="font-size: 2rem;"></i>
+                    <div>
+                        <h6 class="mb-0">Sertifikat Resmi</h6>
+                        <small class="text-muted">Dapatkan sertifikat setelah menyelesaikan tes</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section 4: INTEREST - Komponen Tes -->
+<section id="features" class="py-5 section-gradient">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold">4 Komponen Utama Tes</h2>
+            <p class="lead">Setiap aspek dirancang untuk mengukur kemampuan kognitif yang berbeda</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-lg-3 col-md-6">
+                <div class="card card-hover h-100 text-center p-4">
+                    <div class="mb-3">
+                        <i class="fas fa-bolt text-warning" style="font-size: 3rem;"></i>
+                    </div>
+                    <h5 class="fw-bold">Daya Tangkap</h5>
+                    <p>Mengukur seberapa cepat Anda dapat memahami dan menerapkan informasi baru yang diberikan.</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="card card-hover h-100 text-center p-4">
+                    <div class="mb-3">
+                        <i class="fas fa-search text-info" style="font-size: 3rem;"></i>
+                    </div>
+                    <h5 class="fw-bold">Kemampuan Analisis</h5>
+                    <p>Menilai kapasitas dalam mengolah masalah secara sistematis dan logis.</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="card card-hover h-100 text-center p-4">
+                    <div class="mb-3">
+                        <i class="fas fa-comments text-success" style="font-size: 3rem;"></i>
+                    </div>
+                    <h5 class="fw-bold">Kemampuan Verbal</h5>
+                    <p>Mengukur kemampuan memahami informasi yang disampaikan secara verbal atau lisan.</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="card card-hover h-100 text-center p-4">
+                    <div class="mb-3">
+                        <i class="fas fa-calculator text-danger" style="font-size: 3rem;"></i>
+                    </div>
+                    <h5 class="fw-bold">Kemampuan Numerik</h5>
+                    <p>Menilai kemampuan berpikir teratur dan runtut, terutama dalam perhitungan angka.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section 5: DESIRE - Keuntungan -->
+<section class="py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h2 class="display-5 fw-bold mb-4">Mengapa Tes Ini Penting?</h2>
+                <div class="row g-3">
+                    <div class="col-12">
+                        <div class="d-flex align-items-start">
+                            <i class="fas fa-check-circle text-success me-3 mt-1"></i>
+                            <div>
+                                <h6 class="fw-bold">Kenali Potensi Diri</h6>
+                                <p class="mb-0">Identifikasi kekuatan dan area yang perlu dikembangkan</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="d-flex align-items-start">
+                            <i class="fas fa-check-circle text-success me-3 mt-1"></i>
+                            <div>
+                                <h6 class="fw-bold">Pengembangan Karir</h6>
+                                <p class="mb-0">Bantu tentukan jalur karir yang sesuai dengan kemampuan</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="d-flex align-items-start">
+                            <i class="fas fa-check-circle text-success me-3 mt-1"></i>
+                            <div>
+                                <h6 class="fw-bold">Persiapan Seleksi</h6>
+                                <p class="mb-0">Latihan untuk tes masuk universitas atau pekerjaan</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600" alt="Team Success" class="img-fluid rounded shadow-lg">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section 6: DESIRE - Testimoni -->
+<section class="py-5 section-gradient">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold">Apa Kata Mereka?</h2>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card card-hover h-100 p-4">
+                    <div class="text-center mb-3">
+                        <img src="https://images.unsplash.com/photo-1494790108755-2616c0763c3a?w=100" alt="User" class="rounded-circle" width="80" height="80">
+                    </div>
+                    <p class="text-center fst-italic">"Tes ini sangat membantu saya memahami kekuatan dan kelemahan dalam berpikir. Hasilnya akurat!"</p>
+                    <div class="text-center">
+                        <strong>Sarah, Mahasiswa</strong>
+                        <div class="text-warning">★★★★★</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card card-hover h-100 p-4">
+                    <div class="text-center mb-3">
+                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100" alt="User" class="rounded-circle" width="80" height="80">
+                    </div>
+                    <p class="text-center fst-italic">"Interface yang user-friendly dan hasil yang detail. Sangat merekomendasikan untuk persiapan kerja."</p>
+                    <div class="text-center">
+                        <strong>Ahmad, Professional</strong>
+                        <div class="text-warning">★★★★★</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card card-hover h-100 p-4">
+                    <div class="text-center mb-3">
+                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100" alt="User" class="rounded-circle" width="80" height="80">
+                    </div>
+                    <p class="text-center fst-italic">"Gratis tapi kualitasnya premium! Sertifikat yang didapat juga bisa digunakan untuk lamaran kerja."</p>
+                    <div class="text-center">
+                        <strong>Maya, Fresh Graduate</strong>
+                        <div class="text-warning">★★★★★</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section 7: ACTION - CTA -->
+<section class="py-5" style="background: var(--primary);">
+    <div class="container text-center text-white">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h2 class="display-4 fw-bold mb-4">Siap Mengukur Kecerdasan Anda?</h2>
+                <p class="lead mb-4">Jangan tunggu lagi! Tes hanya membutuhkan 15 menit dan hasilnya langsung tersedia.</p>
+                <div class="d-flex justify-content-center gap-3">
+                    <a href="#test" class="btn btn-light btn-lg px-5">
+                        <i class="fas fa-play me-2"></i>Mulai Tes Sekarang
+                    </a>
+                    <a href="#" class="btn btn-outline-light btn-lg px-5">
+                        <i class="fab fa-whatsapp me-2"></i>Tanya Admin
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section 8: ACTION - Form Pendaftaran -->
+<section id="test" class="py-5 section-gradient">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card shadow-lg border-0">
+                    <div class="card-body p-5">
+                        <div class="text-center mb-4">
+                            <h2 class="fw-bold">Daftar Tes Kecerdasan Umum</h2>
+                            <p class="text-muted">Isi data berikut untuk memulai tes Anda</p>
+                        </div>
+                        
+                        <form id="testForm">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control" id="nama" name="x_01" required>
+                                        <label for="nama">Nama Lengkap</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <input type="email" class="form-control" id="email" name="x_02" required>
+                                        <label for="email">Email</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <input type="tel" class="form-control" id="telepon" name="x_03" required>
+                                        <label for="telepon">Nomor Telepon</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <select class="form-select" id="usia" name="x_04" required>
+                                            <option value="">Pilih Usia</option>
+                                            <option value="15-20">15-20 tahun</option>
+                                            <option value="21-25">21-25 tahun</option>
+                                            <option value="26-30">26-30 tahun</option>
+                                            <option value="31-35">31-35 tahun</option>
+                                            <option value="36-40">36-40 tahun</option>
+                                            <option value="40+">40+ tahun</option>
+                                        </select>
+                                        <label for="usia">Kelompok Usia</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <select class="form-select" id="pendidikan" name="x_05" required>
+                                            <option value="">Pilih Pendidikan</option>
+                                            <option value="SMA">SMA/SMK</option>
+                                            <option value="D3">Diploma 3</option>
+                                            <option value="S1">Sarjana (S1)</option>
+                                            <option value="S2">Magister (S2)</option>
+                                            <option value="S3">Doktor (S3)</option>
+                                        </select>
+                                        <label for="pendidikan">Pendidikan Terakhir</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <select class="form-select" id="tujuan" name="x_06" required>
+                                            <option value="">Pilih Tujuan</option>
+                                            <option value="akademis">Keperluan Akademis</option>
+                                            <option value="karir">Pengembangan Karir</option>
+                                            <option value="seleksi">Persiapan Seleksi</option>
+                                            <option value="personal">Pengembangan Personal</option>
+                                        </select>
+                                        <label for="tujuan">Tujuan Tes</label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="d-grid mt-4">
+                                <button type="submit" class="btn btn-gradient text-white btn-lg">
+                                    <i class="fas fa-brain me-2"></i>Mulai Tes Kecerdasan
+                                </button>
+                            </div>
+                        </form>
+                        
+                        <div id="alert-container" class="mt-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-dark text-white py-4">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <h5><i class="fas fa-brain me-2"></i>IntelliTest</h5>
+                <p>Platform tes kecerdasan umum terpercaya untuk mengukur potensi kognitif Anda.</p>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <p>&copy; 2025 IntelliTest. All rights reserved.</p>
+                <div>
+                    <a href="#" class="text-white me-3"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="text-white me-3"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="text-white me-3"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="text-white"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+<script>
+$(document).ready(function() {
+    // Smooth scrolling
+    $('a[href^="#"]').on('click', function(event) {
+        var target = $(this.getAttribute('href'));
+        if(target.length) {
+            event.preventDefault();
+            $('html, body').stop().animate({
+                scrollTop: target.offset().top - 70
+            }, 1000);
+        }
+    });
+
+    // Counter animation
+    $('.stats-counter').each(function() {
+        $(this).prop('Counter', 0).animate({
+            Counter: $(this).text().replace(/[^\d]/g, '')
+        }, {
+            duration: 2000,
+            easing: 'swing',
+            step: function(now) {
+                var suffix = $(this).text().match(/[^\d]+/g);
+                $(this).text(Math.ceil(now) + (suffix ? suffix.join('') : ''));
+            }
+        });
+    });
+
+    // Form submission
+    $('#testForm').on('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(this);
+        const data = Object.fromEntries(formData);
+        
+        // Show loading
+        showAlert('info', '<i class="fas fa-spinner fa-spin me-2"></i>Sedang memproses pendaftaran...');
+        
+        // API call to Cloudflare Workers
+        fetch('/api/contacts?table=form_tes', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Table-Name': 'form_tes'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (result.success) {
+                showAlert('success', '<i class="fas fa-check-circle me-2"></i>Pendaftaran berhasil! Anda akan segera diarahkan ke halaman tes.');
+                $('#testForm')[0].reset();
+                
+                // Redirect after 2 seconds
+                setTimeout(() => {
+                    window.location.href = '/test-page'; // Ganti dengan URL halaman tes
+                }, 2000);
+            } else {
+                showAlert('danger', '<i class="fas fa-exclamation-triangle me-2"></i>Terjadi kesalahan: ' + result.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showAlert('danger', '<i class="fas fa-exclamation-triangle me-2"></i>Terjadi kesalahan koneksi. Silakan coba lagi.');
+        });
+    });
+
+    function showAlert(type, message) {
+        const alertHtml = `
+            <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        `;
+        $('#alert-container').html(alertHtml);
+    }
+
+    // Navbar background on scroll
+    $(window).scroll(function() {
+        if ($(this).scrollTop() > 50) {
+            $('.navbar').addClass('scrolled');
+        } else {
+            $('.navbar').removeClass('scrolled');
+        }
+    });
+});
+</script>
+
+</body>
+</html>
