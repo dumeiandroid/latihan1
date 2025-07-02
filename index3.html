@@ -1,272 +1,898 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact CRUD - Bootstrap Table</title>
+    <title>Buku Siap Kerja - Panduan Mahasiswa Tingkat Akhir</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #f59e0b;
+            --dark: #1e293b;
+            --light: #f8fafc;
+        }
+        
+        body { font-family: 'Inter', sans-serif; }
+        
+        .hero-gradient {
+            background: linear-gradient(135deg, var(--primary) 0%, #3b82f6 50%, var(--secondary) 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-alt { background: var(--light); }
+        
+        .floating-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: none;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
+        .floating-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+        
+        .problem-icon { color: #ef4444; font-size: 3rem; }
+        .agitate-icon { color: #f59e0b; font-size: 3rem; }
+        .solve-icon { color: #10b981; font-size: 3rem; }
+        
+        .btn-primary {
+            background: linear-gradient(45deg, var(--primary), #3b82f6);
+            border: none;
+            padding: 15px 30px;
+            font-weight: 600;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(37, 99, 235, 0.4);
+        }
+        
+        .book-cover {
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            transform: perspective(1000px) rotateY(-15deg);
+            transition: transform 0.3s ease;
+        }
+        
+        .book-cover:hover {
+            transform: perspective(1000px) rotateY(0deg);
+        }
+        
+        .stats-card {
+            background: rgba(255,255,255,0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.25);
+        }
+        
+        .navbar-brand { font-weight: 700; font-size: 1.5rem; }
+        
+        footer { background: var(--dark); color: white; }
+        
+        .pulse { animation: pulse 2s infinite; }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .loading-spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ffffff;
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
-<body class="bg-light">
-    <div class="container mt-4">
+<body>
+
+<!-- Header -->
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="background: rgba(30, 41, 59, 0.95); backdrop-filter: blur(10px);">
+    <div class="container">
+        <a class="navbar-brand" href="#"><i class="fas fa-graduation-cap me-2"></i>Siap Kerja</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="#hero">Beranda</a></li>
+                <li class="nav-item"><a class="nav-link" href="#problem">Masalah</a></li>
+                <li class="nav-item"><a class="nav-link" href="#solution">Solusi</a></li>
+                <li class="nav-item"><a class="nav-link" href="#benefits">Manfaat</a></li>
+                <li class="nav-item"><a class="nav-link" href="#order">Pesan Sekarang</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Section 1: Hero -->
+<section id="hero" class="hero-gradient">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4">Siap Kerja: Panduan Lengkap Mahasiswa Tingkat Akhir</h1>
+                <p class="lead mb-4">Transformasi dari mahasiswa menjadi profesional yang siap bersaing di dunia kerja dalam 30 hari!</p>
+                <div class="d-flex gap-3 mb-4">
+                    <div class="stats-card">
+                        <h3 class="text-primary fw-bold">10,000+</h3>
+                        <p class="mb-0">Mahasiswa Terbantu</p>
+                    </div>
+                    <div class="stats-card">
+                        <h3 class="text-success fw-bold">95%</h3>
+                        <p class="mb-0">Tingkat Keberhasilan</p>
+                    </div>
+                </div>
+                <a href="#order" class="btn btn-primary btn-lg pulse">Dapatkan Buku Sekarang</a>
+            </div>
+            <div class="col-lg-6 text-center">
+                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=600&fit=crop&crop=face" alt="Buku Siap Kerja" class="img-fluid book-cover" style="max-width: 350px;">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section 2: Problem -->
+<section id="problem" class="py-5">
+    <div class="container">
         <div class="row">
-            <div class="col-12">
-                <div class="card shadow">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h4 class="mb-0"><i class="fas fa-address-book"></i> Contact Management</h4>
-                        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#contactModal">
-                            <i class="fas fa-plus"></i> Add Contact
-                        </button>
+            <div class="col-lg-8 mx-auto text-center mb-5">
+                <i class="fas fa-exclamation-triangle problem-icon mb-3"></i>
+                <h2 class="display-5 fw-bold">Masalah yang Dihadapi Mahasiswa Tingkat Akhir</h2>
+                <p class="lead">Jutaan mahasiswa menghadapi kebingungan dan ketakutan menjelang kelulusan</p>
+            </div>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-3">
+                <div class="card floating-card h-100 p-4">
+                    <i class="fas fa-question-circle text-danger fa-3x mb-3"></i>
+                    <h5>Tidak Tahu Mulai Dari Mana</h5>
+                    <p>85% mahasiswa bingung langkah pertama setelah lulus</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="card floating-card h-100 p-4">
+                    <i class="fas fa-file-alt text-danger fa-3x mb-3"></i>
+                    <h5>CV yang Tidak Menarik</h5>
+                    <p>CV template biasa yang tidak menonjolkan keunikan diri</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="card floating-card h-100 p-4">
+                    <i class="fas fa-comments text-danger fa-3x mb-3"></i>
+                    <h5>Gagal Interview</h5>
+                    <p>Kurang persiapan dan strategi menghadapi wawancara kerja</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="card floating-card h-100 p-4">
+                    <i class="fas fa-network-wired text-danger fa-3x mb-3"></i>
+                    <h5>Networking Terbatas</h5>
+                    <p>Tidak memiliki koneksi profesional di industri</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section 3: Agitate -->
+<section class="py-5 section-alt">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center mb-5">
+                <i class="fas fa-fire agitate-icon mb-3"></i>
+                <h2 class="display-5 fw-bold">Dampak Jika Masalah Ini Tidak Diatasi</h2>
+                <p class="lead text-muted">Konsekuensi yang akan Anda hadapi jika terus menunda persiapan</p>
+            </div>
+        </div>
+        <div class="row g-4">
+            <div class="col-lg-6">
+                <div class="card floating-card border-warning h-100">
+                    <div class="card-body p-4">
+                        <i class="fas fa-clock text-warning fa-2x mb-3"></i>
+                        <h5 class="card-title">Menganggur Berbulan-bulan</h5>
+                        <p class="card-text">Rata-rata fresh graduate menganggur 8-12 bulan karena tidak siap menghadapi dunia kerja</p>
                     </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-hover">
-                                <thead class="table-dark">
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Name</th>
-                                        <th>Email</th>
-                                        <th>Message</th>
-                                        <th>Created</th>
-                                        <th width="120">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="contactsTable">
-                                    <tr>
-                                        <td colspan="6" class="text-center">
-                                            <div class="spinner-border text-primary" role="status">
-                                                <span class="visually-hidden">Loading...</span>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card floating-card border-warning h-100">
+                    <div class="card-body p-4">
+                        <i class="fas fa-money-bill-wave text-warning fa-2x mb-3"></i>
+                        <h5 class="card-title">Lost Income Puluhan Juta</h5>
+                        <p class="card-text">Setiap bulan menganggur = kehilangan potensi gaji 5-15 juta rupiah</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card floating-card border-warning h-100">
+                    <div class="card-body p-4">
+                        <i class="fas fa-sad-tear text-warning fa-2x mb-3"></i>
+                        <h5 class="card-title">Stress dan Depresi</h5>
+                        <p class="card-text">Tekanan keluarga dan masyarakat membuat mental terganggu</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card floating-card border-warning h-100">
+                    <div class="card-body p-4">
+                        <i class="fas fa-chart-line text-warning fa-2x mb-3"></i>
+                        <h5 class="card-title">Career Gap Semakin Jauh</h5>
+                        <p class="card-text">Competitor yang siap akan meninggalkan Anda jauh di belakang</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section 4: Solution Overview -->
+<section id="solution" class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center mb-5">
+                <i class="fas fa-lightbulb solve-icon mb-3"></i>
+                <h2 class="display-5 fw-bold">Solusi Lengkap: Buku Siap Kerja</h2>
+                <p class="lead">Panduan step-by-step yang telah terbukti membantu ribuan mahasiswa</p>
+            </div>
+        </div>
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <img src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600&h=400&fit=crop" alt="Buku Contents" class="img-fluid rounded shadow-lg">
+            </div>
+            <div class="col-lg-6">
+                <h3 class="fw-bold mb-4">Apa yang Akan Anda Dapatkan:</h3>
+                <ul class="list-unstyled">
+                    <li class="mb-3"><i class="fas fa-check-circle text-success me-3"></i>300+ halaman panduan praktis</li>
+                    <li class="mb-3"><i class="fas fa-check-circle text-success me-3"></i>50+ template CV dan cover letter</li>
+                    <li class="mb-3"><i class="fas fa-check-circle text-success me-3"></i>Strategi interview yang terbukti</li>
+                    <li class="mb-3"><i class="fas fa-check-circle text-success me-3"></i>Panduan networking profesional</li>
+                    <li class="mb-3"><i class="fas fa-check-circle text-success me-3"></i>Bonus: Akses komunitas alumni</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section 5: Detailed Benefits -->
+<section id="benefits" class="py-5 section-alt">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center mb-5">
+                <h2 class="display-5 fw-bold">Manfaat yang Akan Anda Rasakan</h2>
+                <p class="lead">Transformasi karir dalam 30 hari setelah membaca buku ini</p>
+            </div>
+        </div>
+        <div class="row g-4">
+            <div class="col-lg-4">
+                <div class="card floating-card border-success h-100">
+                    <div class="card-body text-center p-4">
+                        <i class="fas fa-rocket text-success fa-3x mb-3"></i>
+                        <h5>Langsung Dapat Kerja</h5>
+                        <p>90% pembaca mendapat panggilan interview dalam 2 minggu</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card floating-card border-success h-100">
+                    <div class="card-body text-center p-4">
+                        <i class="fas fa-trophy text-success fa-3x mb-3"></i>
+                        <h5>Gaji Starting Tinggi</h5>
+                        <p>Rata-rata gaji pertama 25% lebih tinggi dari standar</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card floating-card border-success h-100">
+                    <div class="card-body text-center p-4">
+                        <i class="fas fa-users text-success fa-3x mb-3"></i>
+                        <h5>Network Profesional</h5>
+                        <p>Akses ke komunitas 10,000+ profesional muda</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section 6: Testimonials -->
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center mb-5">
+                <h2 class="display-5 fw-bold">Kata Mereka yang Sudah Berhasil</h2>
+                <p class="lead">Testimoni nyata dari mahasiswa yang telah merasakan manfaatnya</p>
+            </div>
+        </div>
+        <div class="row g-4">
+            <div class="col-lg-4">
+                <div class="card floating-card h-100">
+                    <div class="card-body p-4">
+                        <div class="d-flex mb-3">
+                            <img src="https://images.unsplash.com/photo-1494790108755-2616b612b3ce?w=60&h=60&fit=crop&crop=face" alt="Sarah" class="rounded-circle me-3" width="60" height="60">
+                            <div>
+                                <h6 class="mb-0">Sarah Putri</h6>
+                                <small class="text-muted">Alumni UI - Software Engineer</small>
+                            </div>
+                        </div>
+                        <p class="fst-italic">"Dalam 2 minggu setelah baca buku ini, saya dapat 5 panggilan interview. Sekarang kerja di startup unicorn dengan gaji 20 juta!"</p>
+                        <div class="text-warning">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card floating-card h-100">
+                    <div class="card-body p-4">
+                        <div class="d-flex mb-3">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&h=60&fit=crop&crop=face" alt="Ahmad" class="rounded-circle me-3" width="60" height="60">
+                            <div>
+                                <h6 class="mb-0">Ahmad Rizki</h6>
+                                <small class="text-muted">Alumni UGM - Product Manager</small>
+                            </div>
+                        </div>
+                        <p class="fst-italic">"Buku ini benar-benar game changer! CV saya jadi stand out dan berhasil masuk perusahaan multinasional impian."</p>
+                        <div class="text-warning">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card floating-card h-100">
+                    <div class="card-body p-4">
+                        <div class="d-flex mb-3">
+                            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=60&h=60&fit=crop&crop=face" alt="Maya" class="rounded-circle me-3" width="60" height="60">
+                            <div>
+                                <h6 class="mb-0">Maya Sari</h6>
+                                <small class="text-muted">Alumni ITB - Data Analyst</small>
+                            </div>
+                        </div>
+                        <p class="fst-italic">"Networking strategy di buku ini luar biasa! Sekarang saya punya mentor dan koneksi di berbagai perusahaan tech."</p>
+                        <div class="text-warning">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</section>
 
-    <!-- Modal for Add/Edit Contact -->
-    <div class="modal fade" id="contactModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalTitle">Add Contact</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+<!-- Section 7: Urgency -->
+<section class="py-5 section-alt">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center">
+                <i class="fas fa-exclamation-circle text-danger fa-4x mb-4"></i>
+                <h2 class="display-5 fw-bold text-danger">Jangan Tunda Lagi!</h2>
+                <p class="lead mb-4">Setiap hari yang terlewat adalah kesempatan emas yang hilang</p>
+                <div class="row g-4 mb-5">
+                    <div class="col-md-4">
+                        <div class="card border-danger">
+                            <div class="card-body text-center">
+                                <h3 class="text-danger fw-bold">6</h3>
+                                <p class="mb-0">Bulan tersisa sebelum lulus</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card border-danger">
+                            <div class="card-body text-center">
+                                <h3 class="text-danger fw-bold">1000+</h3>
+                                <p class="mb-0">Kompetitor dari angkatan yang sama</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card border-danger">
+                            <div class="card-body text-center">
+                                <h3 class="text-danger fw-bold">LIMITED</h3>
+                                <p class="mb-0">Stock buku fisik terbatas</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="modal-body">
-                    <form id="contactForm">
-                        <input type="hidden" id="contactId">
-                        <div class="mb-3">
-                            <label for="name" class="form-label">Name *</label>
-                            <input type="text" class="form-control" id="name" required>
+                <h3 class="fw-bold mb-4">Harga Normal: <s class="text-muted">Rp 299.000</s></h3>
+                <h2 class="display-4 fw-bold text-success mb-4">Harga Spesial: Rp 149.000</h2>
+                <p class="lead text-danger">*Promo berakhir dalam 48 jam!</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section 8: Final CTA -->
+<section class="py-5" style="background: linear-gradient(135deg, var(--primary), var(--secondary));">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center text-white">
+                <h2 class="display-4 fw-bold mb-4">Ambil Action Sekarang!</h2>
+                <p class="lead mb-5">Investasi terbaik untuk masa depan karir Anda dimulai hari ini</p>
+                <div class="row g-3 mb-5">
+                    <div class="col-md-4">
+                        <div class="d-flex align-items-center justify-content-center text-white">
+                            <i class="fas fa-shipping-fast fa-2x me-3"></i>
+                            <div>
+                                <h6 class="mb-0">Gratis Ongkir</h6>
+                                <small>Seluruh Indonesia</small>
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email *</label>
-                            <input type="email" class="form-control" id="email" required>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="d-flex align-items-center justify-content-center text-white">
+                            <i class="fas fa-shield-alt fa-2x me-3"></i>
+                            <div>
+                                <h6 class="mb-0">Garansi 100%</h6>
+                                <small>Uang kembali</small>
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="message" class="form-label">Message *</label>
-                            <textarea class="form-control" id="message" rows="3" required></textarea>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="d-flex align-items-center justify-content-center text-white">
+                            <i class="fas fa-headset fa-2x me-3"></i>
+                            <div>
+                                <h6 class="mb-0">Support 24/7</h6>
+                                <small>Konsultasi gratis</small>
+                            </div>
                         </div>
-                    </form>
+                    </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" id="saveContact">
-                        <i class="fas fa-save"></i> Save
-                    </button>
+                <a href="#order" class="btn btn-light btn-lg px-5 py-3 fw-bold pulse">PESAN SEKARANG - Hemat 50%!</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Form Pemesanan -->
+<section id="order" class="py-5 bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="card floating-card">
+                    <div class="card-body p-5">
+                        <h2 class="text-center fw-bold mb-4">Form Pemesanan Buku Siap Kerja</h2>
+                        <p class="text-center text-muted mb-5">Isi data diri Anda dengan lengkap untuk pemesanan</p>
+                        
+                        <form id="orderForm">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="nama" class="form-label">Nama Lengkap *</label>
+                                    <input type="text" class="form-control" id="nama" name="x_01" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="email" class="form-label">Email *</label>
+                                    <input type="email" class="form-control" id="email" name="x_02" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="telepon" class="form-label">No. Telepon/WhatsApp *</label>
+                                    <input type="tel" class="form-control" id="telepon" name="x_03" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="universitas" class="form-label">Universitas *</label>
+                                    <input type="text" class="form-control" id="universitas" name="x_04" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="jurusan" class="form-label">Jurusan/Program Studi *</label>
+                                    <input type="text" class="form-control" id="jurusan" name="x_05" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="semester" class="form-label">Semester</label>
+                                    <select class="form-control" id="semester" name="x_06">
+                                        <option value="">Pilih Semester</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9+">9+</option>
+                                    </select>
+                                </div>
+                                <div class="col-12">
+                                    <label for="alamat" class="form-label">Alamat Pengiriman Lengkap *</label>
+                                    <textarea class="form-control" id="alamat" name="x_07" rows="3" required placeholder="Jalan, RT/RW, Kelurahan, Kecamatan, Kota, Provinsi, Kode Pos"></textarea>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="kota" class="form-label">Kota *</label>
+                                    <input type="text" class="form-control" id="kota" name="x_08" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="provinsi" class="form-label">Provinsi *</label>
+                                    <input type="text" class="form-control" id="provinsi" name="x_09" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="paket" class="form-label">Pilih Paket *</label>
+                                    <select class="form-control" id="paket" name="x_10" required>
+                                        <option value="">Pilih Paket</option>
+                                        <option value="Buku Fisik - Rp 149.000">Buku Fisik - Rp 149.000</option>
+                                        <option value="Buku Digital - Rp 99.000">Buku Digital - Rp 99.000</option>
+                                        <option value="Paket Lengkap (Fisik + Digital + Bonus) - Rp 199.000">Paket Lengkap (Fisik + Digital + Bonus) - Rp 199.000</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="jumlah" class="form-label">Jumlah Buku</label>
+                                    <select class="form-control" id="jumlah" name="x_11">
+                                        <option value="1">1 Buku</option>
+                                        <option value="2">2 Buku</option>
+                                        <option value="3">3 Buku</option>
+                                        <option value="5">5 Buku (Diskon 10%)</option>
+                                        <option value="10">10 Buku (Diskon 20%)</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="pembayaran" class="form-label">Metode Pembayaran *</label>
+                                    <select class="form-control" id="pembayaran" name="x_12" required>
+                                        <option value="">Pilih Metode Pembayaran</option>
+                                        <option value="Transfer Bank">Transfer Bank</option>
+                                        <option value="E-Wallet (OVO/GoPay/DANA)">E-Wallet (OVO/GoPay/DANA)</option>
+                                        <option value="COD (Cash On Delivery)">COD (Cash On Delivery)</option>
+                                        <option value="Cicilan 0%">Cicilan 0%</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="referral" class="form-label">Kode Referral/Promo</label>
+                                    <input type="text" class="form-control" id="referral" name="x_13" placeholder="Masukkan kode promo (opsional)">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="target_lulus" class="form-label">Target Kelulusan</label>
+                                    <select class="form-control" id="target_lulus" name="x_14">
+                                        <option value="">Pilih Target Kelulusan</option>
+                                        <option value="Februari 2025">Februari 2025</option>
+                                        <option value="Juli 2025">Juli 2025</option>
+                                        <option value="September 2025">September 2025</option>
+                                        <option value="Februari 2026">Februari 2026</option>
+                                    </select>
+                                </div>
+                                <div class="col-12">
+                                    <label for="karir_target" class="form-label">Target Karir Setelah Lulus</label>
+                                    <input type="text" class="form-control" id="karir_target" name="x_15" placeholder="Contoh: Software Engineer, Product Manager, Data Analyst, dll">
+                                </div>
+                                <div class="col-12">
+                                    <label for="catatan" class="form-label">Catatan Tambahan</label>
+                                    <textarea class="form-control" id="catatan" name="x_16" rows="3" placeholder="Pesan khusus, pertanyaan, atau permintaan spesial"></textarea>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="newsletter" name="x_17" value="Ya">
+                                        <label class="form-check-label" for="newsletter">
+                                            Ya, saya ingin mendapat newsletter tips karir dan lowongan kerja
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="komunitas" name="x_18" value="Ya">
+                                        <label class="form-check-label" for="komunitas">
+                                            Ya, saya ingin bergabung dengan komunitas alumni pembaca buku
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="syarat" required>
+                                        <label class="form-check-label" for="syarat">
+                                            Saya setuju dengan <a href="#" class="text-primary">syarat dan ketentuan</a> yang berlaku *
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="text-center mt-4">
+                                <div class="mb-3">
+                                    <div class="alert alert-success d-none" id="successAlert">
+                                        <i class="fas fa-check-circle me-2"></i>
+                                        <strong>Berhasil!</strong> Pesanan Anda telah diterima. Tim kami akan menghubungi Anda dalam 1x24 jam.
+                                    </div>
+                                    <div class="alert alert-danger d-none" id="errorAlert">
+                                        <i class="fas fa-exclamation-triangle me-2"></i>
+                                        <strong>Error!</strong> <span id="errorMessage">Terjadi kesalahan saat memproses pesanan.</span>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-lg px-5 py-3" id="submitBtn">
+                                    <span class="btn-text">
+                                        <i class="fas fa-shopping-cart me-2"></i>
+                                        PESAN SEKARANG - Hemat 50%!
+                                    </span>
+                                    <div class="loading-spinner"></div>
+                                </button>
+                                <p class="text-muted mt-3 small">
+                                    <i class="fas fa-lock me-1"></i>
+                                    Data Anda aman dan tidak akan disalahgunakan
+                                </p>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+</section>
 
-    <!-- Toast for notifications -->
-    <div class="toast-container position-fixed top-0 end-0 p-3">
-        <div id="toast" class="toast" role="alert">
-            <div class="toast-header">
-                <i class="fas fa-info-circle text-primary me-2"></i>
-                <strong class="me-auto">Notification</strong>
-                <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+<!-- Footer -->
+<footer class="py-5">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-4">
+                <h5 class="fw-bold mb-3"><i class="fas fa-graduation-cap me-2"></i>Siap Kerja</h5>
+                <p class="mb-3">Membantu mahasiswa Indonesia meraih karir impian dengan panduan praktis dan terpercaya.</p>
+                <div class="d-flex gap-3">
+                    <a href="#" class="text-white"><i class="fab fa-facebook fa-2x"></i></a>
+                    <a href="#" class="text-white"><i class="fab fa-instagram fa-2x"></i></a>
+                    <a href="#" class="text-white"><i class="fab fa-linkedin fa-2x"></i></a>
+                    <a href="#" class="text-white"><i class="fab fa-youtube fa-2x"></i></a>
+                </div>
             </div>
-            <div class="toast-body" id="toastMessage"></div>
+            <div class="col-lg-2">
+                <h6 class="fw-bold mb-3">Menu</h6>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><a href="#hero" class="text-white-50 text-decoration-none">Beranda</a></li>
+                    <li class="mb-2"><a href="#problem" class="text-white-50 text-decoration-none">Masalah</a></li>
+                    <li class="mb-2"><a href="#solution" class="text-white-50 text-decoration-none">Solusi</a></li>
+                    <li class="mb-2"><a href="#benefits" class="text-white-50 text-decoration-none">Manfaat</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-3">
+                <h6 class="fw-bold mb-3">Layanan</h6>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><a href="#" class="text-white-50 text-decoration-none">Konsultasi Karir</a></li>
+                    <li class="mb-2"><a href="#" class="text-white-50 text-decoration-none">Review CV</a></li>
+                    <li class="mb-2"><a href="#" class="text-white-50 text-decoration-none">Mock Interview</a></li>
+                    <li class="mb-2"><a href="#" class="text-white-50 text-decoration-none">Job Portal</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-3">
+                <h6 class="fw-bold mb-3">Kontak</h6>
+                <div class="mb-2">
+                    <i class="fas fa-envelope me-2"></i>
+                    <span class="text-white-50">info@siapkerja.com</span>
+                </div>
+                <div class="mb-2">
+                    <i class="fas fa-phone me-2"></i>
+                    <span class="text-white-50">+62 812-3456-7890</span>
+                </div>
+                <div class="mb-2">
+                    <i class="fas fa-map-marker-alt me-2"></i>
+                    <span class="text-white-50">Jakarta, Indonesia</span>
+                </div>
+            </div>
+        </div>
+        <hr class="my-4">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <p class="mb-0 text-white-50">&copy; 2025 Siap Kerja. All rights reserved.</p>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <a href="#" class="text-white-50 text-decoration-none me-3">Privacy Policy</a>
+                <a href="#" class="text-white-50 text-decoration-none">Terms of Service</a>
+            </div>
         </div>
     </div>
+</footer>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
-    <script>
-        const API_BASE = '/api/contacts';
-        let currentContactId = null;
+<!-- Bootstrap JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
 
-        $(document).ready(function() {
-            loadContacts();
-            
-            // Save contact event
-            $('#saveContact').click(function() {
-                saveContact();
-            });
-            
-            // Reset form when modal closes
-            $('#contactModal').on('hidden.bs.modal', function() {
-                resetForm();
-            });
+<script>
+$(document).ready(function() {
+    // Smooth scrolling untuk anchor links
+    $('a[href^="#"]').on('click', function(event) {
+        var target = $(this.getAttribute('href'));
+        if( target.length ) {
+            event.preventDefault();
+            $('html, body').stop().animate({
+                scrollTop: target.offset().top - 80
+            }, 1000);
+        }
+    });
+    
+    // Form submission
+    $('#orderForm').on('submit', function(e) {
+        e.preventDefault();
+        
+        // Hide previous alerts
+        $('#successAlert, #errorAlert').addClass('d-none');
+        
+        // Show loading
+        $('#submitBtn .btn-text').hide();
+        $('#submitBtn .loading-spinner').show();
+        $('#submitBtn').prop('disabled', true);
+        
+        // Collect form data
+        const formData = {};
+        $(this).find('input, select, textarea').each(function() {
+            const name = $(this).attr('name');
+            const value = $(this).val();
+            if (name && value) {
+                if ($(this).is(':checkbox')) {
+                    formData[name] = $(this).is(':checked') ? value : '';
+                } else {
+                    formData[name] = value;
+                }
+            }
         });
-
-        // Load all contacts
-        function loadContacts() {
-            $.get(API_BASE)
-                .done(function(data) {
-                    renderTable(data);
-                })
-                .fail(function(xhr) {
-                    showToast('Error loading contacts: ' + xhr.responseText, 'error');
-                    $('#contactsTable').html('<tr><td colspan="6" class="text-center text-danger">Failed to load contacts</td></tr>');
-                });
-        }
-
-        // Render table
-        function renderTable(contacts) {
-            let html = '';
-            if (contacts.length === 0) {
-                html = '<tr><td colspan="6" class="text-center text-muted">No contacts found</td></tr>';
-            } else {
-                contacts.forEach(contact => {
-                    const date = new Date(contact.created_at).toLocaleDateString();
-                    const shortMessage = contact.message.length > 50 ? 
-                        contact.message.substring(0, 50) + '...' : contact.message;
-                    
-                    html += `
-                        <tr>
-                            <td>${contact.id}</td>
-                            <td>${contact.name}</td>
-                            <td>${contact.email}</td>
-                            <td title="${contact.message}">${shortMessage}</td>
-                            <td>${date}</td>
-                            <td>
-                                <button class="btn btn-sm btn-warning me-1" onclick="editContact(${contact.id}, '${contact.name}', '${contact.email}', \`${contact.message}\`)">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="btn btn-sm btn-danger" onclick="deleteContact(${contact.id}, '${contact.name}')">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    `;
-                });
+        
+        // Add timestamp dan status
+        formData.x_19 = new Date().toISOString();
+        formData.x_20 = 'Pending';
+        
+        // API call
+        $.ajax({
+            url: '/api/contacts',
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Table-Name': 'pesanan_buku'
+            },
+            data: JSON.stringify(formData),
+            success: function(response) {
+                console.log('Success:', response);
+                $('#successAlert').removeClass('d-none');
+                $('#orderForm')[0].reset();
+                
+                // Scroll to success message
+                $('html, body').animate({
+                    scrollTop: $('#successAlert').offset().top - 100
+                }, 500);
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);
+                let errorMsg = 'Terjadi kesalahan saat memproses pesanan.';
+                
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    errorMsg = xhr.responseJSON.message;
+                } else if (xhr.status === 0) {
+                    errorMsg = 'Tidak dapat terhubung ke server. Periksa koneksi internet Anda.';
+                } else if (xhr.status >= 500) {
+                    errorMsg = 'Server sedang bermasalah. Silakan coba lagi nanti.';
+                }
+                
+                $('#errorMessage').text(errorMsg);
+                $('#errorAlert').removeClass('d-none');
+            },
+            complete: function() {
+                // Hide loading
+                $('#submitBtn .loading-spinner').hide();
+                $('#submitBtn .btn-text').show();
+                $('#submitBtn').prop('disabled', false);
             }
-            $('#contactsTable').html(html);
+        });
+    });
+    
+    // Navbar scroll effect
+    $(window).scroll(function() {
+        if ($(this).scrollTop() > 50) {
+            $('.navbar').addClass('navbar-scrolled');
+        } else {
+            $('.navbar').removeClass('navbar-scrolled');
         }
-
-        // Save contact (Create or Update)
-        function saveContact() {
-            const name = $('#name').val().trim();
-            const email = $('#email').val().trim();
-            const message = $('#message').val().trim();
+    });
+    
+    // Auto-calculate price based on package and quantity
+    $('#paket, #jumlah').on('change', function() {
+        updatePrice();
+    });
+    
+    function updatePrice() {
+        const paket = $('#paket').val();
+        const jumlah = parseInt($('#jumlah').val()) || 1;
+        
+        if (paket) {
+            let basePrice = 0;
+            if (paket.includes('149.000')) basePrice = 149000;
+            else if (paket.includes('99.000')) basePrice = 99000;
+            else if (paket.includes('199.000')) basePrice = 199000;
             
-            if (!name || !email || !message) {
-                showToast('Please fill all required fields', 'error');
-                return;
-            }
-
-            const data = { name, email, message };
-            const isEdit = currentContactId !== null;
+            let discount = 0;
+            if (jumlah >= 10) discount = 0.2;
+            else if (jumlah >= 5) discount = 0.1;
             
-            $('#saveContact').prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Saving...');
-
-            if (isEdit) {
-                // Update
-                $.ajax({
-                    url: `${API_BASE}/${currentContactId}`,
-                    method: 'PUT',
-                    contentType: 'application/json',
-                    data: JSON.stringify(data)
-                })
-                .done(function(response) {
-                    showToast('Contact updated successfully', 'success');
-                    $('#contactModal').modal('hide');
-                    loadContacts();
-                })
-                .fail(function(xhr) {
-                    showToast('Error updating contact: ' + (xhr.responseJSON?.error || xhr.responseText), 'error');
-                })
-                .always(function() {
-                    $('#saveContact').prop('disabled', false).html('<i class="fas fa-save"></i> Save');
-                });
-            } else {
-                // Create
-                $.ajax({
-                    url: API_BASE,
-                    method: 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify(data)
-                })
-                .done(function(response) {
-                    showToast('Contact created successfully', 'success');
-                    $('#contactModal').modal('hide');
-                    loadContacts();
-                })
-                .fail(function(xhr) {
-                    showToast('Error creating contact: ' + (xhr.responseJSON?.error || xhr.responseText), 'error');
-                })
-                .always(function() {
-                    $('#saveContact').prop('disabled', false).html('<i class="fas fa-save"></i> Save');
-                });
-            }
-        }
-
-        // Edit contact
-        function editContact(id, name, email, message) {
-            currentContactId = id;
-            $('#modalTitle').text('Edit Contact');
-            $('#contactId').val(id);
-            $('#name').val(name);
-            $('#email').val(email);
-            $('#message').val(message);
-            $('#contactModal').modal('show');
-        }
-
-        // Delete contact
-        function deleteContact(id, name) {
-            if (!confirm(`Are you sure you want to delete "${name}"?`)) {
-                return;
-            }
-
-            $.ajax({
-                url: `${API_BASE}/${id}`,
-                method: 'DELETE'
-            })
-            .done(function(response) {
-                showToast(`Contact "${name}" deleted successfully`, 'success');
-                loadContacts();
-            })
-            .fail(function(xhr) {
-                showToast('Error deleting contact: ' + (xhr.responseJSON?.error || xhr.responseText), 'error');
-            });
-        }
-
-        // Reset form
-        function resetForm() {
-            currentContactId = null;
-            $('#modalTitle').text('Add Contact');
-            $('#contactForm')[0].reset();
-            $('#saveContact').prop('disabled', false).html('<i class="fas fa-save"></i> Save');
-        }
-
-        // Show toast notification
-        function showToast(message, type = 'info') {
-            const iconClass = type === 'error' ? 'fas fa-exclamation-triangle text-danger' : 
-                             type === 'success' ? 'fas fa-check-circle text-success' : 
-                             'fas fa-info-circle text-primary';
+            const totalPrice = basePrice * jumlah * (1 - discount);
+            const formattedPrice = new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                minimumFractionDigits: 0
+            }).format(totalPrice);
             
-            $('#toast .toast-header i').attr('class', iconClass + ' me-2');
-            $('#toastMessage').text(message);
-            
-            const toast = new bootstrap.Toast(document.getElementById('toast'));
-            toast.show();
+            // Update button text with price
+            const btnText = `PESAN SEKARANG - ${formattedPrice}`;
+            $('#submitBtn .btn-text').html(`<i class="fas fa-shopping-cart me-2"></i>${btnText}`);
         }
-    </script>
+    }
+    
+    // Form validation enhancement
+    $('#orderForm input[required], #orderForm select[required]').on('blur', function() {
+        if ($(this).val() === '') {
+            $(this).removeClass('is-valid').addClass('is-invalid');
+        } else {
+            $(this).removeClass('is-invalid').addClass('is-valid');
+        }
+    });
+    
+    // Phone number formatting
+    $('#telepon').on('input', function() {
+        let phone = $(this).val().replace(/\D/g, '');
+        if (phone.startsWith('0')) {
+            phone = '62' + phone.substring(1);
+        } else if (!phone.startsWith('62')) {
+            phone = '62' + phone;
+        }
+        $(this).val(phone);
+    });
+});
+</script>
+
+<style>
+.navbar-scrolled {
+    background: rgba(30, 41, 59, 0.98) !important;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+}
+
+.form-control.is-valid {
+    border-color: #10b981;
+}
+
+.form-control.is-invalid {
+    border-color: #ef4444;
+}
+
+.btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+#submitBtn {
+    position: relative;
+    overflow: hidden;
+}
+
+#submitBtn .loading-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+@media (max-width: 768px) {
+    .hero-gradient {
+        min-height: 80vh;
+        text-align: center;
+    }
+    
+    .display-4 {
+        font-size: 2rem;
+    }
+    
+    .stats-card {
+        margin-bottom: 1rem;
+    }
+    
+    .book-cover {
+        max-width: 250px !important;
+        transform: none;
+    }
+}
+</style>
+
 </body>
 </html>
