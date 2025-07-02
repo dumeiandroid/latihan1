@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Tanya Jawab Seminar Psikologi</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+    <div class="container-fluid bg-light py-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="card shadow">
+                        <div class="card-header bg-primary text-white text-center">
+                            <h4 class="mb-0">Tanya Jawab Seminar Psikologi</h4>
+                            <small>Ada pertanyaan seputar konten? Silakan ajukan di sini!</small>
+                        </div>
+                        <div class="card-body">
+                            <form id="seminarForm">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="x_01" class="form-label">Nama Lengkap *</label>
+                                        <input type="text" class="form-control" id="x_01" name="x_01" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="x_02" class="form-label">Email *</label>
+                                        <input type="email" class="form-control" id="x_02" name="x_02" required>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="x_03" class="form-label">No. Telepon</label>
+                                        <input type="tel" class="form-control" id="x_03" name="x_03">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="x_04" class="form-label">Profesi/Pekerjaan</label>
+                                        <input type="text" class="form-control" id="x_04" name="x_04">
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="x_05" class="form-label">Topik Seminar yang Diminati</label>
+                                    <select class="form-select" id="x_05" name="x_05">
+                                        <option value="">Pilih topik...</option>
+                                        <option value="Psikologi Klinis">Psikologi Klinis</option>
+                                        <option value="Psikologi Perkembangan">Psikologi Perkembangan</option>
+                                        <option value="Psikologi Sosial">Psikologi Sosial</option>
+                                        <option value="Psikologi Pendidikan">Psikologi Pendidikan</option>
+                                        <option value="Psikologi Industri">Psikologi Industri</option>
+                                        <option value="Lainnya">Lainnya</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="x_06" class="form-label">Pertanyaan/Pesan *</label>
+                                    <textarea class="form-control" id="x_06" name="x_06" rows="4" placeholder="Tulis pertanyaan atau pesan Anda di sini..." required></textarea>
+                                </div>
+                                <input type="hidden" id="x_07" name="x_07">
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary btn-lg">
+                                        <span class="spinner-border spinner-border-sm d-none" role="status"></span>
+                                        Kirim Pertanyaan
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            // Set tanggal submit saat form di-load
+            $('#x_07').val(new Date().toISOString());
+            
+            $('#seminarForm').on('submit', function(e) {
+                e.preventDefault();
+                
+                const btn = $(this).find('button[type="submit"]');
+                const spinner = btn.find('.spinner-border');
+                const btnText = btn.contents().filter(function() {
+                    return this.nodeType === 3;
+                }).first();
+                
+                // Update tanggal submit
+                $('#x_07').val(new Date().toISOString());
+                
+                // Show loading
+                btn.prop('disabled', true);
+                spinner.removeClass('d-none');
+                btnText[0].textContent = ' Mengirim...';
+                
+                // Prepare data
+                const formData = {
+                    x_01: $('#x_01').val(),
+                    x_02: $('#x_02').val(),
+                    x_03: $('#x_03').val(),
+                    x_04: $('#x_04').val(),
+                    x_05: $('#x_05').val(),
+                    x_06: $('#x_06').val(),
+                    x_07: $('#x_07').val()
+                };
+                
+                // Simulate API call (replace with actual endpoint)
+                $.ajax({
+                    url: '/api/contacts',
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Table-Name': 'seminar_questions'
+                    },
+                    data: JSON.stringify(formData),
+                    success: function(response) {
+                        alert('Pertanyaan berhasil dikirim! Terima kasih atas partisipasi Anda.');
+                        $('#seminarForm')[0].reset();
+                        $('#x_07').val(new Date().toISOString());
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error:', error);
+                        alert('Terjadi kesalahan. Silakan coba lagi nanti.');
+                    },
+                    complete: function() {
+                        // Hide loading
+                        btn.prop('disabled', false);
+                        spinner.addClass('d-none');
+                        btnText[0].textContent = 'Kirim Pertanyaan';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

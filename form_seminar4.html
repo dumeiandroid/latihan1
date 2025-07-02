@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+</head>
+<body>
+    <div class="bg-light py-3">
+        <div class="container">
+            <div class="card border-0 shadow">
+                <div class="card-header bg-success text-white">
+                    <h6 class="mb-0 text-center">💬 Tanya Ahli Psikologi</h6>
+                </div>
+                <div class="card-body">
+                    <form id="qForm">
+                        <div class="row g-2">
+                            <div class="col-md-4">
+                                <input class="form-control" name="x_01" placeholder="Nama" required>
+                            </div>
+                            <div class="col-md-4">
+                                <input class="form-control" name="x_02" type="email" placeholder="Email" required>
+                            </div>
+                            <div class="col-md-4">
+                                <input class="form-control" name="x_03" placeholder="Telepon">
+                            </div>
+                            <div class="col-md-6">
+                                <select class="form-select" name="x_04">
+                                    <option value="">Profesi</option>
+                                    <option>Mahasiswa</option>
+                                    <option>Guru</option>
+                                    <option>Psikolog</option>
+                                    <option>Orang Tua</option>
+                                    <option>Lainnya</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <select class="form-select" name="x_05">
+                                    <option value="">Area Psikologi</option>
+                                    <option>Anak & Remaja</option>
+                                    <option>Dewasa</option>
+                                    <option>Keluarga</option>
+                                    <option>Pendidikan</option>
+                                    <option>Kerja</option>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <textarea class="form-control" name="x_06" rows="2" placeholder="Apa yang ingin Anda tanyakan?" required></textarea>
+                            </div>
+                            <input type="hidden" name="x_07">
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-success w-100">📤 Kirim Pertanyaan</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    $(function(){
+        $('[name=x_07]').val(new Date().toISOString());
+        $('#qForm').on('submit', function(e){
+            e.preventDefault();
+            let btn = $('button[type=submit]');
+            btn.prop('disabled',true).html('⏳ Mengirim...');
+            $('[name=x_07]').val(new Date().toISOString());
+            
+            let formData = {};
+            $(this).serializeArray().forEach(item => formData[item.name] = item.value);
+            
+            $.ajax({
+                url: '/api/contacts',
+                type: 'POST',
+                headers: {'X-Table-Name': 'psychology_qa'},
+                data: JSON.stringify(formData),
+                contentType: 'application/json',
+                success: function(){
+                    alert('✅ Pertanyaan terkirim! Terima kasih.');
+                    $('#qForm')[0].reset();
+                    $('[name=x_07]').val(new Date().toISOString());
+                },
+                error: function(){
+                    alert('❌ Gagal mengirim. Silakan coba lagi.');
+                },
+                complete: function(){
+                    btn.prop('disabled',false).html('📤 Kirim Pertanyaan');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

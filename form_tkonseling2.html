@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Konseling Psikolog</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <style>
+        .konseling-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .konseling-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+        .form-floating-custom {
+            position: relative;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+        .form-control-custom {
+            border: none;
+            border-bottom: 2px solid #e9ecef;
+            border-radius: 0;
+            background: transparent;
+            transition: all 0.3s ease;
+        }
+        .form-control-custom:focus {
+            border-bottom-color: #667eea;
+            box-shadow: none;
+            background: rgba(102,126,234,0.05);
+        }
+        .btn-gradient {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 50px;
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(102,126,234,0.3);
+        }
+        .btn-gradient:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(102,126,234,0.4);
+            color: white;
+        }
+        .icon-wrapper {
+            background: linear-gradient(45deg, #ff6b6b, #feca57);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 24px;
+            box-shadow: 0 10px 30px rgba(255,107,107,0.3);
+        }
+        .floating-label {
+            color: #667eea;
+            font-weight: 500;
+            font-size: 14px;
+        }
+        .form-text-custom {
+            color: rgba(255,255,255,0.8);
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <section class="konseling-section py-5">
+        <div class="container position-relative">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="text-center text-white mb-5">
+                        <div class="icon-wrapper">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <h2 class="fw-bold mb-3">Konsultasi Kesehatan Mental</h2>
+                        <p class="lead opacity-90">Berbagi cerita Anda dengan psikolog profesional kami</p>
+                    </div>
+                    
+                    <div class="form-floating-custom p-4 p-md-5">
+                        <form id="konsultasiForm">
+                            <div class="row g-4">
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control form-control-custom" id="x_01" name="x_01" placeholder="Nama Lengkap" required>
+                                        <label for="x_01" class="floating-label"><i class="fas fa-user me-2"></i>Nama Lengkap</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <input type="email" class="form-control form-control-custom" id="x_02" name="x_02" placeholder="Email" required>
+                                        <label for="x_02" class="floating-label"><i class="fas fa-envelope me-2"></i>Alamat Email</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <input type="tel" class="form-control form-control-custom" id="x_03" name="x_03" placeholder="WhatsApp" required>
+                                        <label for="x_03" class="floating-label"><i class="fab fa-whatsapp me-2"></i>Nomor WhatsApp</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <select class="form-select form-control-custom" id="x_04" name="x_04">
+                                            <option value="">Pilih Rentang Usia</option>
+                                            <option value="17-25">17-25 tahun</option>
+                                            <option value="26-35">26-35 tahun</option>
+                                            <option value="36-45">36-45 tahun</option>
+                                            <option value="46-55">46-55 tahun</option>
+                                            <option value=">55">>55 tahun</option>
+                                        </select>
+                                        <label for="x_04" class="floating-label"><i class="fas fa-calendar-alt me-2"></i>Rentang Usia</label>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-floating">
+                                        <select class="form-select form-control-custom" id="x_05" name="x_05" required>
+                                            <option value="">Pilih kategori konsultasi</option>
+                                            <option value="Kecemasan & Panic">🌪️ Kecemasan & Panic Attack</option>
+                                            <option value="Depresi & Mood">😔 Depresi & Gangguan Mood</option>
+                                            <option value="Trauma & PTSD">💔 Trauma & PTSD</option>
+                                            <option value="Hubungan & Keluarga">👥 Masalah Hubungan & Keluarga</option>
+                                            <option value="Stress Kerja">💼 Stress Kerja & Burnout</option>
+                                            <option value="Self-Esteem">✨ Kepercayaan Diri & Self-Esteem</option>
+                                            <option value="Lainnya">🔍 Lainnya</option>
+                                        </select>
+                                        <label for="x_05" class="floating-label"><i class="fas fa-clipboard-list me-2"></i>Kategori Konsultasi</label>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-floating">
+                                        <textarea class="form-control form-control-custom" id="x_06" name="x_06" style="height: 120px" placeholder="Ceritakan..." required></textarea>
+                                        <label for="x_06" class="floating-label"><i class="fas fa-comment-dots me-2"></i>Ceritakan situasi atau masalah yang Anda hadapi</label>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="x_07" name="x_07">
+                                <div class="col-12 text-center mt-4">
+                                    <button type="submit" class="btn btn-gradient btn-lg px-5 py-3">
+                                        <span class="spinner-border spinner-border-sm d-none me-2" id="loadingSpinner"></span>
+                                        <i class="fas fa-paper-plane me-2"></i>
+                                        Kirim Konsultasi
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <div class="row mt-4 text-white">
+                        <div class="col-md-4 text-center mb-3">
+                            <i class="fas fa-shield-alt fa-2x mb-2 opacity-75"></i>
+                            <p class="form-text-custom">100% Rahasia & Aman</p>
+                        </div>
+                        <div class="col-md-4 text-center mb-3">
+                            <i class="fas fa-clock fa-2x mb-2 opacity-75"></i>
+                            <p class="form-text-custom">Respon dalam 24 Jam</p>
+                        </div>
+                        <div class="col-md-4 text-center mb-3">
+                            <i class="fas fa-user-md fa-2x mb-2 opacity-75"></i>
+                            <p class="form-text-custom">Psikolog Bersertifikat</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        $(document).ready(function() {
+            $('#x_07').val(new Date().toISOString());
+            
+            // Animasi form elements
+            $('.form-control-custom, .form-select').on('focus', function() {
+                $(this).parent().addClass('focused');
+            }).on('blur', function() {
+                if (!$(this).val()) {
+                    $(this).parent().removeClass('focused');
+                }
+            });
+            
+            $('#konsultasiForm').on('submit', function(e) {
+                e.preventDefault();
+                
+                $('#x_07').val(new Date().toISOString());
+                
+                const formData = {
+                    x_01: $('#x_01').val(),
+                    x_02: $('#x_02').val(),
+                    x_03: $('#x_03').val(),
+                    x_04: $('#x_04').val() || null,
+                    x_05: $('#x_05').val(),
+                    x_06: $('#x_06').val(),
+                    x_07: $('#x_07').val()
+                };
+                
+                $('#loadingSpinner').removeClass('d-none');
+                $('button[type=submit]').prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-2"></span>Mengirim...');
+                
+                $.ajax({
+                    url: '/api/contacts',
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Table-Name': 'konsultasi_psikolog'
+                    },
+                    data: JSON.stringify(formData),
+                    success: function(response) {
+                        if(response.success) {
+                            // Success animation
+                            $('button[type=submit]').html('<i class="fas fa-check me-2"></i>Berhasil Dikirim!').removeClass('btn-gradient').addClass('btn-success');
+                            
+                            setTimeout(() => {
+                                alert('🎉 Konsultasi berhasil dikirim!\n\nTim psikolog kami akan menghubungi Anda melalui WhatsApp dalam 24 jam ke depan.');
+                                $('#konsultasiForm')[0].reset();
+                                $('#x_07').val(new Date().toISOString());
+                                
+                                $('button[type=submit]').html('<i class="fas fa-paper-plane me-2"></i>Kirim Konsultasi').removeClass('btn-success').addClass('btn-gradient');
+                            }, 2000);
+                        } else {
+                            alert('❌ Terjadi kesalahan: ' + response.message);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error:', error);
+                        alert('❌ Gagal mengirim konsultasi. Silakan coba lagi atau hubungi admin.');
+                    },
+                    complete: function() {
+                        $('#loadingSpinner').addClass('d-none');
+                        $('button[type=submit]').prop('disabled', false);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

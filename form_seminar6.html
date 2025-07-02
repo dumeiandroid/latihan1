@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+</head>
+<body>
+    <div class="bg-info bg-opacity-10 py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-7 mx-auto">
+                    <div class="card border-info">
+                        <div class="card-header bg-info text-white text-center">
+                            <h6 class="mb-0">📚 Q&A Seminar Psikologi</h6>
+                            <small>Ajukan pertanyaan seputar materi seminar</small>
+                        </div>
+                        <div class="card-body">
+                            <form id="seminarQA">
+                                <div class="row g-2 mb-2">
+                                    <div class="col-md-6">
+                                        <input class="form-control form-control-sm" name="x_01" placeholder="Nama peserta" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input class="form-control form-control-sm" name="x_02" type="email" placeholder="Email" required>
+                                    </div>
+                                </div>
+                                <div class="row g-2 mb-2">
+                                    <div class="col-md-4">
+                                        <input class="form-control form-control-sm" name="x_03" placeholder="No. HP">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select class="form-select form-select-sm" name="x_04">
+                                            <option value="">Sesi seminar</option>
+                                            <option>Sesi 1: Pengantar</option>
+                                            <option>Sesi 2: Teori</option>
+                                            <option>Sesi 3: Praktik</option>
+                                            <option>Sesi 4: Studi Kasus</option>
+                                            <option>Sesi 5: Diskusi</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select class="form-select form-select-sm" name="x_05">
+                                            <option value="">Tipe pertanyaan</option>
+                                            <option>Klarifikasi materi</option>
+                                            <option>Pendalaman konsep</option>
+                                            <option>Aplikasi praktis</option>
+                                            <option>Referensi lanjutan</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <textarea class="form-control form-control-sm" name="x_06" rows="2" placeholder="Tulis pertanyaan Anda tentang materi seminar..." required></textarea>
+                                </div>
+                                <input type="hidden" name="x_07">
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-info btn-sm px-4">🙋‍♀️ Ajukan Pertanyaan</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    $(() => {
+        $('[name=x_07]').val(new Date().toISOString());
+        $('#seminarQA').submit(e => {
+            e.preventDefault();
+            const btn = $('button[type=submit]');
+            btn.prop('disabled',1).html('📤 Mengirim...');
+            $('[name=x_07]').val(new Date().toISOString());
+            
+            const formData = {};
+            $('#seminarQA').serializeArray().map(i => formData[i.name] = i.value);
+            
+            $.ajax({
+                url: '/api/contacts',
+                type: 'POST',
+                headers: {'X-Table-Name': 'seminar_questions'},
+                data: JSON.stringify(formData),
+                contentType: 'application/json',
+                success: () => {
+                    alert('✅ Pertanyaan berhasil dikirim! Akan dijawab dalam sesi Q&A.');
+                    $('#seminarQA')[0].reset();
+                    $('[name=x_07]').val(new Date().toISOString());
+                },
+                error: () => alert('❌ Gagal mengirim. Silakan coba lagi.'),
+                complete: () => btn.prop('disabled',0).html('🙋‍♀️ Ajukan Pertanyaan')
+            });
+        });
+    });
+    </script>
+</body>
+</html>

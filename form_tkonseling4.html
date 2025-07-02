@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Konseling Psikolog</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .nature-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+        
+        .nature-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="leaves" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="5" cy="5" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="15" cy="15" r="1.5" fill="rgba(255,255,255,0.08)"/><circle cx="10" cy="18" r="1" fill="rgba(255,255,255,0.06)"/></pattern></defs><rect width="100" height="100" fill="url(%23leaves)"/></svg>');
+            animation: float-bg 20s ease-in-out infinite;
+        }
+        
+        @keyframes float-bg {
+            0%, 100% { transform: translateX(0px); }
+            50% { transform: translateX(20px); }
+        }
+        
+        .nature-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 30px;
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.1),
+                0 8px 25px rgba(0, 0, 0, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 0.6);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+        
+        .nature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, #4ecdc4, #44a08d, #5f9ea0, #4ecdc4);
+            background-size: 200% 100%;
+            animation: gradient-flow 3s ease infinite;
+        }
+        
+        @keyframes gradient-flow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .organic-input {
+            border: 2px solid #e8f5e8;
+            border-radius: 20px;
+            padding: 18px 24px;
+            font-size: 16px;
+            background: #fafffe;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+        
+        .organic-input:focus {
+            border-color: #4ecdc4;
+            box-shadow: 0 0 0 4px rgba(78, 205, 196, 0.1);
+            background: #ffffff;
+            outline: none;
+            transform: translateY(-2px);
+        }
+        
+        .organic-input::placeholder {
+            color: #a0a0a0;
+            font-weight: 400;
+        }
+        
+        .input-group-organic {
+            position: relative;
+            margin-bottom: 25px;
+        }
+        
+        .input-label {
+            position: absolute;
+            top: -8px;
+            left: 20px;
+            background: linear-gradient(135deg, #4ecdc4, #44a08d);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 500;
+            z-index: 2;
+            box-shadow: 0 4px 12px rgba(78, 205, 196, 0.3);
+        }
+        
+        .btn-organic {
+            background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+            border: none;
+            border-radius: 25px;
+            color: white;
+            font-weight: 600;
+            padding: 18px 50px;
+            font-size: 16px;
+            box-shadow: 0 8px 25px rgba(78, 205, 196, 0.4);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-organic::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.6s;
+        }
+        
+        .btn-organic:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(78, 205, 196, 0.5);
+        }
+        
+        .btn-organic:hover::before {
+            left: 100%;
+        }
+        
+        .hero-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .hero-title {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            position: relative;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: #5a6c7d;
+            font-weight: 400;
+            line-height: 1.6;
+        }
+        
+        .nature-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #4ecdc4, #44a08d);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 32px;
+            color: white;
+            box-shadow: 0 10px 30px rgba(78, 205, 196, 0.3);
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% { 
+                transform: scale(1); 
+                box-shadow: 0 10px 30px rgba(78, 205, 196, 0.3);
+            }
+            50% { 
+                transform: scale(1.05); 
+                box-shadow: 0 15px 40px rgba(78, 205, 196, 0.5);
+            }
+        }
+        
+        .wellness-features {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 40px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .wellness-item {
+            text-align: center;
+            flex: 1;
+            min-width: 200px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .wellness-item:hover {
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateY(-5px);
+        }
+        
+        .wellness-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #a8e6cf, #88d8c0);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            color: white;
+            font-size: 20px;
+        }
+        
+        .select-organic {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%234ecdc4' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 20px center;
+            background-repeat: no-repeat;
+            background-size: 16px;
+        }
+        
+        .textarea-organic {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .floating-elements {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        
+        .floating-leaf {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: rgba(78, 205, 196, 0.3);
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+            animation: float-leaf 8s ease-in-out infinite;
+        }
+        
+        @keyframes float-leaf {
+            0%, 100% { 
+                transform: translateY(0px) rotate(0deg); 
+                opacity: 0.3; 
+            }
+            50% { 
+                transform: translateY(-30px) rotate(180deg); 
+                opacity: 0.8; 
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class="nature-bg">
+        <div class="floating-elements">
+            <div class="floating-leaf" style="left: 10%; animation-delay: 0s; top: 20%;"></div>
+            <div class="floating-leaf" style="left: 80%; animation-delay: 2s; top: 60%;"></div>
+            <div class="floating-leaf" style="left: 60%; animation-delay: 4s; top: 80%;"></div>
+            <div class="floating-leaf" style="left: 30%; animation-delay: 6s; top: 40%;"></div>
+        </div>
+        
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-9">
+                    <div class="nature-card p-5">
+                        <div class="hero-section">
+                            <div class="nature-icon">
+                                <i class="fas fa-leaf"></i>
+                            </div>
+                            <h1 class="hero-title">Ruang Aman Untuk Jiwa</h1>
+                            <p class="hero-subtitle">
+                                Temukan ketenangan dalam percakapan yang hangat dengan psikolog profesional kami. 
+                                Mari bersama mencari solusi untuk kesehatan mental Anda.
+                            </p>
+                        </div>
+                        
+                        <form id="konsultasiForm">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="input-group-organic">
+                                        <div class="input-label">
+                                            <i class="fas fa-user me-1"></i> Nama Lengkap
+                                        </div>
+                                        <input type="text" class="form-control organic-input" id="x_01" name="x_01" placeholder="Masukkan nama lengkap Anda" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="input-group-organic">
+                                        <div class="input-label">
+                                            <i class="fas fa-envelope me-1"></i> Email
+                                        </div>
+                                        <input type="email" class="form-control organic-input" id="x_02" name="x_02" placeholder="alamat@email.com" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="input-group-organic">
+                                        <div class="input-label">
+                                            <i class="fab fa-whatsapp me-1"></i> WhatsApp
+                                        </div>
+                                        <input type="tel" class="form-control organic-input" id="x_03" name="x_03" placeholder="0812-3456-7890" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="input-group-organic">
+                                        <div class="input-label">
+                                            <i class="fas fa-calendar me-1"></i> Usia
+                                        </div>
+                                        <select class="form-control organic-input select-organic" id="x_04" name="x_04">
+                                            <option value="">Pilih rentang usia</option>
+                                            <option value="Remaja (13-17)">Remaja (13-17 tahun)</option>
+                                            <option value="Dewasa Muda (18-30)">Dewasa Muda (18-30 tahun)</option>
+                                            <option value="Dewasa (31-50)">Dewasa (31-50 tahun)</option>
+                                            <option value="Dewasa Lanjut (51+)">Dewasa Lanjut (51+ tahun)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="input-group-organic">
+                                        <div class="input-label">
+                                            <i class="fas fa-heart me-1"></i> Topik Yang Ingin Dibahas
+                                        </div>
+                                        <select class="form-control organic-input select-organic" id="x_05" name="x_05" required>
+                                            <option value="">Pilih topik konsultasi</option>
+                                            <option value="🌱 Mengatasi Kecemasan">🌱 Mengatasi Kecemasan & Overthinking</option>
+                                            <option value="🌸 Depresi & Mood">🌸 Depresi & Perubahan Suasana Hati</option>
+                                            <option value="🌿 Trauma Healing">🌿 Penyembuhan Trauma & Luka Batin</option>
+                                            <option value="🌺 Hubungan & Keluarga">🌺 Konflik Hubungan & Keluarga</option>
+                                            <option value="🍃 Stress Kerja">🍃 Burnout & Stress Pekerjaan</option>
+                                            <option value="🌻 Kepercayaan Diri">🌻 Membangun Kepercayaan Diri</option>
+                                            <option value="🌴 Perubahan Hidup">🌴 Menghadapi Perubahan Hidup</option>
+                                            <option value="🌾 Hal Lainnya">🌾 Topik Lainnya</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="input-group-organic">
+                                        <div class="input-label">
+                                            <i class="fas fa-comment-dots me-1"></i> Cerita Anda
+                                        </div>
+                                        <textarea class="form-control organic-input textarea-organic" id="x_06" name="x_06" placeholder="Ceritakan apa yang sedang Anda rasakan atau alami saat ini. Semakin detail, semakin baik kami dapat membantu Anda..." required></textarea>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="x_07" name="x_07">
+                                <div class="col-12 text-center mt-4">
+                                    <button type="submit" class="btn-organic">
+                                        <span class="spinner-border spinner-border-sm d-none me-2" id="loadingSpinner"></span>
+                                        <i class="fas fa-paper-plane me-2"></i>
+                                        Mulai Konsultasi
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                        
+                        <div class="wellness-features">
+                            <div class="wellness-item">
+                                <div class="wellness-icon">
+                                    <i class="fas fa-shield-alt"></i>
+                                </div>
+                                <h6 style="color: #2c3e50; font-weight: 600;">Privasi Terjamin</h6>
+                                <small style="color: #5a6c7d;">Kerahasiaan percakapan 100% terlindungi</small>
+                            </div>
+                            <div class="wellness-item">
+                                <div class="wellness-icon">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <h6 style="color: #2c3e50; font-weight: 600;">Respon Cepat</h6>
+                                <small style="color: #5a6c7d;">Tim ahli siap membantu dalam 24 jam</small>
+                            </div>
+                            <div class="wellness-item">
+                                <div class="wellness-icon">
+                                    <i class="fas fa-award"></i>
+                                </div>
+                                <h6 style="color: #2c3e50; font-weight: 600;">Ahli Bersertifikat</h6>
+                                <small style="color: #5a6c7d;">Psikolog profesional berpengalaman</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        $(document).ready(function() {
+            $('#x_07').val(new Date().toISOString());
+            
+            // Enhanced floating animation
+            $('.floating-leaf').each(function(index) {
+                $(this).css({
+                    'animation-delay': Math.random() * 8 + 's',
+                    'left': Math.random() * 90 + '%',
+                    'top': Math.random() * 80 + '%'
+                });
+            });
+            
+            // Input focus animations
+            $('.organic-input').on('focus', function() {
+                $(this).parent().find('.input-label').css({
+                    'transform': 'scale(1.05)',
+                    'box-shadow': '0 6px 20px rgba(78, 205, 196, 0.4)'
+                });
+            }).on('blur', function() {
+                $(this).parent().find('.input-label').css({
+                    'transform': 'scale(1)',
+                    'box-shadow': '0 4px 12px rgba(78, 205, 196, 0.3)'
+                });
+            });
+            
+            $('#konsultasiForm').on('submit', function(e) {
+                e.preventDefault();
+                
+                $('#x_07').val(new Date().toISOString());
+                
+                const formData = {
+                    x_01: $('#x_01').val(),
+                    x_02: $('#x_02').val(),
+                    x_03: $('#x_03').val(),
+                    x_04: $('#x_04').val() || null,
+                    x_05: $('#x_05').val(),
+                    x_06: $('#x_06').val(),
+                    x_07: $('#x_07').val()
+                };
+                
+                $('#loadingSpinner').removeClass('d-none');
+                $('.btn-organic').prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-2"></span>Sedang mengirim...');
+                
+                $.ajax({
+                    url: '/api/contacts',
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Table-Name': 'konsultasi_psikolog'
+                    },
+                    data: JSON.stringify(formData),
+                    success: function(response) {
+                        if(response.success) {
+                            $('.btn-organic').html('<i class="fas fa-check me-2"></i>Berhasil Terkirim!').css({
+                                'background': 'linear-gradient(135deg, #a8e6cf, #88d8c0)',
+                                'transform': 'scale(1.05)'
+                            });
+                            
+                            setTimeout(() => {
+                                alert('🌿 Konsultasi Anda berhasil terkirim!\n\nTim psikolog kami akan menghubungi Anda melalui WhatsApp dalam 24 jam. Terima kasih telah mempercayai kami untuk mendampingi perjalanan kesehatan mental Anda.');
+                                $('#konsultasiForm')[0].reset();
+                                $('#x_07').val(new Date().toISOString());
+                                
+                                $('.btn-organic').html('<i class="fas fa-paper-plane me-2"></i>Mulai Konsultasi').css({
+                                    'background': 'linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%)',
+                                    'transform': 'scale(1)'
+                                });
+                            }, 3000);
+                        } else {
+                            alert('❌ Terjadi kesalahan: ' + response.message);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error:', error);
+                        alert('❌ Gagal mengirim konsultasi. Silakan coba lagi atau hubungi tim support kami.');
+                    },
+                    complete: function() {
+                        $('#loadingSpinner').addClass('d-none');
+                        $('.btn-organic').prop('disabled', false);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

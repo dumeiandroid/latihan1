@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Konsultasi Tes Psikologi</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .form-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 0;
+            margin-top: 50px;
+        }
+        .form-container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+        .form-title {
+            color: #333;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .btn-submit {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-weight: bold;
+        }
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+    </style>
+</head>
+<body>
+    <div class="form-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="form-container">
+                        <h3 class="form-title text-center">Konsultasi Tes Psikologi</h3>
+                        <p class="text-center text-muted mb-4">Ada pertanyaan seputar tes psikologi? Kami siap membantu Anda!</p>
+                        
+                        <form id="consultationForm">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="x_01" class="form-label">Nama Lengkap *</label>
+                                    <input type="text" class="form-control" id="x_01" name="x_01" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="x_02" class="form-label">Email *</label>
+                                    <input type="email" class="form-control" id="x_02" name="x_02" required>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="x_03" class="form-label">No. Telepon</label>
+                                    <input type="tel" class="form-control" id="x_03" name="x_03">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="x_04" class="form-label">Jenis Tes Psikologi</label>
+                                    <select class="form-control" id="x_04" name="x_04">
+                                        <option value="">Pilih Jenis Tes</option>
+                                        <option value="Tes Kepribadian">Tes Kepribadian</option>
+                                        <option value="Tes IQ">Tes IQ</option>
+                                        <option value="Tes Minat Bakat">Tes Minat Bakat</option>
+                                        <option value="Tes Klinis">Tes Klinis</option>
+                                        <option value="Tes Kerja">Tes Kerja</option>
+                                        <option value="Lainnya">Lainnya</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="x_05" class="form-label">Subjek Pertanyaan</label>
+                                <input type="text" class="form-control" id="x_05" name="x_05" placeholder="Topik yang ingin ditanyakan">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="x_06" class="form-label">Pertanyaan / Pesan *</label>
+                                <textarea class="form-control" id="x_06" name="x_06" rows="4" placeholder="Tuliskan pertanyaan atau pesan Anda..." required></textarea>
+                            </div>
+                            
+                            <input type="hidden" id="x_07" name="x_07">
+                            
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary btn-submit">
+                                    <i class="fas fa-paper-plane me-2"></i>Kirim Pertanyaan
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Set tanggal submit saat form dimuat
+            $('#x_07').val(new Date().toISOString());
+            
+            // Handle form submission
+            $('#consultationForm').on('submit', function(e) {
+                e.preventDefault();
+                
+                // Update tanggal submit
+                $('#x_07').val(new Date().toISOString());
+                
+                // Collect form data
+                const formData = {
+                    x_01: $('#x_01').val(),
+                    x_02: $('#x_02').val(), 
+                    x_03: $('#x_03').val(),
+                    x_04: $('#x_04').val(),
+                    x_05: $('#x_05').val(),
+                    x_06: $('#x_06').val(),
+                    x_07: $('#x_07').val()
+                };
+                
+                // Submit to API
+                $.ajax({
+                    url: '/api/contacts',
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Table-Name': 'psychology_consultations'
+                    },
+                    data: JSON.stringify(formData),
+                    success: function(response) {
+                        alert('Terima kasih! Pertanyaan Anda telah berhasil dikirim.');
+                        $('#consultationForm')[0].reset();
+                        $('#x_07').val(new Date().toISOString());
+                    },
+                    error: function(xhr, status, error) {
+                        alert('Maaf, terjadi kesalahan. Silakan coba lagi.');
+                        console.error('Error:', error);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

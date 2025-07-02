@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Konsultasi Tes Psikologi</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #e0e5ec;
+            --text-primary: #2c3e50;
+            --text-secondary: #7f8c8d;
+            --accent-color: #8e44ad;
+            --success-color: #27ae60;
+            --danger-color: #e74c3c;
+            --shadow-light: #ffffff;
+            --shadow-dark: #a3b1c6;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: var(--bg-color);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+        
+        .consultation-section {
+            padding: 80px 0;
+            background: var(--bg-color);
+            position: relative;
+        }
+        
+        .neuro-card {
+            background: var(--bg-color);
+            border-radius: 25px;
+            padding: 0;
+            box-shadow: 
+                20px 20px 40px var(--shadow-dark),
+                -20px -20px 40px var(--shadow-light),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+            border: none;
+            overflow: hidden;
+        }
+        
+        .card-header {
+            background: var(--bg-color);
+            padding: 40px 40px 30px;
+            text-align: center;
+            border-bottom: none;
+            position: relative;
+        }
+        
+        .header-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: var(--bg-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 
+                10px 10px 20px var(--shadow-dark),
+                -10px -10px 20px var(--shadow-light);
+        }
+        
+        .header-icon i {
+            font-size: 32px;
+            background: linear-gradient(135deg, var(--accent-color), #9b59b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .card-title {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+        }
+        
+        .card-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            font-weight: 400;
+        }
+        
+        .card-body {
+            padding: 40px;
+            background: var(--bg-color);
+        }
+        
+        .form-group {
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 12px;
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .neuro-input,
+        .neuro-select,
+        .neuro-textarea {
+            width: 100%;
+            padding: 18px 24px;
+            background: var(--bg-color);
+            border: none;
+            border-radius: 15px;
+            font-size: 16px;
+            color: var(--text-primary);
+            box-shadow: 
+                inset 8px 8px 16px var(--shadow-dark),
+                inset -8px -8px 16px var(--shadow-light);
+            transition: all 0.3s ease;
+            outline: none;
+        }
+        
+        .neuro-input:focus,
+        .neuro-select:focus,
+        .neuro-textarea:focus {
+            box-shadow: 
+                inset 12px 12px 24px var(--shadow-dark),
+                inset -12px -12px 24px var(--shadow-light),
+                0 0 0 3px rgba(142, 68, 173, 0.2);
+        }
+        
+        .neuro-input::placeholder,
+        .neuro-textarea::placeholder {
+            color: var(--text-secondary);
+            opacity: 0.7;
+        }
+        
+        .neuro-select option {
+            background: var(--bg-color);
+            color: var(--text-primary);
+        }
+        
+        .neuro-textarea {
+            resize: vertical;
+            min-height: 120px;
+            font-family: inherit;
+        }
+        
+        .required-dot {
+            color: var(--danger-color);
+            font-weight: bold;
+            margin-left: 4px;
+        }
+        
+        .btn-neuro {
+            background: var(--bg-color);
+            border: none;
+            padding: 18px 40px;
+            border-radius: 20px;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--accent-color);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 
+                8px 8px 16px var(--shadow-dark),
+                -8px -8px 16px var(--shadow-light);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-neuro:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                12px 12px 24px var(--shadow-dark),
+                -12px -12px 24px var(--shadow-light);
+            color: var(--accent-color);
+        }
+        
+        .btn-neuro:active {
+            transform: translateY(0);
+            box-shadow: 
+                inset 4px 4px 8px var(--shadow-dark),
+                inset -4px -4px 8px var(--shadow-light);
+        }
+        
+        .btn-neuro.loading {
+            color: var(--text-secondary);
+            pointer-events: none;
+        }
+        
+        .btn-neuro.success {
+            color: var(--success-color);
+        }
+        
+        .btn-neuro.error {
+            color: var(--danger-color);
+        }
+        
+        .input-group {
+            position: relative;
+        }
+        
+        .input-icon {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            font-size: 18px;
+            z-index: 2;
+        }
+        
+        .input-with-icon {
+            padding-left: 55px !important;
+        }
+        
+        .floating-shapes {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        
+        .neuro-shape {
+            position: absolute;
+            background: var(--bg-color);
+            border-radius: 50%;
+            box-shadow: 
+                6px 6px 12px var(--shadow-dark),
+                -6px -6px 12px var(--shadow-light);
+            animation: floatNeuro 6s ease-in-out infinite;
+        }
+        
+        .shape-1 {
+            width: 60px;
+            height: 60px;
+            top: 15%;
+            left: 5%;
+            animation-delay: 0s;
+        }
+        
+        .shape-2 {
+            width: 40px;
+            height: 40px;
+            top: 25%;
+            right: 8%;
+            animation-delay: 2s;
+        }
+        
+        .shape-3 {
+            width: 80px;
+            height: 80px;
+            bottom: 20%;
+            left: 10%;
+            animation-delay: 4s;
+        }
+        
+        .shape-4 {
+            width: 50px;
+            height: 50px;
+            bottom: 35%;
+            right: 5%;
+            animation-delay: 6s;
+        }
+        
+        @keyframes floatNeuro {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+                opacity: 0.6;
+            }
+            50% {
+                transform: translateY(-20px) rotate(180deg);
+                opacity: 0.8;
+            }
+        }
+        
+        .validation-message {
+            font-size: 12px;
+            color: var(--danger-color);
+            margin-top: 8px;
+            display: none;
+            font-weight: 500;
+        }
+        
+        .form-group.error .neuro-input,
+        .form-group.error .neuro-select,
+        .form-group.error .neuro-textarea {
+            box-shadow: 
+                inset 8px 8px 16px var(--shadow-dark),
+                inset -8px -8px 16px var(--shadow-light),
+                0 0 0 2px var(--danger-color);
+        }
+        
+        .form-group.error .validation-message {
+            display: block;
+        }
+        
+        .success-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--bg-color);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 
+                20px 20px 40px var(--shadow-dark),
+                -20px -20px 40px var(--shadow-light);
+            text-align: center;
+            z-index: 1000;
+            display: none;
+        }
+        
+        .success-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 20px;
+            background: var(--bg-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 
+                8px 8px 16px var(--shadow-dark),
+                -8px -8px 16px var(--shadow-light);
+        }
+        
+        .success-icon i {
+            font-size: 24px;
+            color: var(--success-color);
+        }
+        
+        @media (max-width: 768px) {
+            .card-header,
+            .card-body {
+                padding: 30px 20px;
+            }
+            
+            .card-title {
+                font-size: 1.6rem;
+            }
+            
+            .floating-shapes {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="consultation-section">
+        <div class="floating-shapes">
+            <div class="neuro-shape shape-1"></div>
+            <div class="neuro-shape shape-2"></div>
+            <div class="neuro-shape shape-3"></div>
+            <div class="neuro-shape shape-4"></div>
+        </div>
+        
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-9 col-xl-8">
+                    <div class="neuro-card">
+                        <div class="card-header">
+                            <div class="header-icon">
+                                <i class="fas fa-brain"></i>
+                            </div>
+                            <h2 class="card-title">Konsultasi Psikologi</h2>
+                            <p class="card-subtitle">Hubungi psikolog profesional untuk mendapat jawaban terpercaya</p>
+                        </div>
+                        
+                        <div class="card-body">
+                            <form id="consultationForm">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label">Nama Lengkap<span class="required-dot">●</span></label>
+                                            <div class="input-group">
+                                                <i class="fas fa-user input-icon"></i>
+                                                <input type="text" class="neuro-input input-with-icon" id="x_01" name="x_01" placeholder="Masukkan nama lengkap" required>
+                                            </div>
+                                            <div class="validation-message">Nama lengkap wajib diisi</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label">Alamat Email<span class="required-dot">●</span></label>
+                                            <div class="input-group">
+                                                <i class="fas fa-envelope input-icon"></i>
+                                                <input type="email" class="neuro-input input-with-icon" id="x_02" name="x_02" placeholder="contoh@email.com" required>
+                                            </div>
+                                            <div class="validation-message">Email valid wajib diisi</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label">Nomor Telepon</label>
+                                            <div class="input-group">
+                                                <i class="fas fa-phone input-icon"></i>
+                                                <input type="tel" class="neuro-input input-with-icon" id="x_03" name="x_03" placeholder="08xx-xxxx-xxxx">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label">Jenis Layanan</label>
+                                            <div class="input-group">
+                                                <i class="fas fa-list input-icon"></i>
+                                                <select class="neuro-select input-with-icon" id="x_04" name="x_04">
+                                                    <option value="">-- Pilih Layanan --</option>
+                                                    <option value="Tes Kepribadian">Assessment Kepribadian</option>
+                                                    <option value="Tes IQ">Tes Kecerdasan Intelektual</option>
+                                                    <option value="Tes Minat Bakat">Eksplorasi Minat & Bakat</option>
+                                                    <option value="Tes Klinis">Evaluasi Psikologis Klinis</option>
+                                                    <option value="Tes Kerja">Assessment Profesional</option>
+                                                    <option value="Konseling">Layanan Konseling</option>
+                                                    <option value="Lainnya">Konsultasi Umum</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">Topik Spesifik</label>
+                                    <div class="input-group">
+                                        <i class="fas fa-tag input-icon"></i>
+                                        <input type="text" class="neuro-input input-with-icon" id="x_05" name="x_05" placeholder="Topik atau area yang ingin dikonsultasikan">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">Pertanyaan Detail<span class="required-dot">●</span></label>
+                                    <textarea class="neuro-textarea" id="x_06" name="x_06" rows="5" placeholder="Jelaskan secara detail pertanyaan atau masalah yang ingin Anda konsultasikan. Semakin spesifik informasi yang Anda berikan, semakin tepat saran yang dapat kami berikan." required></textarea>
+                                    <div class="validation-message">Pertanyaan detail wajib diisi</div>
+                                </div>
+                                
+                                <input type="hidden" id="x_07" name="x_07">
+                                
+                                <div class="text-center mt-4">
+                                    <button type="submit" class="btn-neuro">
+                                        <i class="fas fa-paper-plane me-2"></i>
+                                        Kirim Konsultasi
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="success-popup" id="successPopup">
+        <div class="success-icon">
+            <i class="fas fa-check"></i>
+        </div>
+        <h4>Konsultasi Berhasil Dikirim!</h4>
+        <p>Tim psikolog kami akan merespon dalam 1-2 hari kerja melalui email.</p>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Set timestamp
+            $('#x_07').val(new Date().toISOString());
+            
+            // Real-time validation
+            $('.neuro-input, .neuro-select, .neuro-textarea').on('input change', function() {
+                const $group = $(this).closest('.form-group');
+                const value = $(this).val().trim();
+                
+                if ($(this).prop('required') && !value) {
+                    $group.addClass('error');
+                } else if ($(this).attr('type') === 'email' && value && !isValidEmail(value)) {
+                    $group.addClass('error');
+                } else {
+                    $group.removeClass('error');
+                }
+            });
+            
+            // Email validation function
+            function isValidEmail(email) {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return emailRegex.test(email);
+            }
+            
+            // Form submission
+            $('#consultationForm').on('submit', function(e) {
+                e.preventDefault();
+                
+                const $btn = $('.btn-neuro');
+                const originalHtml = $btn.html();
+                
+                // Validate required fields
+                let isValid = true;
+                const requiredFields = ['x_01', 'x_02', 'x_06'];
+                
+                requiredFields.forEach(function(fieldId) {
+                    const $field = $('#' + fieldId);
+                    const $group = $field.closest('.form-group');
+                    const value = $field.val().trim();
+                    
+                    if (!value) {
+                        $group.addClass('error');
+                        isValid = false;
+                    } else if (fieldId === 'x_02' && !isValidEmail(value)) {
+                        $group.addClass('error');
+                        isValid = false;
+                    } else {
+                        $group.removeClass('error');
+                    }
+                });
+                
+                if (!isValid) {
+                    $btn.addClass('error');
+                    $btn.html('<i class="fas fa-exclamation-triangle me-2"></i>Periksa Data');
+                    
+                    setTimeout(() => {
+                        $btn.removeClass('error');
+                        $btn.html(originalHtml);
+                    }, 2000);
+                    return;
+                }
+                
+                // Loading state
+                $btn.addClass('loading');
+                $btn.html('<i class="fas fa-spinner fa-spin me-2"></i>Mengirim...');
+                $btn.prop('disabled', true);
+                
+                // Update timestamp
+                $('#x_07').val(new Date().toISOString());
+                
+                const formData = {
+                    x_01: $('#x_01').val(),
+                    x_02: $('#x_02').val(),
+                    x_03: $('#x_03').val(),
+                    x_04: $('#x_04').val(),
+                    x_05: $('#x_05').val(),
+                    x_06: $('#x_06').val(),
+                    x_07: $('#x_07').val()
+                };
+                
+                // Simulate API call
+                setTimeout(() => {
+                    $.ajax({
+                        url: '/api/contacts',
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Table-Name': 'psychology_consultations'
+                        },
+                        data: JSON.stringify(formData),
+                        success: function(response) {
+                            $btn.removeClass('loading').addClass('success');
+                            $btn.html('<i class="fas fa-check me-2"></i>Berhasil');
+                            
+                            // Show success popup
+                            $('#successPopup').fadeIn();
+                            
+                            setTimeout(() => {
+                                $('#successPopup').fadeOut();
+                                
+                                // Reset form
+                                $('#consultationForm')[0].reset();
+                                $('.form-group').removeClass('error');
+                                $btn.removeClass('success');
+                                $btn.html(originalHtml);
+                                $btn.prop('disabled', false);
+                                $('#x_07').val(new Date().toISOString());
+                            }, 3000);
+                        },
+                        error: function(xhr, status, error) {
+                            $btn.removeClass('loading').addClass('error');
+                            $btn.html('<i class="fas fa-times me-2"></i>Gagal Kirim');
+                            
+                            setTimeout(() => {
+                                $btn.removeClass('error');
+                                $btn.html(originalHtml);
+                                $btn.prop('disabled', false);
+                            }, 2000);
+                            
+                            console.error('Error:', error);
+                        }
+                    });
+                }, 1500);
+            });
+            
+            // Close popup on click
+            $('#successPopup').on('click', function() {
+                $(this).fadeOut();
+            });
+        });
+    </script>
+</body>
+</html>
