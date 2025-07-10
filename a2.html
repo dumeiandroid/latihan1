@@ -96,436 +96,65 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
-        .loading {
+        .loading-spinner {
             display: none;
         }
-        .loading.show {
+        .loading-spinner.show {
             display: block;
         }
-        .spinner-border-sm {
-            width: 1rem;
-            height: 1rem;
+        #evaluationForm.loading {
+            opacity: 0.6;
+            pointer-events: none;
         }
     </style>
 </head>
 <body class="bg-light">
-    <!-- Alert Container -->
-    <div id="alertContainer"></div>
+    <div id="databaseAlert" class="database-alert"></div>
 
     <div class="container py-5">
         <div class="row justify-content-center">
             <div class="col-lg-8">
                 <div class="text-center mb-5">
                     <h1 class="display-5 fw-bold text-success">
-                        <i class="fas fa-globe digital-icon"></i> Evaluasi Bab 2: Meningkatkan Kesadaran Diri
+                        <i class="fas fa-globe digital-icon"></i> <span id="pageTitle">Evaluasi Bab 2: Meningkatkan Kesadaran Diri</span>
                     </h1>
-                    <p class="lead text-muted">Meningkatkan Kesadaran Diri</p>
-                    <div class="badge bg-success fs-6">Kecerdasan Emosional dalam 12 Minggu</div>
+                    <p class="lead text-muted" id="pageSubtitle">Meningkatkan Kesadaran Diri</p>
+                    <div class="badge bg-success fs-6" id="pageBadge">Kecerdasan Emosional dalam 12 Minggu</div>
                 </div>
 
-                <!-- Hasil Evaluasi Section (Hidden by default) -->
-                <div id="hasilSection" class="d-none">
-                    <div class="card hasil-card mb-5">
-                        <div class="card-body text-center">
-                            <h3><i class="fas fa-trophy"></i> Hasil Evaluasi</h3>
-                            <div class="row mt-4">
-                                <div class="col-md-4">
-                                    <h2 class="fw-bold" id="totalSkor">0</h2>
-                                    <p>dari <span id="totalMaksimal">100</span> poin</p>
-                                </div>
-                                <div class="col-md-4">
-                                    <h2 class="fw-bold" id="persentase">0%</h2>
-                                    <p>Pencapaian</p>
-                                </div>
-                                <div class="col-md-4">
-                                    <span class="badge fs-5 p-3" id="kategoribadge">
-                                        <span id="kategoriLabel">Evaluasi</span>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="progress progress-custom mt-3">
-                                <div class="progress-bar bg-success" id="progressBar" style="width: 0%"></div>
-                            </div>
-                            <div class="mt-3">
-                                <small class="text-light"><i class="fas fa-database"></i> Hasil telah disimpan ke database</small>
-                            </div>
-                        </div>
+                <!-- Loading Spinner -->
+                <div id="loading" class="text-center loading-spinner">
+                    <div class="spinner-border text-success" role="status">
+                        <span class="visually-hidden">Loading...</span>
                     </div>
+                    <p class="mt-2">Menyimpan hasil evaluasi...</p>
+                </div>
 
-                    <!-- Detail Skor -->
-                    <div class="card mb-4">
-                        <div class="card-header bg-success text-white">
-                            <h5><i class="fas fa-chart-bar"></i> Detail Skor per Aspek</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="row" id="detailSkor">
-                                <!-- Detail skor akan diisi dengan JavaScript -->
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Rekomendasi -->
-                    <div class="card mb-4">
-                        <div class="card-header bg-info text-white">
-                            <h5><i class="fas fa-lightbulb"></i> Rekomendasi untuk Meningkatkan Kesadaran Diri</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="alert" id="rekomendasiAlert">
-                                <h6 id="rekomendasiTitle"></h6>
-                                <ul class="mb-0" id="rekomendasiList">
-                                    <!-- Rekomendasi akan diisi dengan JavaScript -->
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="text-center">
-                        <button class="btn btn-outline-success btn-lg" onclick="resetEvaluasi()">
-                            <i class="fas fa-redo"></i> Evaluasi Ulang
-                        </button>
-                    </div>
+                <!-- Results Section -->
+                <div id="results" style="display: none;">
+                    <!-- Dynamic results will be inserted here -->
                 </div>
 
                 <!-- Form Evaluasi -->
-                <div id="formSection">
-                    <form id="evaluasiForm">
-                        <!-- Kategori: Mengenali Emosi -->
-                        <div class="kategori-header dynamic-kategori-header" style="background: linear-gradient(135deg, #e74c3c 0%, #e74c3ccc 100%);">
-                            <h4><i class="fas fa-heart"></i> Mengenali Emosi</h4>
-                        </div>
+                <form id="evaluationForm" method="POST">
+                    <div id="questionsContainer">
+                        <!-- Dynamic questions will be inserted here -->
+                    </div>
 
-                        <!-- Soal 1 -->
-                        <div class="card question-card" style="border-left-color: #e74c3c;">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-start mb-3">
-                                    <h6 class="card-title mb-0">
-                                        <span class="badge bg-success me-2">1</span>
-                                        Apakah kamu sudah berlatih mengenali emosi secara spesifik (tidak hanya "senang", "sedih", "marah") berdasarkan materi?
-                                    </h6>
-                                    <span class="badge bg-secondary">20 poin</span>
-                                </div>
-                                <div class="custom-radio">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="mengenali_emosi_spesifik" value="0" required>
-                                        <label class="form-check-label">
-                                            Belum pernah berlatih
-                                            <span class="badge badge-poin ms-2">0 poin</span>
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="mengenali_emosi_spesifik" value="10" required>
-                                        <label class="form-check-label">
-                                            Kadang-kadang (1-2 kali seminggu)
-                                            <span class="badge badge-poin ms-2">10 poin</span>
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="mengenali_emosi_spesifik" value="15" required>
-                                        <label class="form-check-label">
-                                            Sering (3-4 kali seminggu)
-                                            <span class="badge badge-poin ms-2">15 poin</span>
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="mengenali_emosi_spesifik" value="20" required>
-                                        <label class="form-check-label">
-                                            Rutin setiap hari
-                                            <span class="badge badge-poin ms-2">20 poin</span>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Soal 2 -->
-                        <div class="card question-card" style="border-left-color: #e74c3c;">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-start mb-3">
-                                    <h6 class="card-title mb-0">
-                                        <span class="badge bg-success me-2">2</span>
-                                        Apakah kamu sudah berlatih mencari sumber atau pemicu emosi seperti yang dijelaskan dalam materi?
-                                    </h6>
-                                    <span class="badge bg-secondary">10 poin</span>
-                                </div>
-                                <div class="custom-radio">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="identifikasi_sumber_emosi" value="0" required>
-                                        <label class="form-check-label">
-                                            Belum pernah mencoba
-                                            <span class="badge badge-poin ms-2">0 poin</span>
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="identifikasi_sumber_emosi" value="5" required>
-                                        <label class="form-check-label">
-                                            Pernah tapi belum konsisten
-                                            <span class="badge badge-poin ms-2">5 poin</span>
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="identifikasi_sumber_emosi" value="8" required>
-                                        <label class="form-check-label">
-                                            Sering melakukannya
-                                            <span class="badge badge-poin ms-2">8 poin</span>
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="identifikasi_sumber_emosi" value="10" required>
-                                        <label class="form-check-label">
-                                            Selalu melakukan refleksi sumber emosi
-                                            <span class="badge badge-poin ms-2">10 poin</span>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Soal 6 -->
-                        <div class="card question-card" style="border-left-color: #e74c3c;">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-start mb-3">
-                                    <h6 class="card-title mb-0">
-                                        <span class="badge bg-success me-2">6</span>
-                                        Apakah kamu sudah berlatih teknik "pause" (jeda) sebelum bereaksi dalam situasi emosional?
-                                    </h6>
-                                    <span class="badge bg-secondary">15 poin</span>
-                                </div>
-                                <div class="custom-radio">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="teknik_pause" value="0" required>
-                                        <label class="form-check-label">
-                                            Belum pernah mencoba
-                                            <span class="badge badge-poin ms-2">0 poin</span>
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="teknik_pause" value="8" required>
-                                        <label class="form-check-label">
-                                            Kadang-kadang berhasil
-                                            <span class="badge badge-poin ms-2">8 poin</span>
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="teknik_pause" value="12" required>
-                                        <label class="form-check-label">
-                                            Sering berhasil menerapkan
-                                            <span class="badge badge-poin ms-2">12 poin</span>
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="teknik_pause" value="15" required>
-                                        <label class="form-check-label">
-                                            Hampir selalu berhasil pause
-                                            <span class="badge badge-poin ms-2">15 poin</span>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Kategori: Praktik Mindfulness -->
-                        <div class="kategori-header dynamic-kategori-header" style="background: linear-gradient(135deg, #28a745 0%, #28a745cc 100%);">
-                            <h4><i class="fas fa-leaf"></i> Praktik Mindfulness</h4>
-                        </div>
-
-                        <!-- Soal 4 -->
-                        <div class="card question-card" style="border-left-color: #28a745;">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-start mb-3">
-                                    <h6 class="card-title mb-0">
-                                        <span class="badge bg-success me-2">4</span>
-                                        Berapa sering kamu mempraktikkan teknik mindfulness (5-4-3-2-1, mindful breathing, body scan) yang diajarkan?
-                                    </h6>
-                                    <span class="badge bg-secondary">20 poin</span>
-                                </div>
-                                <div class="custom-radio">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="teknik_mindfulness" value="0" required>
-                                        <label class="form-check-label">
-                                            Belum pernah mencoba
-                                            <span class="badge badge-poin ms-2">0 poin</span>
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="teknik_mindfulness" value="10" required>
-                                        <label class="form-check-label">
-                                            Kadang-kadang (1-2 kali seminggu)
-                                            <span class="badge badge-poin ms-2">10 poin</span>
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="teknik_mindfulness" value="15" required>
-                                        <label class="form-check-label">
-                                            Sering (3-5 kali seminggu)
-                                            <span class="badge badge-poin ms-2">15 poin</span>
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="teknik_mindfulness" value="20" required>
-                                        <label class="form-check-label">
-                                            Rutin setiap hari
-                                            <span class="badge badge-poin ms-2">20 poin</span>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Soal 5 -->
-                        <div class="card question-card" style="border-left-color: #28a745;">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-start mb-3">
-                                    <h6 class="card-title mb-0">
-                                        <span class="badge bg-success me-2">5</span>
-                                        Apakah kamu sudah menerapkan rutinitas check-in emosional seperti yang disarankan dalam materi?
-                                    </h6>
-                                    <span class="badge bg-secondary">15 poin</span>
-                                </div>
-                                <div class="custom-radio">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="check_in_emosional" value="0" required>
-                                        <label class="form-check-label">
-                                            Belum pernah melakukan
-                                            <span class="badge badge-poin ms-2">0 poin</span>
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="check_in_emosional" value="8" required>
-                                        <label class="form-check-label">
-                                            Kadang-kadang ingat melakukan
-                                            <span class="badge badge-poin ms-2">8 poin</span>
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="check_in_emosional" value="12" required>
-                                        <label class="form-check-label">
-                                            Sering melakukan (1-2 kali sehari)
-                                            <span class="badge badge-poin ms-2">12 poin</span>
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="check_in_emosional" value="15" required>
-                                        <label class="form-check-label">
-                                            Rutin 3+ kali sehari
-                                            <span class="badge badge-poin ms-2">15 poin</span>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Kategori: Refleksi Diri -->
-                        <div class="kategori-header dynamic-kategori-header" style="background: linear-gradient(135deg, #fd7e14 0%, #fd7e14cc 100%);">
-                            <h4><i class="fas fa-mirror"></i> Refleksi Diri</h4>
-                        </div>
-
-                        <!-- Soal 3 -->
-                        <div class="card question-card" style="border-left-color: #fd7e14;">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-start mb-3">
-                                    <h6 class="card-title mb-0">
-                                        <span class="badge bg-success me-2">3</span>
-                                        Apakah kamu sudah menerapkan teknik journaling perasaan dengan format yang diajarkan?
-                                    </h6>
-                                    <span class="badge bg-secondary">10 poin</span>
-                                </div>
-                                <div class="custom-radio">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="jurnal_perasaan" value="0" required>
-                                        <label class="form-check-label">
-                                            Belum pernah menulis jurnal
-                                            <span class="badge badge-poin ms-2">0 poin</span>
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="jurnal_perasaan" value="5" required>
-                                        <label class="form-check-label">
-                                            Pernah tapi tidak rutin
-                                            <span class="badge badge-poin ms-2">5 poin</span>
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="jurnal_perasaan" value="8" required>
-                                        <label class="form-check-label">
-                                            Rutin beberapa kali seminggu
-                                            <span class="badge badge-poin ms-2">8 poin</span>
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="jurnal_perasaan" value="10" required>
-                                        <label class="form-check-label">
-                                            Rutin setiap hari dengan format lengkap
-                                            <span class="badge badge-poin ms-2">10 poin</span>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Soal 7 -->
-                        <div class="card question-card" style="border-left-color: #fd7e14;">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-start mb-3">
-                                    <h6 class="card-title mb-0">
-                                        <span class="badge bg-success me-2">7</span>
-                                        Apakah kamu sudah mencoba eksplorasi emosi melalui seni (menggambar, menulis, musik) seperti yang disarankan?
-                                    </h6>
-                                    <span class="badge bg-secondary">10 poin</span>
-                                </div>
-                                <div class="custom-radio">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="eksplorasi_seni" value="0" required>
-                                        <label class="form-check-label">
-                                            Belum pernah mencoba
-                                            <span class="badge badge-poin ms-2">0 poin</span>
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="eksplorasi_seni" value="5" required>
-                                        <label class="form-check-label">
-                                            Pernah 1-2 kali
-                                            <span class="badge badge-poin ms-2">5 poin</span>
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="eksplorasi_seni" value="8" required>
-                                        <label class="form-check-label">
-                                            Sering melakukannya
-                                            <span class="badge badge-poin ms-2">8 poin</span>
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="eksplorasi_seni" value="10" required>
-                                        <label class="form-check-label">
-                                            Rutin menggunakan seni untuk refleksi
-                                            <span class="badge badge-poin ms-2">10 poin</span>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="text-center mt-5">
-                            <button type="submit" class="btn btn-success btn-lg px-5">
-                                <span class="loading">
-                                    <span class="spinner-border spinner-border-sm me-2"></span>
-                                    Menyimpan...
-                                </span>
-                                <span class="normal">
-                                    <i class="fas fa-calculator"></i> Lihat Hasil Evaluasi
-                                </span>
-                            </button>
-                        </div>
-                    </form>
-                </div>
+                    <div class="text-center mt-5">
+                        <button type="submit" id="submitBtn" class="btn btn-success btn-lg px-5">
+                            <i class="fas fa-calculator"></i> Lihat Hasil Evaluasi
+                        </button>
+                    </div>
+                </form>
 
                 <div class="card mt-5 border-0 bg-transparent">
                     <div class="card-body text-center">
                         <p class="text-muted mb-0">
-                            <i class="fas fa-lightbulb"></i> Evaluasi ini membantu mengukur kemajuan dalam mengembangkan kesadaran diri dan kecerdasan emosional
+                            <i class="fas fa-lightbulb"></i> <span id="mainTip">Evaluasi ini membantu mengukur kemajuan dalam mengembangkan kesadaran diri dan kecerdasan emosional</span>
                         </p>
                         <p class="text-muted mt-2 small">
-                            <i class="fas fa-info-circle"></i> Tips: Kesadaran diri yang baik dapat meningkatkan kemampuan mengelola emosi hingga 80%
+                            <i class="fas fa-info-circle"></i> <span id="subTip">Tips: Kesadaran diri yang baik dapat meningkatkan kemampuan mengelola emosi hingga 80%</span>
                         </p>
                     </div>
                 </div>
@@ -535,38 +164,502 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Configuration
-        const CONFIG = {
-            // Ganti dengan URL API Anda
-            API_BASE_URL: '/api/contacts',
-            TABLE_NAME: 'evaluasi', // Nama tabel di D1
-            
-            // Mapping kolom database
-            DB_FIELD: 'x_06', // Kolom untuk menyimpan hasil evaluasi
-            
-            // Konfigurasi scoring
-            SCORING: [
+        // Configuration Data
+        const config = {
+            meta: {
+                title: 'Evaluasi Bab 2: Meningkatkan Kesadaran Diri',
+                subtitle: 'Meningkatkan Kesadaran Diri',
+                badge: 'Kecerdasan Emosional dalam 12 Minggu',
+                db_field: 'x_06'
+            },
+            categories: {
+                'Mengenali Emosi': { icon: 'fas fa-heart', color: '#e74c3c' },
+                'Praktik Mindfulness': { icon: 'fas fa-leaf', color: '#28a745' },
+                'Refleksi Diri': { icon: 'fas fa-mirror', color: '#fd7e14' }
+            },
+            scoring: [
                 { min: 90, label: 'Sangat Baik', class: 'success' },
                 { min: 75, label: 'Baik', class: 'info' },
                 { min: 60, label: 'Cukup', class: 'warning' },
                 { min: 40, label: 'Perlu Perbaikan', class: 'danger' },
                 { min: 0, label: 'Sangat Perlu Perbaikan', class: 'dark' }
             ],
-            
-            // Konfigurasi kategori
-            CATEGORIES: {
-                'Mengenali Emosi': { icon: 'fas fa-heart', color: '#e74c3c' },
-                'Praktik Mindfulness': { icon: 'fas fa-leaf', color: '#28a745' },
-                'Refleksi Diri': { icon: 'fas fa-mirror', color: '#fd7e14' }
-            },
-            
-            // Konfigurasi rekomendasi
-            RECOMMENDATIONS: {
+            recommendations: {
                 low: {
                     title: 'Area yang Perlu Diperbaiki:',
-                    class: 'alert-warning',
+                    class: 'warning',
                     icon: 'fas fa-exclamation-triangle',
                     items: [
                         'Mulai latihan mengenali emosi secara spesifik setiap hari',
                         'Praktikkan teknik mindfulness dasar seperti 5-4-3-2-1',
                         'Buat jurnal perasaan untuk memahami pola emosi',
+                        'Lakukan check-in emosional 3 kali sehari',
+                        'Berlatih teknik mindful breathing selama 5 menit'
+                    ]
+                },
+                medium: {
+                    title: 'Tingkatkan Lagi:',
+                    class: 'info',
+                    icon: 'fas fa-info-circle',
+                    items: [
+                        'Perbanyak frekuensi latihan mindfulness menjadi 2 kali sehari',
+                        'Eksplorasi sumber emosi lebih mendalam melalui refleksi',
+                        'Tingkatkan konsistensi menulis jurnal perasaan',
+                        'Praktikkan body scan untuk menyadari sensasi fisik'
+                    ]
+                },
+                high: {
+                    title: 'Bagus! Pertahankan:',
+                    class: 'success',
+                    icon: 'fas fa-check-circle',
+                    items: [
+                        'Konsistensi dalam praktik kesadaran diri harian',
+                        'Kemampuan mengenali dan menamai emosi dengan spesifik',
+                        'Rutinitas mindfulness dan refleksi yang teratur',
+                        'Eksplorasi lebih dalam tentang pola emosional pribadi'
+                    ]
+                }
+            },
+            footer: {
+                main_tip: 'Evaluasi ini membantu mengukur kemajuan dalam mengembangkan kesadaran diri dan kecerdasan emosional',
+                sub_tip: 'Tips: Kesadaran diri yang baik dapat meningkatkan kemampuan mengelola emosi hingga 80%'
+            }
+        };
+
+        // Questions Data
+        const soalEvaluasi = [
+            {
+                id: 'mengenali_emosi_spesifik',
+                pertanyaan: 'Apakah kamu sudah berlatih mengenali emosi secara spesifik (tidak hanya "senang", "sedih", "marah") berdasarkan materi?',
+                kategori: 'Mengenali Emosi',
+                bobot: 20,
+                pilihan: [
+                    { value: 0, text: 'Belum pernah berlatih' },
+                    { value: 10, text: 'Kadang-kadang (1-2 kali seminggu)' },
+                    { value: 15, text: 'Sering (3-4 kali seminggu)' },
+                    { value: 20, text: 'Rutin setiap hari' }
+                ]
+            },
+            {
+                id: 'identifikasi_sumber_emosi',
+                pertanyaan: 'Apakah kamu sudah berlatih mencari sumber atau pemicu emosi seperti yang dijelaskan dalam materi?',
+                kategori: 'Mengenali Emosi',
+                bobot: 10,
+                pilihan: [
+                    { value: 0, text: 'Belum pernah mencoba' },
+                    { value: 5, text: 'Pernah tapi belum konsisten' },
+                    { value: 8, text: 'Sering melakukannya' },
+                    { value: 10, text: 'Selalu melakukan refleksi sumber emosi' }
+                ]
+            },
+            {
+                id: 'jurnal_perasaan',
+                pertanyaan: 'Apakah kamu sudah menerapkan teknik journaling perasaan dengan format yang diajarkan?',
+                kategori: 'Refleksi Diri',
+                bobot: 10,
+                pilihan: [
+                    { value: 0, text: 'Belum pernah menulis jurnal' },
+                    { value: 5, text: 'Pernah tapi tidak rutin' },
+                    { value: 8, text: 'Rutin beberapa kali seminggu' },
+                    { value: 10, text: 'Rutin setiap hari dengan format lengkap' }
+                ]
+            },
+            {
+                id: 'teknik_mindfulness',
+                pertanyaan: 'Berapa sering kamu mempraktikkan teknik mindfulness (5-4-3-2-1, mindful breathing, body scan) yang diajarkan?',
+                kategori: 'Praktik Mindfulness',
+                bobot: 20,
+                pilihan: [
+                    { value: 0, text: 'Belum pernah mencoba' },
+                    { value: 10, text: 'Kadang-kadang (1-2 kali seminggu)' },
+                    { value: 15, text: 'Sering (3-5 kali seminggu)' },
+                    { value: 20, text: 'Rutin setiap hari' }
+                ]
+            },
+            {
+                id: 'check_in_emosional',
+                pertanyaan: 'Apakah kamu sudah menerapkan rutinitas check-in emosional seperti yang disarankan dalam materi?',
+                kategori: 'Praktik Mindfulness',
+                bobot: 15,
+                pilihan: [
+                    { value: 0, text: 'Belum pernah melakukan' },
+                    { value: 8, text: 'Kadang-kadang ingat melakukan' },
+                    { value: 12, text: 'Sering melakukan (1-2 kali sehari)' },
+                    { value: 15, text: 'Rutin 3+ kali sehari' }
+                ]
+            },
+            {
+                id: 'teknik_pause',
+                pertanyaan: 'Apakah kamu sudah berlatih teknik "pause" (jeda) sebelum bereaksi dalam situasi emosional?',
+                kategori: 'Mengenali Emosi',
+                bobot: 15,
+                pilihan: [
+                    { value: 0, text: 'Belum pernah mencoba' },
+                    { value: 8, text: 'Kadang-kadang berhasil' },
+                    { value: 12, text: 'Sering berhasil menerapkan' },
+                    { value: 15, text: 'Hampir selalu berhasil pause' }
+                ]
+            },
+            {
+                id: 'eksplorasi_seni',
+                pertanyaan: 'Apakah kamu sudah mencoba eksplorasi emosi melalui seni (menggambar, menulis, musik) seperti yang disarankan?',
+                kategori: 'Refleksi Diri',
+                bobot: 10,
+                pilihan: [
+                    { value: 0, text: 'Belum pernah mencoba' },
+                    { value: 5, text: 'Pernah 1-2 kali' },
+                    { value: 8, text: 'Sering melakukannya' },
+                    { value: 10, text: 'Rutin menggunakan seni untuk refleksi' }
+                ]
+            }
+        ];
+
+        // Helper Functions
+        function hitungSkor(postData) {
+            let totalSkor = 0;
+            let detailSkor = {};
+            
+            soalEvaluasi.forEach(soal => {
+                const nilai = postData[soal.id] ? parseInt(postData[soal.id]) : 0;
+                detailSkor[soal.id] = nilai;
+                totalSkor += nilai;
+            });
+            
+            return { total: totalSkor, detail: detailSkor };
+        }
+
+        function getKategoriHasil(skor) {
+            for (let level of config.scoring) {
+                if (skor >= level.min) {
+                    return { label: level.label, class: level.class };
+                }
+            }
+            return { label: 'Unknown', class: 'secondary' };
+        }
+
+        function getRekomendasi(skor) {
+            if (skor < 60) return config.recommendations.low;
+            if (skor < 80) return config.recommendations.medium;
+            return config.recommendations.high;
+        }
+
+        function hitungTotalMaksimalSkor() {
+            return soalEvaluasi.reduce((total, soal) => {
+                const maxNilai = Math.max(...soal.pilihan.map(p => p.value));
+                return total + maxNilai;
+            }, 0);
+        }
+
+        function hitungKategoriGrup(detailSkor) {
+            const kategoriGrup = {};
+            
+            soalEvaluasi.forEach(soal => {
+                const kategori = soal.kategori;
+                
+                if (!kategoriGrup[kategori]) {
+                    kategoriGrup[kategori] = { total: 0, skor: 0, max: 0 };
+                }
+                
+                kategoriGrup[kategori].total += soal.bobot;
+                kategoriGrup[kategori].skor += detailSkor[soal.id];
+                kategoriGrup[kategori].max += Math.max(...soal.pilihan.map(p => p.value));
+            });
+            
+            return kategoriGrup;
+        }
+
+        function formatDataDatabase(hasilEvaluasi, kategoriGrup) {
+            const dataParts = [
+                hasilEvaluasi.total_skor,
+                hasilEvaluasi.persentase,
+                hasilEvaluasi.kategori
+            ];
+            
+            Object.values(kategoriGrup).forEach(data => {
+                dataParts.push(data.skor);
+                dataParts.push(data.max);
+            });
+            
+            return dataParts.join('|');
+        }
+
+        async function simpanDatabase(data) {
+            try {
+                const response = await fetch('/api/contacts', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        table: 'evaluasi',
+                        field: config.meta.db_field,
+                        data: data
+                    })
+                });
+                
+                const result = await response.json();
+                return {
+                    success: response.ok,
+                    message: response.ok ? 'Hasil evaluasi berhasil disimpan ke database!' : 'Gagal menyimpan hasil evaluasi'
+                };
+            } catch (error) {
+                return {
+                    success: false,
+                    message: 'Error database: ' + error.message
+                };
+            }
+        }
+
+        function showAlert(message, type = 'success') {
+            const alertDiv = document.getElementById('databaseAlert');
+            alertDiv.innerHTML = `
+                <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-triangle'}"></i>
+                    ${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            `;
+            
+            // Auto-close after 5 seconds
+            setTimeout(() => {
+                const alert = alertDiv.querySelector('.alert');
+                if (alert) new bootstrap.Alert(alert).close();
+            }, 5000);
+        }
+
+        function renderForm() {
+            const container = document.getElementById('questionsContainer');
+            let html = '';
+            let currentKategori = '';
+            let noSoal = 1;
+
+            soalEvaluasi.forEach(soal => {
+                // Render header kategori jika kategori berubah
+                if (currentKategori !== soal.kategori) {
+                    currentKategori = soal.kategori;
+                    const kategoriConfig = config.categories[currentKategori];
+                    html += `
+                        <div class="kategori-header dynamic-kategori-header" style="background: linear-gradient(135deg, ${kategoriConfig.color} 0%, ${kategoriConfig.color}cc 100%);">
+                            <h4><i class="${kategoriConfig.icon}"></i> ${currentKategori}</h4>
+                        </div>
+                    `;
+                }
+
+                html += `
+                    <div class="card question-card" style="border-left-color: ${config.categories[soal.kategori].color};">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <h6 class="card-title mb-0">
+                                    <span class="badge bg-success me-2">${noSoal}</span>
+                                    ${soal.pertanyaan}
+                                </h6>
+                                <span class="badge bg-secondary">${soal.bobot} poin</span>
+                            </div>
+
+                            <div class="custom-radio">
+                `;
+
+                soal.pilihan.forEach((pilihan, index) => {
+                    html += `
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="${soal.id}" 
+                                   id="${soal.id}_${index}" value="${pilihan.value}" required>
+                            <label class="form-check-label" for="${soal.id}_${index}">
+                                ${pilihan.text}
+                                <span class="badge badge-poin ms-2">${pilihan.value} poin</span>
+                            </label>
+                        </div>
+                    `;
+                });
+
+                html += `
+                            </div>
+                        </div>
+                    </div>
+                `;
+                noSoal++;
+            });
+
+            container.innerHTML = html;
+        }
+
+        function renderResults(hasilEvaluasi) {
+            const resultsContainer = document.getElementById('results');
+            
+            let html = `
+                <!-- Hasil Evaluasi -->
+                <div class="card hasil-card mb-5">
+                    <div class="card-body text-center">
+                        <h3><i class="fas fa-trophy"></i> Hasil Evaluasi</h3>
+                        <div class="row mt-4">
+                            <div class="col-md-4">
+                                <h2 class="fw-bold">${hasilEvaluasi.total_skor}</h2>
+                                <p>dari ${hasilEvaluasi.total_maksimal} poin</p>
+                            </div>
+                            <div class="col-md-4">
+                                <h2 class="fw-bold">${hasilEvaluasi.persentase}%</h2>
+                                <p>Pencapaian</p>
+                            </div>
+                            <div class="col-md-4">
+                                <span class="badge bg-${hasilEvaluasi.warna_badge} fs-5 p-3">
+                                    ${hasilEvaluasi.kategori}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="progress progress-custom mt-3">
+                            <div class="progress-bar bg-success" style="width: ${hasilEvaluasi.persentase}%"></div>
+                        </div>
+                        <div class="mt-3">
+                            <small class="text-light"><i class="fas fa-database"></i> Hasil telah disimpan ke database</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detail Skor -->
+                <div class="card mb-4">
+                    <div class="card-header bg-success text-white">
+                        <h5><i class="fas fa-chart-bar"></i> Detail Skor per Aspek</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+            `;
+
+            const kategoriCount = Object.keys(hasilEvaluasi.kategori_grup).length;
+            const colWidth = kategoriCount <= 3 ? 12 / kategoriCount : 6;
+
+            Object.entries(hasilEvaluasi.kategori_grup).forEach(([namaKategori, data]) => {
+                const persentase = data.max > 0 ? Math.round((data.skor / data.max) * 100) : 0;
+                html += `
+                    <div class="col-md-${colWidth} mb-3">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <h6 class="card-title">
+                                    <i class="${config.categories[namaKategori].icon}"></i>
+                                    ${namaKategori}
+                                </h6>
+                                <h4 class="text-success">${data.skor}/${data.max}</h4>
+                                <div class="progress">
+                                    <div class="progress-bar bg-success" style="width: ${persentase}%"></div>
+                                </div>
+                                <small class="text-muted">${persentase}%</small>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += `
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Rekomendasi
+            const rekomendasi = getRekomendasi(hasilEvaluasi.total_skor);
+            html += `
+                <div class="card mb-4">
+                    <div class="card-header bg-info text-white">
+                        <h5><i class="fas fa-lightbulb"></i> Rekomendasi untuk Meningkatkan Kesadaran Diri</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-${rekomendasi.class}">
+                            <h6><i class="${rekomendasi.icon}"></i> ${rekomendasi.title}</h6>
+                            <ul class="mb-0">
+            `;
+
+            rekomendasi.items.forEach(item => {
+                html += `<li>${item}</li>`;
+            });
+
+            html += `
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <button onclick="resetForm()" class="btn btn-outline-success btn-lg">
+                        <i class="fas fa-redo"></i> Evaluasi Ulang
+                    </button>
+                </div>
+            `;
+
+            resultsContainer.innerHTML = html;
+        }
+
+        function resetForm() {
+            document.getElementById('evaluationForm').reset();
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('evaluationForm').style.display = 'block';
+        }
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            renderForm();
+
+            const form = document.getElementById('evaluationForm');
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                // Validate form
+                const formData = new FormData(form);
+                const postData = {};
+                
+                for (let [key, value] of formData.entries()) {
+                    postData[key] = value;
+                }
+
+                // Check if all questions are answered
+                const allAnswered = soalEvaluasi.every(soal => postData[soal.id]);
+                if (!allAnswered) {
+                    alert('Mohon jawab semua pertanyaan sebelum melanjutkan!');
+                    return;
+                }
+
+                // Show loading
+                document.getElementById('loading').classList.add('show');
+                form.classList.add('loading');
+
+                try {
+                    // Calculate results
+                    const skor = hitungSkor(postData);
+                    const kategori = getKategoriHasil(skor.total);
+                    const kategoriGrup = hitungKategoriGrup(skor.detail);
+                    const totalMaksimal = hitungTotalMaksimalSkor();
+                    
+                    const hasilEvaluasi = {
+                        total_skor: skor.total,
+                        detail_skor: skor.detail,
+                        kategori: kategori.label,
+                        warna_badge: kategori.class,
+                        persentase: Math.round((skor.total / totalMaksimal) * 100 * 10) / 10,
+                        kategori_grup: kategoriGrup,
+                        total_maksimal: totalMaksimal
+                    };
+
+                    // Save to database
+                    const dataSimpan = formatDataDatabase(hasilEvaluasi, kategoriGrup);
+                    const databaseResult = await simpanDatabase(dataSimpan);
+
+                    // Hide loading
+                    document.getElementById('loading').classList.remove('show');
+                    form.classList.remove('loading');
+
+                    // Show results
+                    document.getElementById('evaluationForm').style.display = 'none';
+                    document.getElementById('results').style.display = 'block';
+                    renderResults(hasilEvaluasi);
+
+                    // Show alert
+                    showAlert(databaseResult.message, databaseResult.success ? 'success' : 'danger');
+
+                } catch (error) {
+                    document.getElementById('loading').classList.remove('show');
+                    form.classList.remove('loading');
+                    showAlert('Terjadi kesalahan: ' + error.message, 'danger');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
