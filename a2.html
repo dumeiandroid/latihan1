@@ -7,138 +7,120 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        .kategori-header { 
-            background: linear-gradient(135deg, #28a745 0%, #20c997 100%); 
-            color: white; 
-            border-radius: 10px; 
-            padding: 15px; 
-            margin: 20px 0 15px 0; 
-        }
-        .question-card { 
-            border-left: 4px solid #28a745; 
-            margin-bottom: 20px; 
-            transition: all 0.3s ease; 
-        }
-        .question-card:hover { 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
-            transform: translateY(-2px); 
-        }
-        .hasil-card { 
-            background: linear-gradient(135deg, #28a745 0%, #20c997 100%); 
-            color: white; 
-            border-radius: 15px; 
-        }
-        .progress-custom { 
-            height: 25px; 
-            border-radius: 15px; 
-        }
-        .custom-radio { 
-            margin-left: 35px; 
-            margin-top: 15px; 
-        }
-        .custom-radio .form-check { 
-            background: #f8f9fa; 
-            border: 2px solid #e9ecef; 
-            border-radius: 8px; 
-            padding: 12px 15px; 
-            margin-bottom: 8px; 
-            transition: all 0.3s ease; 
-            cursor: pointer; 
-        }
-        .custom-radio .form-check:hover { 
-            background: #d1ecf1; 
-            border-color: #28a745; 
-            transform: translateX(5px); 
-        }
-        .custom-radio .form-check-input:checked + .form-check-label { 
-            color: #155724; 
-            font-weight: 500; 
-        }
-        .custom-radio .form-check:has(.form-check-input:checked) { 
-            background: #d1ecf1; 
-            border-color: #28a745; 
-            box-shadow: 0 2px 8px rgba(40, 167, 69, 0.2); 
-        }
-        .custom-radio .form-check-input { 
-            width: 20px; 
-            height: 20px; 
-            margin-top: 2px; 
-        }
-        .custom-radio .form-check-label { 
-            margin-left: 10px; 
-            cursor: pointer; 
-            line-height: 1.4; 
-        }
-        .badge-poin { 
-            background: #28a745 !important; 
-            color: white !important; 
-            font-size: 0.75rem; 
-            padding: 4px 8px; 
-            border-radius: 12px; 
-        }
-        .database-alert { 
-            position: fixed; 
-            top: 20px; 
-            right: 20px; 
-            z-index: 1050; 
-            min-width: 300px; 
-        }
-        .digital-icon { 
-            background: linear-gradient(135deg, #28a745, #20c997); 
-            -webkit-background-clip: text; 
-            -webkit-text-fill-color: transparent; 
-            background-clip: text; 
-        }
-        .dynamic-kategori-header {
-            transition: all 0.3s ease;
-        }
-        .dynamic-kategori-header:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-        .loading-spinner {
-            display: none;
-        }
-        .loading-spinner.show {
-            display: block;
-        }
-        #evaluationForm.loading {
-            opacity: 0.6;
-            pointer-events: none;
-        }
-    </style>
+    .kategori-header { 
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%); 
+        color: white; 
+        border-radius: 10px; 
+        padding: 15px; 
+        margin: 20px 0 15px 0; 
+    }
+    .question-card { 
+        border-left: 4px solid #28a745; 
+        margin-bottom: 20px; 
+        transition: all 0.3s ease; 
+    }
+    .question-card:hover { 
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+        transform: translateY(-2px); 
+    }
+    .hasil-card { 
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%); 
+        color: white; 
+        border-radius: 15px; 
+    }
+    .progress-custom { 
+        height: 25px; 
+        border-radius: 15px; 
+    }
+    .custom-radio { 
+        margin-left: 35px; 
+        margin-top: 15px; 
+    }
+    .custom-radio .form-check { 
+        background: #f8f9fa; 
+        border: 2px solid #e9ecef; 
+        border-radius: 8px; 
+        padding: 12px 15px; 
+        margin-bottom: 8px; 
+        transition: all 0.3s ease; 
+        cursor: pointer; 
+    }
+    .custom-radio .form-check:hover { 
+        background: #d1ecf1; 
+        border-color: #28a745; 
+        transform: translateX(5px); 
+    }
+    .custom-radio .form-check-input:checked + .form-check-label { 
+        color: #155724; 
+        font-weight: 500; 
+    }
+    .custom-radio .form-check:has(.form-check-input:checked) { 
+        background: #d1ecf1; 
+        border-color: #28a745; 
+        box-shadow: 0 2px 8px rgba(40, 167, 69, 0.2); 
+    }
+    .custom-radio .form-check-input { 
+        width: 20px; 
+        height: 20px; 
+        margin-top: 2px; 
+    }
+    .custom-radio .form-check-label { 
+        margin-left: 10px; 
+        cursor: pointer; 
+        line-height: 1.4; 
+    }
+    .badge-poin { 
+        background: #28a745 !important; 
+        color: white !important; 
+        font-size: 0.75rem; 
+        padding: 4px 8px; 
+        border-radius: 12px; 
+    }
+    .database-alert { 
+        position: fixed; 
+        top: 20px; 
+        right: 20px; 
+        z-index: 1050; 
+        min-width: 300px; 
+    }
+    .digital-icon { 
+        background: linear-gradient(135deg, #28a745, #20c997); 
+        -webkit-background-clip: text; 
+        -webkit-text-fill-color: transparent; 
+        background-clip: text; 
+    }
+    .dynamic-kategori-header {
+        transition: all 0.3s ease;
+    }
+    .dynamic-kategori-header:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+</style>
 </head>
 <body class="bg-light">
-    <div id="databaseAlert" class="database-alert"></div>
+    <div id="loading" class="alert alert-info database-alert" style="display: none;">
+        <i class="fas fa-spinner fa-spin"></i> Memproses evaluasi...
+    </div>
 
     <div class="container py-5">
         <div class="row justify-content-center">
             <div class="col-lg-8">
                 <div class="text-center mb-5">
                     <h1 class="display-5 fw-bold text-success">
-                        <i class="fas fa-globe digital-icon"></i> <span id="pageTitle">Evaluasi Bab 2: Meningkatkan Kesadaran Diri</span>
+                        <i class="fas fa-globe digital-icon"></i> <span id="pageTitle"></span>
                     </h1>
-                    <p class="lead text-muted" id="pageSubtitle">Meningkatkan Kesadaran Diri</p>
-                    <div class="badge bg-success fs-6" id="pageBadge">Kecerdasan Emosional dalam 12 Minggu</div>
+                    <p class="lead text-muted" id="pageSubtitle"></p>
+                    <div class="badge bg-success fs-6" id="pageBadge"></div>
                 </div>
 
-                <!-- Loading Spinner -->
-                <div id="loading" class="text-center loading-spinner">
-                    <div class="spinner-border text-success" role="status">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
-                    <p class="mt-2">Menyimpan hasil evaluasi...</p>
-                </div>
-
-                <!-- Results Section -->
                 <div id="results" style="display: none;">
-                    <!-- Dynamic results will be inserted here -->
+                    <!-- Hasil akan ditampilkan di sini -->
                 </div>
 
-                <!-- Form Evaluasi -->
-                <form id="evaluationForm" method="POST">
-                    <div id="questionsContainer">
-                        <!-- Dynamic questions will be inserted here -->
+                <form id="evaluationForm">
+                    <div id="questionContainer">
+                        <!-- Soal akan di-render di sini -->
                     </div>
 
                     <div class="text-center mt-5">
@@ -151,10 +133,10 @@
                 <div class="card mt-5 border-0 bg-transparent">
                     <div class="card-body text-center">
                         <p class="text-muted mb-0">
-                            <i class="fas fa-lightbulb"></i> <span id="mainTip">Evaluasi ini membantu mengukur kemajuan dalam mengembangkan kesadaran diri dan kecerdasan emosional</span>
+                            <i class="fas fa-lightbulb"></i> <span id="mainTip"></span>
                         </p>
                         <p class="text-muted mt-2 small">
-                            <i class="fas fa-info-circle"></i> <span id="subTip">Tips: Kesadaran diri yang baik dapat meningkatkan kemampuan mengelola emosi hingga 80%</span>
+                            <i class="fas fa-info-circle"></i> <span id="subTip"></span>
                         </p>
                     </div>
                 </div>
@@ -164,502 +146,472 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Configuration Data
-        const config = {
-            meta: {
-                title: 'Evaluasi Bab 2: Meningkatkan Kesadaran Diri',
-                subtitle: 'Meningkatkan Kesadaran Diri',
-                badge: 'Kecerdasan Emosional dalam 12 Minggu',
-                db_field: 'x_06'
-            },
-            categories: {
-                'Mengenali Emosi': { icon: 'fas fa-heart', color: '#e74c3c' },
-                'Praktik Mindfulness': { icon: 'fas fa-leaf', color: '#28a745' },
-                'Refleksi Diri': { icon: 'fas fa-mirror', color: '#fd7e14' }
-            },
-            scoring: [
-                { min: 90, label: 'Sangat Baik', class: 'success' },
-                { min: 75, label: 'Baik', class: 'info' },
-                { min: 60, label: 'Cukup', class: 'warning' },
-                { min: 40, label: 'Perlu Perbaikan', class: 'danger' },
-                { min: 0, label: 'Sangat Perlu Perbaikan', class: 'dark' }
-            ],
-            recommendations: {
-                low: {
-                    title: 'Area yang Perlu Diperbaiki:',
-                    class: 'warning',
-                    icon: 'fas fa-exclamation-triangle',
-                    items: [
-                        'Mulai latihan mengenali emosi secara spesifik setiap hari',
-                        'Praktikkan teknik mindfulness dasar seperti 5-4-3-2-1',
-                        'Buat jurnal perasaan untuk memahami pola emosi',
-                        'Lakukan check-in emosional 3 kali sehari',
-                        'Berlatih teknik mindful breathing selama 5 menit'
-                    ]
-                },
-                medium: {
-                    title: 'Tingkatkan Lagi:',
-                    class: 'info',
-                    icon: 'fas fa-info-circle',
-                    items: [
-                        'Perbanyak frekuensi latihan mindfulness menjadi 2 kali sehari',
-                        'Eksplorasi sumber emosi lebih mendalam melalui refleksi',
-                        'Tingkatkan konsistensi menulis jurnal perasaan',
-                        'Praktikkan body scan untuk menyadari sensasi fisik'
-                    ]
-                },
-                high: {
-                    title: 'Bagus! Pertahankan:',
-                    class: 'success',
-                    icon: 'fas fa-check-circle',
-                    items: [
-                        'Konsistensi dalam praktik kesadaran diri harian',
-                        'Kemampuan mengenali dan menamai emosi dengan spesifik',
-                        'Rutinitas mindfulness dan refleksi yang teratur',
-                        'Eksplorasi lebih dalam tentang pola emosional pribadi'
-                    ]
-                }
-            },
-            footer: {
-                main_tip: 'Evaluasi ini membantu mengukur kemajuan dalam mengembangkan kesadaran diri dan kecerdasan emosional',
-                sub_tip: 'Tips: Kesadaran diri yang baik dapat meningkatkan kemampuan mengelola emosi hingga 80%'
-            }
-        };
-
-        // Questions Data
-        const soalEvaluasi = [
-            {
-                id: 'mengenali_emosi_spesifik',
-                pertanyaan: 'Apakah kamu sudah berlatih mengenali emosi secara spesifik (tidak hanya "senang", "sedih", "marah") berdasarkan materi?',
-                kategori: 'Mengenali Emosi',
-                bobot: 20,
-                pilihan: [
-                    { value: 0, text: 'Belum pernah berlatih' },
-                    { value: 10, text: 'Kadang-kadang (1-2 kali seminggu)' },
-                    { value: 15, text: 'Sering (3-4 kali seminggu)' },
-                    { value: 20, text: 'Rutin setiap hari' }
-                ]
-            },
-            {
-                id: 'identifikasi_sumber_emosi',
-                pertanyaan: 'Apakah kamu sudah berlatih mencari sumber atau pemicu emosi seperti yang dijelaskan dalam materi?',
-                kategori: 'Mengenali Emosi',
-                bobot: 10,
-                pilihan: [
-                    { value: 0, text: 'Belum pernah mencoba' },
-                    { value: 5, text: 'Pernah tapi belum konsisten' },
-                    { value: 8, text: 'Sering melakukannya' },
-                    { value: 10, text: 'Selalu melakukan refleksi sumber emosi' }
-                ]
-            },
-            {
-                id: 'jurnal_perasaan',
-                pertanyaan: 'Apakah kamu sudah menerapkan teknik journaling perasaan dengan format yang diajarkan?',
-                kategori: 'Refleksi Diri',
-                bobot: 10,
-                pilihan: [
-                    { value: 0, text: 'Belum pernah menulis jurnal' },
-                    { value: 5, text: 'Pernah tapi tidak rutin' },
-                    { value: 8, text: 'Rutin beberapa kali seminggu' },
-                    { value: 10, text: 'Rutin setiap hari dengan format lengkap' }
-                ]
-            },
-            {
-                id: 'teknik_mindfulness',
-                pertanyaan: 'Berapa sering kamu mempraktikkan teknik mindfulness (5-4-3-2-1, mindful breathing, body scan) yang diajarkan?',
-                kategori: 'Praktik Mindfulness',
-                bobot: 20,
-                pilihan: [
-                    { value: 0, text: 'Belum pernah mencoba' },
-                    { value: 10, text: 'Kadang-kadang (1-2 kali seminggu)' },
-                    { value: 15, text: 'Sering (3-5 kali seminggu)' },
-                    { value: 20, text: 'Rutin setiap hari' }
-                ]
-            },
-            {
-                id: 'check_in_emosional',
-                pertanyaan: 'Apakah kamu sudah menerapkan rutinitas check-in emosional seperti yang disarankan dalam materi?',
-                kategori: 'Praktik Mindfulness',
-                bobot: 15,
-                pilihan: [
-                    { value: 0, text: 'Belum pernah melakukan' },
-                    { value: 8, text: 'Kadang-kadang ingat melakukan' },
-                    { value: 12, text: 'Sering melakukan (1-2 kali sehari)' },
-                    { value: 15, text: 'Rutin 3+ kali sehari' }
-                ]
-            },
-            {
-                id: 'teknik_pause',
-                pertanyaan: 'Apakah kamu sudah berlatih teknik "pause" (jeda) sebelum bereaksi dalam situasi emosional?',
-                kategori: 'Mengenali Emosi',
-                bobot: 15,
-                pilihan: [
-                    { value: 0, text: 'Belum pernah mencoba' },
-                    { value: 8, text: 'Kadang-kadang berhasil' },
-                    { value: 12, text: 'Sering berhasil menerapkan' },
-                    { value: 15, text: 'Hampir selalu berhasil pause' }
-                ]
-            },
-            {
-                id: 'eksplorasi_seni',
-                pertanyaan: 'Apakah kamu sudah mencoba eksplorasi emosi melalui seni (menggambar, menulis, musik) seperti yang disarankan?',
-                kategori: 'Refleksi Diri',
-                bobot: 10,
-                pilihan: [
-                    { value: 0, text: 'Belum pernah mencoba' },
-                    { value: 5, text: 'Pernah 1-2 kali' },
-                    { value: 8, text: 'Sering melakukannya' },
-                    { value: 10, text: 'Rutin menggunakan seni untuk refleksi' }
-                ]
-            }
-        ];
-
-        // Helper Functions
-        function hitungSkor(postData) {
-            let totalSkor = 0;
-            let detailSkor = {};
-            
-            soalEvaluasi.forEach(soal => {
-                const nilai = postData[soal.id] ? parseInt(postData[soal.id]) : 0;
-                detailSkor[soal.id] = nilai;
-                totalSkor += nilai;
-            });
-            
-            return { total: totalSkor, detail: detailSkor };
+        // JavaScript code akan ditambahkan di sini
+    </script>
+    <script>
+        // Konfigurasi data
+const config = {
+    meta: {
+        title: 'Evaluasi Bab 2: Meningkatkan Kesadaran Diri',
+        subtitle: 'Meningkatkan Kesadaran Diri',
+        badge: 'Kecerdasan Emosional dalam 12 Minggu',
+        db_field: 'x_06'
+    },
+    categories: {
+        'Mengenali Emosi': { icon: 'fas fa-heart', color: '#e74c3c' },
+        'Praktik Mindfulness': { icon: 'fas fa-leaf', color: '#28a745' },
+        'Refleksi Diri': { icon: 'fas fa-mirror', color: '#fd7e14' }
+    },
+    scoring: [
+        { min: 90, label: 'Sangat Baik', class: 'success' },
+        { min: 75, label: 'Baik', class: 'info' },
+        { min: 60, label: 'Cukup', class: 'warning' },
+        { min: 40, label: 'Perlu Perbaikan', class: 'danger' },
+        { min: 0, label: 'Sangat Perlu Perbaikan', class: 'dark' }
+    ],
+    recommendations: {
+        low: {
+            title: 'Area yang Perlu Diperbaiki:',
+            class: 'warning',
+            icon: 'fas fa-exclamation-triangle',
+            items: [
+                'Mulai latihan mengenali emosi secara spesifik setiap hari',
+                'Praktikkan teknik mindfulness dasar seperti 5-4-3-2-1',
+                'Buat jurnal perasaan untuk memahami pola emosi',
+                'Lakukan check-in emosional 3 kali sehari',
+                'Berlatih teknik mindful breathing selama 5 menit'
+            ]
+        },
+        medium: {
+            title: 'Tingkatkan Lagi:',
+            class: 'info',
+            icon: 'fas fa-info-circle',
+            items: [
+                'Perbanyak frekuensi latihan mindfulness menjadi 2 kali sehari',
+                'Eksplorasi sumber emosi lebih mendalam melalui refleksi',
+                'Tingkatkan konsistensi menulis jurnal perasaan',
+                'Praktikkan body scan untuk menyadari sensasi fisik'
+            ]
+        },
+        high: {
+            title: 'Bagus! Pertahankan:',
+            class: 'success',
+            icon: 'fas fa-check-circle',
+            items: [
+                'Konsistensi dalam praktik kesadaran diri harian',
+                'Kemampuan mengenali dan menamai emosi dengan spesifik',
+                'Rutinitas mindfulness dan refleksi yang teratur',
+                'Eksplorasi lebih dalam tentang pola emosional pribadi'
+            ]
         }
+    },
+    footer: {
+        main_tip: 'Evaluasi ini membantu mengukur kemajuan dalam mengembangkan kesadaran diri dan kecerdasan emosional',
+        sub_tip: 'Tips: Kesadaran diri yang baik dapat meningkatkan kemampuan mengelola emosi hingga 80%'
+    }
+};
 
-        function getKategoriHasil(skor) {
-            for (let level of config.scoring) {
-                if (skor >= level.min) {
-                    return { label: level.label, class: level.class };
-                }
-            }
-            return { label: 'Unknown', class: 'secondary' };
+const soalEvaluasi = [
+    {
+        id: 'mengenali_emosi_spesifik',
+        pertanyaan: 'Apakah kamu sudah berlatih mengenali emosi secara spesifik (tidak hanya "senang", "sedih", "marah") berdasarkan materi?',
+        kategori: 'Mengenali Emosi',
+        bobot: 20,
+        pilihan: [
+            { value: 0, text: 'Belum pernah berlatih' },
+            { value: 10, text: 'Kadang-kadang (1-2 kali seminggu)' },
+            { value: 15, text: 'Sering (3-4 kali seminggu)' },
+            { value: 20, text: 'Rutin setiap hari' }
+        ]
+    },
+    {
+        id: 'identifikasi_sumber_emosi',
+        pertanyaan: 'Apakah kamu sudah berlatih mencari sumber atau pemicu emosi seperti yang dijelaskan dalam materi?',
+        kategori: 'Mengenali Emosi',
+        bobot: 10,
+        pilihan: [
+            { value: 0, text: 'Belum pernah mencoba' },
+            { value: 5, text: 'Pernah tapi belum konsisten' },
+            { value: 8, text: 'Sering melakukannya' },
+            { value: 10, text: 'Selalu melakukan refleksi sumber emosi' }
+        ]
+    },
+    {
+        id: 'jurnal_perasaan',
+        pertanyaan: 'Apakah kamu sudah menerapkan teknik journaling perasaan dengan format yang diajarkan?',
+        kategori: 'Refleksi Diri',
+        bobot: 10,
+        pilihan: [
+            { value: 0, text: 'Belum pernah menulis jurnal' },
+            { value: 5, text: 'Pernah tapi tidak rutin' },
+            { value: 8, text: 'Rutin beberapa kali seminggu' },
+            { value: 10, text: 'Rutin setiap hari dengan format lengkap' }
+        ]
+    },
+    {
+        id: 'teknik_mindfulness',
+        pertanyaan: 'Berapa sering kamu mempraktikkan teknik mindfulness (5-4-3-2-1, mindful breathing, body scan) yang diajarkan?',
+        kategori: 'Praktik Mindfulness',
+        bobot: 20,
+        pilihan: [
+            { value: 0, text: 'Belum pernah mencoba' },
+            { value: 10, text: 'Kadang-kadang (1-2 kali seminggu)' },
+            { value: 15, text: 'Sering (3-5 kali seminggu)' },
+            { value: 20, text: 'Rutin setiap hari' }
+        ]
+    },
+    {
+        id: 'check_in_emosional',
+        pertanyaan: 'Apakah kamu sudah menerapkan rutinitas check-in emosional seperti yang disarankan dalam materi?',
+        kategori: 'Praktik Mindfulness',
+        bobot: 15,
+        pilihan: [
+            { value: 0, text: 'Belum pernah melakukan' },
+            { value: 8, text: 'Kadang-kadang ingat melakukan' },
+            { value: 12, text: 'Sering melakukan (1-2 kali sehari)' },
+            { value: 15, text: 'Rutin 3+ kali sehari' }
+        ]
+    },
+    {
+        id: 'teknik_pause',
+        pertanyaan: 'Apakah kamu sudah berlatih teknik "pause" (jeda) sebelum bereaksi dalam situasi emosional?',
+        kategori: 'Mengenali Emosi',
+        bobot: 15,
+        pilihan: [
+            { value: 0, text: 'Belum pernah mencoba' },
+            { value: 8, text: 'Kadang-kadang berhasil' },
+            { value: 12, text: 'Sering berhasil menerapkan' },
+            { value: 15, text: 'Hampir selalu berhasil pause' }
+        ]
+    },
+    {
+        id: 'eksplorasi_seni',
+        pertanyaan: 'Apakah kamu sudah mencoba eksplorasi emosi melalui seni (menggambar, menulis, musik) seperti yang disarankan?',
+        kategori: 'Refleksi Diri',
+        bobot: 10,
+        pilihan: [
+            { value: 0, text: 'Belum pernah mencoba' },
+            { value: 5, text: 'Pernah 1-2 kali' },
+            { value: 8, text: 'Sering melakukannya' },
+            { value: 10, text: 'Rutin menggunakan seni untuk refleksi' }
+        ]
+    }
+];
+
+// Helper functions
+function hitungTotalMaksimalSkor(soalEvaluasi) {
+    return soalEvaluasi.reduce((total, soal) => {
+        const maxNilai = Math.max(...soal.pilihan.map(p => p.value));
+        return total + maxNilai;
+    }, 0);
+}
+
+function hitungSkor(soalEvaluasi, formData) {
+    const totalSkor = soalEvaluasi.reduce((total, soal) => {
+        const nilai = parseInt(formData.get(soal.id)) || 0;
+        return total + nilai;
+    }, 0);
+    
+    const detailSkor = {};
+    soalEvaluasi.forEach(soal => {
+        detailSkor[soal.id] = parseInt(formData.get(soal.id)) || 0;
+    });
+    
+    return { total: totalSkor, detail: detailSkor };
+}
+
+function getKategoriHasil(skor, scoringConfig) {
+    for (const level of scoringConfig) {
+        if (skor >= level.min) {
+            return { label: level.label, class: level.class };
         }
+    }
+    return { label: 'Unknown', class: 'secondary' };
+}
 
-        function getRekomendasi(skor) {
-            if (skor < 60) return config.recommendations.low;
-            if (skor < 80) return config.recommendations.medium;
-            return config.recommendations.high;
+function getRekomendasi(skor, recommendations) {
+    if (skor < 60) return recommendations.low;
+    if (skor < 80) return recommendations.medium;
+    return recommendations.high;
+}
+
+function hitungKategoriGrup(soalEvaluasi, detailSkor) {
+    const kategoriGrup = {};
+    
+    soalEvaluasi.forEach(soal => {
+        const kategori = soal.kategori;
+        
+        if (!kategoriGrup[kategori]) {
+            kategoriGrup[kategori] = { total: 0, skor: 0, max: 0 };
         }
+        
+        kategoriGrup[kategori].total += soal.bobot;
+        kategoriGrup[kategori].skor += detailSkor[soal.id];
+        kategoriGrup[kategori].max += Math.max(...soal.pilihan.map(p => p.value));
+    });
+    
+    return kategoriGrup;
+}
 
-        function hitungTotalMaksimalSkor() {
-            return soalEvaluasi.reduce((total, soal) => {
-                const maxNilai = Math.max(...soal.pilihan.map(p => p.value));
-                return total + maxNilai;
-            }, 0);
-        }
-
-        function hitungKategoriGrup(detailSkor) {
-            const kategoriGrup = {};
-            
-            soalEvaluasi.forEach(soal => {
-                const kategori = soal.kategori;
-                
-                if (!kategoriGrup[kategori]) {
-                    kategoriGrup[kategori] = { total: 0, skor: 0, max: 0 };
-                }
-                
-                kategoriGrup[kategori].total += soal.bobot;
-                kategoriGrup[kategori].skor += detailSkor[soal.id];
-                kategoriGrup[kategori].max += Math.max(...soal.pilihan.map(p => p.value));
-            });
-            
-            return kategoriGrup;
-        }
-
-        function formatDataDatabase(hasilEvaluasi, kategoriGrup) {
-            const dataParts = [
-                hasilEvaluasi.total_skor,
-                hasilEvaluasi.persentase,
-                hasilEvaluasi.kategori
-            ];
-            
-            Object.values(kategoriGrup).forEach(data => {
-                dataParts.push(data.skor);
-                dataParts.push(data.max);
-            });
-            
-            return dataParts.join('|');
-        }
-
-        async function simpanDatabase(data) {
-            try {
-                const response = await fetch('/api/contacts', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        table: 'evaluasi',
-                        field: config.meta.db_field,
-                        data: data
-                    })
-                });
-                
-                const result = await response.json();
-                return {
-                    success: response.ok,
-                    message: response.ok ? 'Hasil evaluasi berhasil disimpan ke database!' : 'Gagal menyimpan hasil evaluasi'
-                };
-            } catch (error) {
-                return {
-                    success: false,
-                    message: 'Error database: ' + error.message
-                };
-            }
-        }
-
-        function showAlert(message, type = 'success') {
-            const alertDiv = document.getElementById('databaseAlert');
-            alertDiv.innerHTML = `
-                <div class="alert alert-${type} alert-dismissible fade show" role="alert">
-                    <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-triangle'}"></i>
-                    ${message}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            `;
-            
-            // Auto-close after 5 seconds
-            setTimeout(() => {
-                const alert = alertDiv.querySelector('.alert');
-                if (alert) new bootstrap.Alert(alert).close();
-            }, 5000);
-        }
-
-        function renderForm() {
-            const container = document.getElementById('questionsContainer');
-            let html = '';
-            let currentKategori = '';
-            let noSoal = 1;
-
-            soalEvaluasi.forEach(soal => {
-                // Render header kategori jika kategori berubah
-                if (currentKategori !== soal.kategori) {
-                    currentKategori = soal.kategori;
-                    const kategoriConfig = config.categories[currentKategori];
-                    html += `
-                        <div class="kategori-header dynamic-kategori-header" style="background: linear-gradient(135deg, ${kategoriConfig.color} 0%, ${kategoriConfig.color}cc 100%);">
-                            <h4><i class="${kategoriConfig.icon}"></i> ${currentKategori}</h4>
-                        </div>
-                    `;
-                }
-
-                html += `
-                    <div class="card question-card" style="border-left-color: ${config.categories[soal.kategori].color};">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-start mb-3">
-                                <h6 class="card-title mb-0">
-                                    <span class="badge bg-success me-2">${noSoal}</span>
-                                    ${soal.pertanyaan}
-                                </h6>
-                                <span class="badge bg-secondary">${soal.bobot} poin</span>
-                            </div>
-
-                            <div class="custom-radio">
-                `;
-
-                soal.pilihan.forEach((pilihan, index) => {
-                    html += `
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="${soal.id}" 
-                                   id="${soal.id}_${index}" value="${pilihan.value}" required>
-                            <label class="form-check-label" for="${soal.id}_${index}">
-                                ${pilihan.text}
-                                <span class="badge badge-poin ms-2">${pilihan.value} poin</span>
-                            </label>
-                        </div>
-                    `;
-                });
-
-                html += `
-                            </div>
-                        </div>
-                    </div>
-                `;
-                noSoal++;
-            });
-
-            container.innerHTML = html;
-        }
-
-        function renderResults(hasilEvaluasi) {
-            const resultsContainer = document.getElementById('results');
-            
-            let html = `
-                <!-- Hasil Evaluasi -->
-                <div class="card hasil-card mb-5">
-                    <div class="card-body text-center">
-                        <h3><i class="fas fa-trophy"></i> Hasil Evaluasi</h3>
-                        <div class="row mt-4">
-                            <div class="col-md-4">
-                                <h2 class="fw-bold">${hasilEvaluasi.total_skor}</h2>
-                                <p>dari ${hasilEvaluasi.total_maksimal} poin</p>
-                            </div>
-                            <div class="col-md-4">
-                                <h2 class="fw-bold">${hasilEvaluasi.persentase}%</h2>
-                                <p>Pencapaian</p>
-                            </div>
-                            <div class="col-md-4">
-                                <span class="badge bg-${hasilEvaluasi.warna_badge} fs-5 p-3">
-                                    ${hasilEvaluasi.kategori}
-                                </span>
-                            </div>
-                        </div>
-                        <div class="progress progress-custom mt-3">
-                            <div class="progress-bar bg-success" style="width: ${hasilEvaluasi.persentase}%"></div>
-                        </div>
-                        <div class="mt-3">
-                            <small class="text-light"><i class="fas fa-database"></i> Hasil telah disimpan ke database</small>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Detail Skor -->
-                <div class="card mb-4">
-                    <div class="card-header bg-success text-white">
-                        <h5><i class="fas fa-chart-bar"></i> Detail Skor per Aspek</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-            `;
-
-            const kategoriCount = Object.keys(hasilEvaluasi.kategori_grup).length;
-            const colWidth = kategoriCount <= 3 ? 12 / kategoriCount : 6;
-
-            Object.entries(hasilEvaluasi.kategori_grup).forEach(([namaKategori, data]) => {
-                const persentase = data.max > 0 ? Math.round((data.skor / data.max) * 100) : 0;
-                html += `
-                    <div class="col-md-${colWidth} mb-3">
-                        <div class="card h-100">
-                            <div class="card-body text-center">
-                                <h6 class="card-title">
-                                    <i class="${config.categories[namaKategori].icon}"></i>
-                                    ${namaKategori}
-                                </h6>
-                                <h4 class="text-success">${data.skor}/${data.max}</h4>
-                                <div class="progress">
-                                    <div class="progress-bar bg-success" style="width: ${persentase}%"></div>
-                                </div>
-                                <small class="text-muted">${persentase}%</small>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            });
-
+// Render functions
+function renderQuestions() {
+    const container = document.getElementById('questionContainer');
+    let currentKategori = '';
+    let noSoal = 1;
+    let html = '';
+    
+    soalEvaluasi.forEach(soal => {
+        if (currentKategori !== soal.kategori) {
+            currentKategori = soal.kategori;
+            const kategoriConfig = config.categories[currentKategori];
             html += `
-                        </div>
-                    </div>
+                <div class="kategori-header dynamic-kategori-header" style="background: linear-gradient(135deg, ${kategoriConfig.color} 0%, ${kategoriConfig.color}cc 100%);">
+                    <h4><i class="${kategoriConfig.icon}"></i> ${currentKategori}</h4>
                 </div>
             `;
-
-            // Rekomendasi
-            const rekomendasi = getRekomendasi(hasilEvaluasi.total_skor);
-            html += `
-                <div class="card mb-4">
-                    <div class="card-header bg-info text-white">
-                        <h5><i class="fas fa-lightbulb"></i> Rekomendasi untuk Meningkatkan Kesadaran Diri</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="alert alert-${rekomendasi.class}">
-                            <h6><i class="${rekomendasi.icon}"></i> ${rekomendasi.title}</h6>
-                            <ul class="mb-0">
-            `;
-
-            rekomendasi.items.forEach(item => {
-                html += `<li>${item}</li>`;
-            });
-
-            html += `
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="text-center">
-                    <button onclick="resetForm()" class="btn btn-outline-success btn-lg">
-                        <i class="fas fa-redo"></i> Evaluasi Ulang
-                    </button>
-                </div>
-            `;
-
-            resultsContainer.innerHTML = html;
         }
-
-        function resetForm() {
-            document.getElementById('evaluationForm').reset();
-            document.getElementById('results').style.display = 'none';
-            document.getElementById('evaluationForm').style.display = 'block';
-        }
-
-        // Event Listeners
-        document.addEventListener('DOMContentLoaded', function() {
-            renderForm();
-
-            const form = document.getElementById('evaluationForm');
-            form.addEventListener('submit', async function(e) {
-                e.preventDefault();
-                
-                // Validate form
-                const formData = new FormData(form);
-                const postData = {};
-                
-                for (let [key, value] of formData.entries()) {
-                    postData[key] = value;
-                }
-
-                // Check if all questions are answered
-                const allAnswered = soalEvaluasi.every(soal => postData[soal.id]);
-                if (!allAnswered) {
-                    alert('Mohon jawab semua pertanyaan sebelum melanjutkan!');
-                    return;
-                }
-
-                // Show loading
-                document.getElementById('loading').classList.add('show');
-                form.classList.add('loading');
-
-                try {
-                    // Calculate results
-                    const skor = hitungSkor(postData);
-                    const kategori = getKategoriHasil(skor.total);
-                    const kategoriGrup = hitungKategoriGrup(skor.detail);
-                    const totalMaksimal = hitungTotalMaksimalSkor();
-                    
-                    const hasilEvaluasi = {
-                        total_skor: skor.total,
-                        detail_skor: skor.detail,
-                        kategori: kategori.label,
-                        warna_badge: kategori.class,
-                        persentase: Math.round((skor.total / totalMaksimal) * 100 * 10) / 10,
-                        kategori_grup: kategoriGrup,
-                        total_maksimal: totalMaksimal
-                    };
-
-                    // Save to database
-                    const dataSimpan = formatDataDatabase(hasilEvaluasi, kategoriGrup);
-                    const databaseResult = await simpanDatabase(dataSimpan);
-
-                    // Hide loading
-                    document.getElementById('loading').classList.remove('show');
-                    form.classList.remove('loading');
-
-                    // Show results
-                    document.getElementById('evaluationForm').style.display = 'none';
-                    document.getElementById('results').style.display = 'block';
-                    renderResults(hasilEvaluasi);
-
-                    // Show alert
-                    showAlert(databaseResult.message, databaseResult.success ? 'success' : 'danger');
-
-                } catch (error) {
-                    document.getElementById('loading').classList.remove('show');
-                    form.classList.remove('loading');
-                    showAlert('Terjadi kesalahan: ' + error.message, 'danger');
-                }
-            });
+        
+        html += `
+            <div class="card question-card" style="border-left-color: ${config.categories[soal.kategori].color};">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <h6 class="card-title mb-0">
+                            <span class="badge bg-success me-2">${noSoal}</span>
+                            ${soal.pertanyaan}
+                        </h6>
+                        <span class="badge bg-secondary">${soal.bobot} poin</span>
+                    </div>
+                    <div class="custom-radio">
+        `;
+        
+        soal.pilihan.forEach((pilihan, index) => {
+            html += `
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="${soal.id}" 
+                           id="${soal.id}_${index}" value="${pilihan.value}" required>
+                    <label class="form-check-label" for="${soal.id}_${index}">
+                        ${pilihan.text}
+                        <span class="badge badge-poin ms-2">${pilihan.value} poin</span>
+                    </label>
+                </div>
+            `;
         });
+        
+        html += `
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        noSoal++;
+    });
+    
+    container.innerHTML = html;
+}
+
+function renderResults(hasilEvaluasi) {
+    const resultsDiv = document.getElementById('results');
+    const form = document.getElementById('evaluationForm');
+    const rekomendasi = getRekomendasi(hasilEvaluasi.totalSkor, config.recommendations);
+    
+    let html = `
+        <div class="card hasil-card mb-5">
+            <div class="card-body text-center">
+                <h3><i class="fas fa-trophy"></i> Hasil Evaluasi</h3>
+                <div class="row mt-4">
+                    <div class="col-md-4">
+                        <h2 class="fw-bold">${hasilEvaluasi.totalSkor}</h2>
+                        <p>dari ${hasilEvaluasi.totalMaksimal} poin</p>
+                    </div>
+                    <div class="col-md-4">
+                        <h2 class="fw-bold">${hasilEvaluasi.persentase}%</h2>
+                        <p>Pencapaian</p>
+                    </div>
+                    <div class="col-md-4">
+                        <span class="badge bg-${hasilEvaluasi.warnaBadge} fs-5 p-3">
+                            ${hasilEvaluasi.kategori}
+                        </span>
+                    </div>
+                </div>
+                <div class="progress progress-custom mt-3">
+                    <div class="progress-bar bg-success" style="width: ${hasilEvaluasi.persentase}%"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header bg-success text-white">
+                <h5><i class="fas fa-chart-bar"></i> Detail Skor per Aspek</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+    `;
+    
+    const jumlahKategori = Object.keys(hasilEvaluasi.kategoriGrup).length;
+    const colClass = jumlahKategori <= 3 ? `col-md-${12/jumlahKategori}` : 'col-md-6';
+    
+    Object.entries(hasilEvaluasi.kategoriGrup).forEach(([namaKategori, data]) => {
+        const persentase = data.max > 0 ? Math.round((data.skor/data.max)*100) : 0;
+        html += `
+            <div class="${colClass} mb-3">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <h6 class="card-title">
+                            <i class="${config.categories[namaKategori].icon}"></i>
+                            ${namaKategori}
+                        </h6>
+                        <h4 class="text-success">${data.skor}/${data.max}</h4>
+                        <div class="progress">
+                            <div class="progress-bar bg-success" style="width: ${persentase}%"></div>
+                        </div>
+                        <small class="text-muted">${persentase}%</small>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+    
+    html += `
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <h5><i class="fas fa-lightbulb"></i> Rekomendasi</h5>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-${rekomendasi.class}">
+                    <h6><i class="${rekomendasi.icon}"></i> ${rekomendasi.title}</h6>
+                    <ul class="mb-0">
+    `;
+    
+    rekomendasi.items.forEach(item => {
+        html += `<li>${item}</li>`;
+    });
+    
+    html += `
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center">
+            <button onclick="location.reload()" class="btn btn-outline-success btn-lg">
+                <i class="fas fa-redo"></i> Evaluasi Ulang
+            </button>
+        </div>
+    `;
+    
+    resultsDiv.innerHTML = html;
+    resultsDiv.style.display = 'block';
+    form.style.display = 'none';
+}
+
+// API functions
+async function saveToDatabase(data) {
+    try {
+        const response = await fetch('/api/contacts?table=evaluasi', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                field: config.meta.db_field,
+                data: data
+            })
+        });
+        
+        if (!response.ok) throw new Error('Network response was not ok');
+        
+        const result = await response.json();
+        return { success: true, message: 'Hasil evaluasi berhasil disimpan!' };
+    } catch (error) {
+        console.error('Error saving to database:', error);
+        return { success: false, message: 'Gagal menyimpan hasil evaluasi' };
+    }
+}
+
+function showAlert(message, type = 'success') {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${type} alert-dismissible fade show database-alert`;
+    alertDiv.innerHTML = `
+        <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-triangle'}"></i>
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    document.body.appendChild(alertDiv);
+    
+    setTimeout(() => {
+        if (alertDiv.parentNode) {
+            alertDiv.parentNode.removeChild(alertDiv);
+        }
+    }, 5000);
+}
+
+// Initialize page
+function initializePage() {
+    // Set page content
+    document.getElementById('pageTitle').textContent = config.meta.title;
+    document.getElementById('pageSubtitle').textContent = config.meta.subtitle;
+    document.getElementById('pageBadge').textContent = config.meta.badge;
+    document.getElementById('mainTip').textContent = config.footer.main_tip;
+    document.getElementById('subTip').textContent = config.footer.sub_tip;
+    
+    // Render questions
+    renderQuestions();
+    
+    // Form submission handler
+    document.getElementById('evaluationForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const loadingDiv = document.getElementById('loading');
+        const submitBtn = document.getElementById('submitBtn');
+        
+        loadingDiv.style.display = 'block';
+        submitBtn.disabled = true;
+        
+        try {
+            const formData = new FormData(this);
+            const skor = hitungSkor(soalEvaluasi, formData);
+            const totalMaksimal = hitungTotalMaksimalSkor(soalEvaluasi);
+            const kategori = getKategoriHasil(skor.total, config.scoring);
+            const kategoriGrup = hitungKategoriGrup(soalEvaluasi, skor.detail);
+            
+            const hasilEvaluasi = {
+                totalSkor: skor.total,
+                detailSkor: skor.detail,
+                kategori: kategori.label,
+                warnaBadge: kategori.class,
+                persentase: Math.round((skor.total / totalMaksimal) * 100),
+                kategoriGrup: kategoriGrup,
+                totalMaksimal: totalMaksimal
+            };
+            
+            // Save to database
+            const dataSimpan = `${hasilEvaluasi.totalSkor}|${hasilEvaluasi.persentase}|${hasilEvaluasi.kategori}`;
+            const dbResult = await saveToDatabase(dataSimpan);
+            
+            // Show results
+            renderResults(hasilEvaluasi);
+            
+            // Show alert
+            showAlert(dbResult.message, dbResult.success ? 'success' : 'danger');
+            
+        } catch (error) {
+            console.error('Error processing evaluation:', error);
+            showAlert('Terjadi kesalahan saat memproses evaluasi', 'danger');
+        } finally {
+            loadingDiv.style.display = 'none';
+            submitBtn.disabled = false;
+        }
+    });
+}
+
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', initializePage);
+
     </script>
 </body>
 </html>
