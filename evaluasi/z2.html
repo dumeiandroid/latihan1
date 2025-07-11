@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluasi Bab 2: Bangun Jejak Digitalmu</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .kategori-header { 
+            color: white; 
+            border-radius: 10px; 
+            padding: 15px; 
+            margin: 20px 0 15px 0; 
+        }
+        .question-card { 
+            border-left: 4px solid #28a745; 
+            margin-bottom: 20px; 
+            transition: all 0.3s ease; 
+        }
+        .question-card:hover { 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+            transform: translateY(-2px); 
+        }
+        .hasil-card { 
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%); 
+            color: white; 
+            border-radius: 15px; 
+        }
+        .custom-radio { 
+            margin-left: 35px; 
+            margin-top: 15px; 
+        }
+        .custom-radio .form-check { 
+            background: #f8f9fa; 
+            border: 2px solid #e9ecef; 
+            border-radius: 8px; 
+            padding: 12px 15px; 
+            margin-bottom: 8px; 
+            transition: all 0.3s ease; 
+            cursor: pointer; 
+        }
+        .custom-radio .form-check:hover { 
+            background: #d1ecf1; 
+            border-color: #28a745; 
+            transform: translateX(5px); 
+        }
+        .custom-radio .form-check:has(.form-check-input:checked) { 
+            background: #d1ecf1; 
+            border-color: #28a745; 
+            box-shadow: 0 2px 8px rgba(40, 167, 69, 0.2); 
+        }
+        .digital-icon { 
+            background: linear-gradient(135deg, #28a745, #20c997); 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+            background-clip: text; 
+        }
+        .hidden { display: none; }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="text-center mb-5">
+                    <h1 class="display-5 fw-bold text-success">
+                        <i class="fas fa-globe digital-icon"></i> Evaluasi Bab 2: Bangun Jejak Digitalmu
+                    </h1>
+                    <p class="lead text-muted">Bangun Jejak Digitalmu</p>
+                    <div class="badge bg-success fs-6">Siap Kerja dalam 12 Bulan</div>
+                </div>
+
+                <!-- Form Evaluasi -->
+                <div id="evaluationForm">
+                    <form id="digitalForm">
+                        <!-- Profil LinkedIn -->
+                        <div class="kategori-header" style="background: linear-gradient(135deg, #0077b5 0%, #0077b5cc 100%);">
+                            <h4><i class="fab fa-linkedin"></i> Profil LinkedIn</h4>
+                        </div>
+
+                        <div class="card question-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <h6 class="card-title mb-0">
+                                        <span class="badge bg-success me-2">1</span>
+                                        Seberapa lengkap profil LinkedIn kamu saat ini?
+                                    </h6>
+                                    <span class="badge bg-secondary">20 poin</span>
+                                </div>
+                                <div class="custom-radio">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="q1" value="0" required>
+                                        <label class="form-check-label">Belum ada/kosong <span class="badge bg-success ms-2">0 poin</span></label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="q1" value="10">
+                                        <label class="form-check-label">50-75% lengkap <span class="badge bg-success ms-2">10 poin</span></label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="q1" value="15">
+                                        <label class="form-check-label">76-90% lengkap <span class="badge bg-success ms-2">15 poin</span></label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="q1" value="20">
+                                        <label class="form-check-label">91-100% lengkap <span class="badge bg-success ms-2">20 poin</span></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card question-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <h6 class="card-title mb-0">
+                                        <span class="badge bg-success me-2">2</span>
+                                        Bagaimana kualitas foto profil dan headline LinkedIn kamu?
+                                    </h6>
+                                    <span class="badge bg-secondary">10 poin</span>
+                                </div>
+                                <div class="custom-radio">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="q2" value="0" required>
+                                        <label class="form-check-label">Belum ada <span class="badge bg-success ms-2">0 poin</span></label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="q2" value="5">
+                                        <label class="form-check-label">Ada tapi belum profesional <span class="badge bg-success ms-2">5 poin</span></label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="q2" value="8">
+                                        <label class="form-check-label">Cukup profesional <span class="badge bg-success ms-2">8 poin</span></label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="q2" value="10">
+                                        <label class="form-check-label">Sangat profesional <span class="badge bg-success ms-2">10 poin</span></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card question-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <h6 class="card-title mb-0">
+                                        <span class="badge bg-success me-2">3</span>
+                                        Apakah kamu sudah membuat summary yang menarik di LinkedIn?
+                                    </h6>
+                                    <span class="badge bg-secondary">10 poin</span>
+                                </div>
+                                <div class="custom-radio">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="q3" value="0" required>
+                                        <label class="form-check-label">Belum ada <span class="badge bg-success ms-2">0 poin</span></label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="q3" value="5">
+                                        <label class="form-check-label">Ada tapi standar <span class="badge bg-success ms-2">5 poin</span></label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="q3" value="8">
+                                        <label class="form-check-label">Menarik <span class="badge bg-success ms-2">8 poin</span></label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="q3" value="10">
+                                        <label class="form-check-label">Sangat menarik dan personal <span class="badge bg-success ms-2">10 poin</span></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Aktivitas Digital -->
+                        <div class="kategori-header" style="background: linear-gradient(135deg, #28a745 0%, #28a745cc 100%);">
+                            <h4><i class="fas fa-share-alt"></i> Aktivitas Digital</h4>
+                        </div>
+
+                        <div class="card question-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <h6 class="card-title mb-0">
+                                        <span class="badge bg-success me-2">4</span>
+                                        Seberapa konsisten kamu posting konten di LinkedIn?
+                                    </h6>
+                                    <span class="badge bg-secondary">20 poin</span>
+                                </div>
+                                <div class="custom-radio">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="q4" value="0" required>
+                                        <label class="form-check-label">Jarang/tidak pernah <span class="badge bg-success ms-2">0 poin</span></label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="q4" value="10">
+                                        <label class="form-check-label">1-2 kali seminggu <span class="badge bg-success ms-2">10 poin</span></label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="q4" value="15">
+                                        <label class="form-check-label">3 kali seminggu <span class="badge bg-success ms-2">15 poin</span></label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="q4" value="20">
+                                        <label class="form-check-label">3+ kali seminggu konsisten <span class="badge bg-success ms-2">20 poin</span></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card question-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <h6 class="card-title mb-0">
+                                        <span class="badge bg-success me-2">5</span>
+                                        Bagaimana kualitas interaksi kamu di platform digital?
+                                    </h6>
+                                    <span class="badge bg-secondary">15 poin</span>
+                                </div>
+                                <div class="custom-radio">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="q5" value="0" required>
+                                        <label class="form-check-label">Pasif <span class="badge bg-success ms-2">0 poin</span></label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="q5" value="8">
+                                        <label class="form-check-label">Sesekali komentar <span class="badge bg-success ms-2">8 poin</span></label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="q5" value="12">
+                                        <label class="form-check-label">Aktif berkomentar <span class="badge bg-success ms-2">12 poin</span></label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="q5" value="15">
+                                        <label class="form-check-label">Sangat aktif dan meaningful <span class="badge bg-success ms-2">15 poin</span></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Portfolio Online -->
+                        <div class="kategori-header" style="background: linear-gradient(135deg, #fd7e14 0%, #fd7e14cc 100%);">
+                            <h4><i class="fas fa-briefcase"></i> Portfolio Online</h4>
+                        </div>
+
+                        <div class="card question-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <h6 class="card-title mb-0">
+                                        <span class="badge bg-success me-2">6</span>
+                                        Berapa banyak platform portfolio online yang kamu miliki?
+                                    </h6>
+                                    <span class="badge bg-secondary">15 poin</span>
+                                </div>
+                                <div class="custom-radio">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="q6" value="0" required>
+                                        <label class="form-check-label">Belum ada <span class="badge bg-success ms-2">0 poin</span></label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="q6" value="8">
+                                        <label class="form-check-label">Ada 1 platform <span class="badge bg-success ms-2">8 poin</span></label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="q6" value="12">
+                                        <label class="form-check-label">Ada 2 platform <span class="badge bg-success ms-2">12 poin</span></label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="q6" value="15">
+                                        <label class="form-check-label">Ada 3+ platform <span class="badge bg-success ms-2">15 poin</span></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card question-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <h6 class="card-title mb-0">
+                                        <span class="badge bg-success me-2">7</span>
+                                        Bagaimana kualitas konten di portfolio online kamu?
+                                    </h6>
+                                    <span class="badge bg-secondary">10 poin</span>
+                                </div>
+                                <div class="custom-radio">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="q7" value="0" required>
+                                        <label class="form-check-label">Belum ada konten <span class="badge bg-success ms-2">0 poin</span></label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="q7" value="5">
+                                        <label class="form-check-label">Konten minimal <span class="badge bg-success ms-2">5 poin</span></label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="q7" value="8">
+                                        <label class="form-check-label">Konten berkualitas <span class="badge bg-success ms-2">8 poin</span></label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="q7" value="10">
+                                        <label class="form-check-label">Konten sangat berkualitas <span class="badge bg-success ms-2">10 poin</span></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-center mt-5">
+                            <button type="submit" class="btn btn-success btn-lg px-5">
+                                <i class="fas fa-calculator"></i> Lihat Hasil Evaluasi
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Hasil Evaluasi -->
+                <div id="resultSection" class="hidden">
+                    <div class="card hasil-card mb-5">
+                        <div class="card-body text-center">
+                            <h3><i class="fas fa-trophy"></i> Hasil Evaluasi</h3>
+                            <div class="row mt-4">
+                                <div class="col-md-4">
+                                    <h2 class="fw-bold" id="totalScore">0</h2>
+                                    <p>dari 100 poin</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <h2 class="fw-bold" id="percentage">0%</h2>
+                                    <p>Pencapaian</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <span class="badge fs-5 p-3" id="categoryBadge">
+                                        Kategori
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="progress mt-3" style="height: 25px; border-radius: 15px;">
+                                <div class="progress-bar bg-success" id="progressBar" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Detail Skor -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-success text-white">
+                            <h5><i class="fas fa-chart-bar"></i> Detail Skor per Aspek</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <div class="card h-100">
+                                        <div class="card-body text-center">
+                                            <h6 class="card-title">
+                                                <i class="fab fa-linkedin"></i> Profil LinkedIn
+                                            </h6>
+                                            <h4 class="text-success" id="linkedinScore">0/40</h4>
+                                            <div class="progress">
+                                                <div class="progress-bar bg-success" id="linkedinProgress" style="width: 0%"></div>
+                                            </div>
+                                            <small class="text-muted" id="linkedinPercentage">0%</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="card h-100">
+                                        <div class="card-body text-center">
+                                            <h6 class="card-title">
+                                                <i class="fas fa-share-alt"></i> Aktivitas Digital
+                                            </h6>
+                                            <h4 class="text-success" id="digitalScore">0/35</h4>
+                                            <div class="progress">
+                                                <div class="progress-bar bg-success" id="digitalProgress" style="width: 0%"></div>
+                                            </div>
+                                            <small class="text-muted" id="digitalPercentage">0%</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="card h-100">
+                                        <div class="card-body text-center">
+                                            <h6 class="card-title">
+                                                <i class="fas fa-briefcase"></i> Portfolio Online
+                                            </h6>
+                                            <h4 class="text-success" id="portfolioScore">0/25</h4>
+                                            <div class="progress">
+                                                <div class="progress-bar bg-success" id="portfolioProgress" style="width: 0%"></div>
+                                            </div>
+                                            <small class="text-muted" id="portfolioPercentage">0%</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Rekomendasi -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-info text-white">
+                            <h5><i class="fas fa-lightbulb"></i> Rekomendasi untuk Meningkatkan Jejak Digital</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="alert" id="recommendationAlert">
+                                <h6 id="recommendationTitle"></h6>
+                                <ul id="recommendationList"></ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <button onclick="resetEvaluation()" class="btn btn-outline-success btn-lg">
+                            <i class="fas fa-redo"></i> Evaluasi Ulang
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card mt-5 border-0 bg-transparent">
+                    <div class="card-body text-center">
+                        <p class="text-muted mb-0">
+                            <i class="fas fa-lightbulb"></i> Evaluasi ini membantu kamu mengukur kualitas jejak digital dan online presence untuk karier
+                        </p>
+                        <p class="text-muted mt-2 small">
+                            <i class="fas fa-info-circle"></i> Tips: Jejak digital yang kuat dapat meningkatkan peluang ditemukan oleh rekruter hingga 70%
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const recommendations = {
+            low: {
+                title: '<i class="fas fa-exclamation-triangle"></i> Area yang Perlu Diperbaiki:',
+                class: 'alert-warning',
+                items: [
+                    'Lengkapi profil LinkedIn dengan foto profesional dan headline menarik',
+                    'Buat summary yang personal dan mencerminkan value proposition',
+                    'Mulai konsisten posting konten berkualitas 2-3 kali seminggu',
+                    'Bangun portfolio online di minimal 2 platform',
+                    'Aktif berinteraksi dengan postingan orang lain'
+                ]
+            },
+            medium: {
+                title: '<i class="fas fa-info-circle"></i> Tingkatkan Lagi:',
+                class: 'alert-info',
+                items: [
+                    'Optimalkan konten posting agar lebih engaging',
+                    'Perbanyak platform portfolio untuk diversifikasi',
+                    'Tingkatkan kualitas interaksi dengan memberikan komentar yang meaningful',
+                    'Pastikan semua konten portfolio berkualitas tinggi'
+                ]
+            },
+            high: {
+                title: '<i class="fas fa-check-circle"></i> Bagus! Pertahankan:',
+                class: 'alert-success',
+                items: [
+                    'Konsistensi posting dan kualitas konten',
+                    'Aktivitas networking di platform digital',
+                    'Update berkala profil dan portfolio',
+                    'Eksplorasi tren dan platform baru yang relevan'
+                ]
+            }
+        };
+
+        document.getElementById('digitalForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            calculateResults();
+        });
+
+        function calculateResults() {
+            const formData = new FormData(document.getElementById('digitalForm'));
+            
+            // Calculate scores
+            const linkedinScore = 
+                parseInt(formData.get('q1') || 0) + 
+                parseInt(formData.get('q2') || 0) + 
+                parseInt(formData.get('q3') || 0);
+            
+            const digitalScore = 
+                parseInt(formData.get('q4') || 0) + 
+                parseInt(formData.get('q5') || 0);
+            
+            const portfolioScore = 
+                parseInt(formData.get('q6') || 0) + 
+                parseInt(formData.get('q7') || 0);
+            
+            const totalScore = linkedinScore + digitalScore + portfolioScore;
+            const percentage = Math.round((totalScore / 100) * 100);
+            
+            // Determine category
+            let category, badgeClass;
+            if (totalScore >= 90) {
+                category = 'Sangat Baik';
+                badgeClass = 'bg-success';
+            } else if (totalScore >= 75) {
+                category = 'Baik';
+                badgeClass = 'bg-info';
+            } else if (totalScore >= 60) {
+                category = 'Cukup';
+                badgeClass = 'bg-warning';
+            } else if (totalScore >= 40) {
+                category = 'Perlu Perbaikan';
+                badgeClass = 'bg-danger';
+            } else {
+                category = 'Sangat Perlu Perbaikan';
+                badgeClass = 'bg-dark';
+            }
+            
+            // Update UI
+            document.getElementById('totalScore').textContent = totalScore;
+            document.getElementById('percentage').textContent = percentage + '%';
+            document.getElementById('categoryBadge').textContent = category;
+            document.getElementById('categoryBadge').className = `badge fs-5 p-3 ${badgeClass}`;
+            document.getElementById('progressBar').style.width = percentage + '%';
+            
+            // Update category scores
+            updateCategoryScore('linkedin', linkedinScore, 40);
+            updateCategoryScore('digital', digitalScore, 35);
+            updateCategoryScore('portfolio', portfolioScore, 25);
+            
+            // Show recommendations
+            showRecommendations(totalScore);
+            
+            // Show result section
+            document.getElementById('evaluationForm').classList.add('hidden');
+            document.getElementById('resultSection').classList.remove('hidden');
+            
+            // Scroll to results
+            document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function updateCategoryScore(category, score, maxScore) {
+            const percentage = Math.round((score / maxScore) * 100);
+            document.getElementById(category + 'Score').textContent = score + '/' + maxScore;
+            document.getElementById(category + 'Progress').style.width = percentage + '%';
+            document.getElementById(category + 'Percentage').textContent = percentage + '%';
+        }
+
+        function showRecommendations(score) {
+            let rec;
+            if (score < 60) rec = recommendations.low;
+            else if (score < 80) rec = recommendations.medium;
+            else rec = recommendations.high;
+            
+            document.getElementById('recommendationTitle').innerHTML = rec.title;
+            document.getElementById('recommendationAlert').className = 'alert ' + rec.class;
+            
+            const list = document.getElementById('recommendationList');
+            list.innerHTML = '';
+            rec.items.forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = item;
+                list.appendChild(li);
+            });
+        }
+
+        function resetEvaluation() {
+            document.getElementById('digitalForm').reset();
+            document.getElementById('evaluationForm').classList.remove('hidden');
+            document.getElementById('resultSection').classList.add('hidden');
+            document.querySelector('.container').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

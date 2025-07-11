@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluasi Bab 4: Taklukkan Wawancara Kerja</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .kategori-header { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; border-radius: 10px; padding: 15px; margin: 20px 0 15px 0; }
+        .question-card { border-left: 4px solid #f5576c; margin-bottom: 20px; transition: all 0.3s ease; }
+        .question-card:hover { box-shadow: 0 4px 15px rgba(245, 87, 108, 0.2); transform: translateY(-2px); }
+        .hasil-card { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; border-radius: 15px; }
+        .progress-custom { height: 25px; border-radius: 15px; }
+        .custom-radio { margin-left: 35px; margin-top: 15px; }
+        .custom-radio .form-check { background: #f8f9fa; border: 2px solid #e9ecef; border-radius: 8px; padding: 12px 15px; margin-bottom: 8px; transition: all 0.3s ease; cursor: pointer; }
+        .custom-radio .form-check:hover { background: #ffeaa7; border-color: #fdcb6e; transform: translateX(5px); }
+        .number-input-wrapper { margin-left: 35px; margin-top: 15px; }
+        .number-input-wrapper .form-control { border: 2px solid #e9ecef; border-radius: 8px; padding: 12px 15px; font-size: 16px; transition: all 0.3s ease; }
+        .number-input-wrapper .form-control:focus { border-color: #f5576c; box-shadow: 0 0 0 0.2rem rgba(245, 87, 108, 0.25); }
+        .badge-poin { background: #f5576c !important; color: white !important; font-size: 0.75rem; padding: 4px 8px; border-radius: 12px; }
+        .main-header { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; border-radius: 15px; padding: 30px; margin-bottom: 30px; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="main-header text-center">
+                    <h1 class="display-5 fw-bold"><i class="fas fa-comments"></i> Evaluasi Bab 4</h1>
+                    <p class="lead mb-0">Taklukkan Wawancara Kerja</p>
+                    <div class="badge bg-light text-dark fs-6 mt-2">Siap Kerja dalam 12 Bulan</div>
+                </div>
+
+                <!-- Form Evaluasi -->
+                <div id="formSection">
+                    <form id="evaluasiForm">
+                        <!-- Persiapan Materi -->
+                        <div class="kategori-header">
+                            <h4><i class="fas fa-folder-open"></i> Persiapan Materi</h4>
+                            <p class="mb-0">Persiapan materi dan pengetahuan dasar sebelum wawancara</p>
+                        </div>
+
+                        <div class="card question-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <h6 class="card-title mb-0">
+                                        <span class="badge me-2" style="background-color: #f5576c;">1</span>
+                                        Berapa banyak perusahaan yang sudah kamu riset secara mendalam?
+                                    </h6>
+                                    <span class="badge bg-secondary">15 poin</span>
+                                </div>
+                                <div class="number-input-wrapper">
+                                    <input type="number" class="form-control" name="riset_perusahaan" min="0" max="20" placeholder="Jumlah perusahaan">
+                                    <small class="text-muted mt-2 d-block">
+                                        <i class="fas fa-info-circle"></i> Target: 20 perusahaan (0.75 poin per perusahaan, maks 15 poin)
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card question-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <h6 class="card-title mb-0">
+                                        <span class="badge me-2" style="background-color: #f5576c;">2</span>
+                                        Berapa banyak cerita STAR yang sudah kamu siapkan?
+                                    </h6>
+                                    <span class="badge bg-secondary">15 poin</span>
+                                </div>
+                                <div class="number-input-wrapper">
+                                    <input type="number" class="form-control" name="cerita_star" min="0" max="10" placeholder="Jumlah cerita STAR">
+                                    <small class="text-muted mt-2 d-block">
+                                        <i class="fas fa-info-circle"></i> Target: 5+ cerita (3 poin per cerita, maks 15 poin)
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Latihan Praktik -->
+                        <div class="kategori-header">
+                            <h4><i class="fas fa-folder-open"></i> Latihan Praktik</h4>
+                            <p class="mb-0">Intensitas dan kualitas latihan wawancara yang sudah dilakukan</p>
+                        </div>
+
+                        <div class="card question-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <h6 class="card-title mb-0">
+                                        <span class="badge me-2" style="background-color: #f5576c;">3</span>
+                                        Berapa banyak sesi latihan wawancara yang sudah kamu lakukan?
+                                    </h6>
+                                    <span class="badge bg-secondary">25 poin</span>
+                                </div>
+                                <div class="number-input-wrapper">
+                                    <input type="number" class="form-control" name="frekuensi_latihan" min="0" max="15" placeholder="Jumlah sesi latihan">
+                                    <small class="text-muted mt-2 d-block">
+                                        <i class="fas fa-info-circle"></i> Target: 10+ sesi (1.67 poin per sesi, maks 25 poin)
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card question-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <h6 class="card-title mb-0">
+                                        <span class="badge me-2" style="background-color: #f5576c;">4</span>
+                                        Bagaimana kualitas performance wawancara kamu saat ini?
+                                    </h6>
+                                    <span class="badge bg-secondary">20 poin</span>
+                                </div>
+                                <div class="custom-radio">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="kualitas_performance" value="0">
+                                        <label class="form-check-label">
+                                            Belum pernah latihan wawancara
+                                            <span class="badge badge-poin ms-2">0 poin</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="kualitas_performance" value="10">
+                                        <label class="form-check-label">
+                                            Masih grogi dan tidak percaya diri
+                                            <span class="badge badge-poin ms-2">10 poin</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="kualitas_performance" value="15">
+                                        <label class="form-check-label">
+                                            Cukup percaya diri dan lancar
+                                            <span class="badge badge-poin ms-2">15 poin</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="kualitas_performance" value="20">
+                                        <label class="form-check-label">
+                                            Sangat percaya diri dan impressive
+                                            <span class="badge badge-poin ms-2">20 poin</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Perbaikan Berkelanjutan -->
+                        <div class="kategori-header">
+                            <h4><i class="fas fa-folder-open"></i> Perbaikan Berkelanjutan</h4>
+                            <p class="mb-0">Kemampuan evaluasi diri dan perbaikan berkelanjutan</p>
+                        </div>
+
+                        <div class="card question-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <h6 class="card-title mb-0">
+                                        <span class="badge me-2" style="background-color: #f5576c;">5</span>
+                                        Seberapa sering kamu merekam dan menganalisis video latihan wawancara?
+                                    </h6>
+                                    <span class="badge bg-secondary">15 poin</span>
+                                </div>
+                                <div class="custom-radio">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="analisis_video" value="0">
+                                        <label class="form-check-label">
+                                            Tidak pernah merekam latihan
+                                            <span class="badge badge-poin ms-2">0 poin</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="analisis_video" value="8">
+                                        <label class="form-check-label">
+                                            Jarang merekam dan menganalisis
+                                            <span class="badge badge-poin ms-2">8 poin</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="analisis_video" value="12">
+                                        <label class="form-check-label">
+                                            Sering merekam dan menganalisis
+                                            <span class="badge badge-poin ms-2">12 poin</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="analisis_video" value="15">
+                                        <label class="form-check-label">
+                                            Selalu merekam, analisis, dan improve
+                                            <span class="badge badge-poin ms-2">15 poin</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card question-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <h6 class="card-title mb-0">
+                                        <span class="badge me-2" style="background-color: #f5576c;">6</span>
+                                        Seberapa baik kamu menerapkan feedback yang diterima?
+                                    </h6>
+                                    <span class="badge bg-secondary">10 poin</span>
+                                </div>
+                                <div class="custom-radio">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="implementasi_feedback" value="0">
+                                        <label class="form-check-label">
+                                            Tidak menerapkan feedback
+                                            <span class="badge badge-poin ms-2">0 poin</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="implementasi_feedback" value="5">
+                                        <label class="form-check-label">
+                                            Kadang-kadang menerapkan feedback
+                                            <span class="badge badge-poin ms-2">5 poin</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="implementasi_feedback" value="8">
+                                        <label class="form-check-label">
+                                            Sering menerapkan feedback dengan baik
+                                            <span class="badge badge-poin ms-2">8 poin</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="implementasi_feedback" value="10">
+                                        <label class="form-check-label">
+                                            Selalu menerapkan feedback dengan sangat baik
+                                            <span class="badge badge-poin ms-2">10 poin</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-center mt-5">
+                            <button type="submit" class="btn btn-lg px-5" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; border: none;">
+                                <i class="fas fa-calculator"></i> Lihat Hasil Evaluasi
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Hasil Evaluasi -->
+                <div id="resultSection" class="hidden">
+                    <div class="card hasil-card mb-5">
+                        <div class="card-body text-center">
+                            <h3><i class="fas fa-trophy"></i> Hasil Evaluasi Wawancara Kerja</h3>
+                            <div class="row mt-4">
+                                <div class="col-md-4">
+                                    <h2 class="fw-bold" id="totalSkor">0</h2>
+                                    <p>dari 100 poin</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <h2 class="fw-bold" id="persentase">0%</h2>
+                                    <p>Pencapaian</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <span class="badge fs-5 p-3" id="kategori">-</span>
+                                </div>
+                            </div>
+                            <div class="progress progress-custom mt-3">
+                                <div class="progress-bar bg-warning" id="progressBar" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Detail Skor -->
+                    <div class="card mb-4">
+                        <div class="card-header text-white" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                            <h5><i class="fas fa-chart-bar"></i> Detail Skor per Aspek Wawancara</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row" id="kategoriDetail">
+                                <!-- Kategori detail akan diisi JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Rekomendasi -->
+                    <div class="card mb-4">
+                        <div class="card-header text-white" id="rekomendasi-header">
+                            <h5><i class="fas fa-lightbulb"></i> Rekomendasi Perbaikan</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="alert" id="rekomendasi-content">
+                                <!-- Rekomendasi akan diisi JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <button class="btn btn-outline-primary btn-lg" onclick="resetForm()">
+                            <i class="fas fa-redo"></i> Evaluasi Ulang
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="card mt-5 border-0 bg-transparent">
+                    <div class="card-body text-center">
+                        <p class="text-muted mb-0">
+                            <i class="fas fa-comments"></i> Evaluasi ini membantu mengukur kesiapan kamu dalam menghadapi wawancara kerja
+                        </p>
+                        <small class="text-muted">Wawancara yang baik = Persiapan matang + Latihan konsisten + Perbaikan berkelanjutan</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('evaluasiForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            let totalSkor = 0;
+            let kategoriSkor = {
+                'Persiapan Materi': 0,
+                'Latihan Praktik': 0,
+                'Perbaikan Berkelanjutan': 0
+            };
+
+            // Hitung skor per kategori
+            const riset = Math.min(Math.min(parseInt(formData.get('riset_perusahaan')) || 0, 20) * 0.75, 15);
+            const star = Math.min(parseInt(formData.get('cerita_star')) || 0, 5) * 3;
+            const latihan = Math.min(Math.min(parseInt(formData.get('frekuensi_latihan')) || 0, 15) * 1.67, 25);
+            const performance = parseInt(formData.get('kualitas_performance')) || 0;
+            const video = parseInt(formData.get('analisis_video')) || 0;
+            const feedback = parseInt(formData.get('implementasi_feedback')) || 0;
+
+            kategoriSkor['Persiapan Materi'] = riset + star;
+            kategoriSkor['Latihan Praktik'] = latihan + performance;
+            kategoriSkor['Perbaikan Berkelanjutan'] = video + feedback;
+
+            totalSkor = kategoriSkor['Persiapan Materi'] + kategoriSkor['Latihan Praktik'] + kategoriSkor['Perbaikan Berkelanjutan'];
+
+            // Hitung grade
+            const persentase = (totalSkor / 100) * 100;
+            let grade = {text: 'Sangat Perlu Perbaikan', class: 'dark'};
+            if (persentase >= 90) grade = {text: 'Sangat Baik', class: 'success'};
+            else if (persentase >= 75) grade = {text: 'Baik', class: 'info'};
+            else if (persentase >= 60) grade = {text: 'Cukup', class: 'warning'};
+            else if (persentase >= 40) grade = {text: 'Perlu Perbaikan', class: 'danger'};
+
+            // Tampilkan hasil
+            document.getElementById('totalSkor').textContent = totalSkor.toFixed(1);
+            document.getElementById('persentase').textContent = persentase.toFixed(1) + '%';
+            document.getElementById('kategori').textContent = grade.text;
+            document.getElementById('kategori').className = `badge bg-${grade.class} fs-5 p-3`;
+            document.getElementById('progressBar').style.width = persentase + '%';
+
+            // Detail kategori
+            const detailHTML = `
+                <div class="col-md-4 mb-3">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <h6 class="card-title">Persiapan Materi</h6>
+                            <h4 style="color: #f5576c;">${kategoriSkor['Persiapan Materi'].toFixed(1)}/30</h4>
+                            <div class="progress">
+                                <div class="progress-bar" style="background-color: #f5576c; width: ${(kategoriSkor['Persiapan Materi']/30)*100}%"></div>
+                            </div>
+                            <small class="text-muted">${Math.round((kategoriSkor['Persiapan Materi']/30)*100)}%</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <h6 class="card-title">Latihan Praktik</h6>
+                            <h4 style="color: #f5576c;">${kategoriSkor['Latihan Praktik'].toFixed(1)}/45</h4>
+                            <div class="progress">
+                                <div class="progress-bar" style="background-color: #f5576c; width: ${(kategoriSkor['Latihan Praktik']/45)*100}%"></div>
+                            </div>
+                            <small class="text-muted">${Math.round((kategoriSkor['Latihan Praktik']/45)*100)}%</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <h6 class="card-title">Perbaikan Berkelanjutan</h6>
+                            <h4 style="color: #f5576c;">${kategoriSkor['Perbaikan Berkelanjutan'].toFixed(1)}/25</h4>
+                            <div class="progress">
+                                <div class="progress-bar" style="background-color: #f5576c; width: ${(kategoriSkor['Perbaikan Berkelanjutan']/25)*100}%"></div>
+                            </div>
+                            <small class="text-muted">${Math.round((kategoriSkor['Perbaikan Berkelanjutan']/25)*100)}%</small>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('kategoriDetail').innerHTML = detailHTML;
+
+            // Rekomendasi
+            let rekomendasi = {
+                title: 'Prioritas Utama:',
+                class: 'warning',
+                icon: 'exclamation-triangle',
+                items: [
+                    'Perbanyak latihan wawancara dengan teman atau mentor',
+                    'Siapkan minimal 5 cerita STAR yang kuat',
+                    'Riset mendalam tentang perusahaan target',
+                    'Rekam latihan wawancara untuk evaluasi diri'
+                ]
+            };
+
+            if (persentase >= 80) {
+                rekomendasi = {
+                    title: 'Pertahankan Momentum:',
+                    class: 'success',
+                    icon: 'check-circle',
+                    items: [
+                        'Kamu sudah siap untuk wawancara kerja!',
+                        'Terus latihan untuk menjaga performa terbaik',
+                        'Bantu teman-teman yang masih perlu bimbingan'
+                    ]
+                };
+            } else if (persentase >= 60) {
+                rekomendasi = {
+                    title: 'Area Pengembangan:',
+                    class: 'info',
+                    icon: 'info-circle',
+                    items: [
+                        'Tingkatkan kualitas performance dengan latihan konsisten',
+                        'Fokus pada implementasi feedback yang diterima',
+                        'Tambah variasi pertanyaan latihan wawancara'
+                    ]
+                };
+            }
+
+            document.getElementById('rekomendasi-header').className = `card-header bg-${rekomendasi.class} text-white`;
+            document.getElementById('rekomendasi-content').innerHTML = `
+                <h6><i class="fas fa-${rekomendasi.icon}"></i> ${rekomendasi.title}</h6>
+                <ul class="mb-0">
+                    ${rekomendasi.items.map(item => `<li>${item}</li>`).join('')}
+                </ul>
+            `;
+            document.getElementById('rekomendasi-content').className = `alert alert-${rekomendasi.class}`;
+
+            // Tampilkan hasil
+            document.getElementById('formSection').classList.add('hidden');
+            document.getElementById('resultSection').classList.remove('hidden');
+        });
+
+        function resetForm() {
+            document.getElementById('evaluasiForm').reset();
+            document.getElementById('formSection').classList.remove('hidden');
+            document.getElementById('resultSection').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>

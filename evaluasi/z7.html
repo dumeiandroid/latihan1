@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluasi Bab 7: Asah Soft Skills yang Dibutuhkan</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .kategori-header { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; border-radius: 10px; padding: 15px; margin: 20px 0 15px 0; }
+        .question-card { border-left: 4px solid #f5576c; margin-bottom: 20px; transition: all 0.3s ease; }
+        .question-card:hover { box-shadow: 0 4px 15px rgba(0,0,0,0.1); transform: translateY(-2px); }
+        .hasil-card { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; border-radius: 15px; }
+        .progress-custom { height: 25px; border-radius: 15px; }
+        .custom-radio { margin-left: 35px; margin-top: 15px; }
+        .custom-radio .form-check { background: #f8f9fa; border: 2px solid #e9ecef; border-radius: 8px; padding: 12px 15px; margin-bottom: 8px; transition: all 0.3s ease; cursor: pointer; }
+        .custom-radio .form-check:hover { background: #fce4ec; border-color: #f5576c; transform: translateX(5px); }
+        .custom-radio .form-check-input:checked + .form-check-label { color: #c2185b; font-weight: 500; }
+        .custom-radio .form-check:has(.form-check-input:checked) { background: #fce4ec; border-color: #f5576c; box-shadow: 0 2px 8px rgba(245, 87, 108, 0.2); }
+        .badge-poin { background: #f5576c !important; color: white !important; font-size: 0.75rem; padding: 4px 8px; border-radius: 12px; }
+        .btn-primary { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border: none; }
+        .btn-primary:hover { background: linear-gradient(135deg, #f5576c 0%, #f093fb 100%); }
+        .text-primary { color: #f5576c !important; }
+        .bg-primary { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%) !important; }
+        .kategori-card { min-height: 180px; }
+        #hasilSection { display: none; }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <!-- Header -->
+                <div class="text-center mb-5">
+                    <h1 class="display-5 fw-bold text-primary">
+                        <i class="fas fa-users"></i> Evaluasi Bab 7
+                    </h1>
+                    <p class="lead text-muted">Asah Soft Skills yang Dibutuhkan</p>
+                    <div class="badge bg-info fs-6">Siap Kerja dalam 12 Bulan</div>
+                    <div class="mt-3">
+                        <small class="text-muted">
+                            <i class="fas fa-info-circle"></i> 
+                            Total: <span id="totalSoal">8</span> soal | 
+                            Maksimal: <span id="totalPoin">100</span> poin | 
+                            Kategori: <span id="totalKategori">3</span> kategori
+                        </small>
+                    </div>
+                </div>
+
+                <!-- Hasil Evaluasi -->
+                <div id="hasilSection">
+                    <div class="card hasil-card mb-5">
+                        <div class="card-body text-center">
+                            <h3><i class="fas fa-trophy"></i> Hasil Evaluasi</h3>
+                            <div class="row mt-4">
+                                <div class="col-md-4">
+                                    <h2 class="fw-bold" id="skorTotal">0</h2>
+                                    <p>dari <span id="skorMaksimal">100</span> poin</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <h2 class="fw-bold" id="persentase">0%</h2>
+                                    <p>Pencapaian</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <span class="badge fs-5 p-3" id="kategoriLabel">-</span>
+                                </div>
+                            </div>
+                            <div class="progress progress-custom mt-3">
+                                <div class="progress-bar bg-warning" id="progressBar" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Detail Skor per Kategori -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-primary text-white">
+                            <h5><i class="fas fa-chart-bar"></i> Detail Skor per Aspek</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row" id="detailKategori"></div>
+                        </div>
+                    </div>
+
+                    <!-- Rekomendasi -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-info text-white">
+                            <h5><i class="fas fa-lightbulb"></i> Rekomendasi Pengembangan</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="rekomendasiContent"></div>
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <button onclick="resetEvaluasi()" class="btn btn-outline-primary btn-lg">
+                            <i class="fas fa-redo"></i> Evaluasi Ulang
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Form Evaluasi -->
+                <div id="formSection">
+                    <form id="evaluasiForm">
+                        <div id="soalContainer"></div>
+                        <div class="text-center mt-5">
+                            <button type="submit" class="btn btn-primary btn-lg px-5">
+                                <i class="fas fa-calculator"></i> Lihat Hasil Evaluasi
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Footer -->
+                <div class="card mt-5 border-0 bg-transparent">
+                    <div class="card-body text-center">
+                        <p class="text-muted mb-0">
+                            <i class="fas fa-lightbulb"></i> Evaluasi ini membantu kamu mengukur dan mengembangkan soft skills yang penting untuk karier
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Data konfigurasi
+        const soalEvaluasi = [
+            {
+                id: 'komunikasi_verbal',
+                pertanyaan: 'Seberapa baik kemampuan komunikasi verbal kamu dalam presentasi dan diskusi?',
+                kategori: 'Komunikasi Efektif',
+                bobot: 15,
+                pilihan: [
+                    { value: 0, text: 'Masih grogi dan sulit menyampaikan ide' },
+                    { value: 8, text: 'Cukup baik, bisa menyampaikan ide dasar' },
+                    { value: 12, text: 'Baik, bisa menyampaikan ide dengan jelas' },
+                    { value: 15, text: 'Sangat baik, bisa menyampaikan ide dengan persuasif' }
+                ]
+            },
+            {
+                id: 'komunikasi_tertulis',
+                pertanyaan: 'Seberapa baik kemampuan komunikasi tertulis kamu dalam email dan dokumen profesional?',
+                kategori: 'Komunikasi Efektif',
+                bobot: 15,
+                pilihan: [
+                    { value: 0, text: 'Masih kesulitan menulis formal' },
+                    { value: 8, text: 'Cukup baik, bisa menulis email standar' },
+                    { value: 12, text: 'Baik, bisa menulis dokumen profesional' },
+                    { value: 15, text: 'Sangat baik, bisa menulis dengan gaya yang menarik' }
+                ]
+            },
+            {
+                id: 'mendengar_aktif',
+                pertanyaan: 'Seberapa baik kemampuan mendengar aktif kamu dalam diskusi dan meeting?',
+                kategori: 'Komunikasi Efektif',
+                bobot: 10,
+                pilihan: [
+                    { value: 0, text: 'Sering tidak fokus saat orang lain berbicara' },
+                    { value: 5, text: 'Kadang-kadang mendengarkan dengan baik' },
+                    { value: 8, text: 'Sering mendengarkan dan merespon dengan tepat' },
+                    { value: 10, text: 'Selalu mendengarkan aktif dan memberikan feedback' }
+                ]
+            },
+            {
+                id: 'kerja_tim',
+                pertanyaan: 'Seberapa baik kemampuan kamu dalam bekerja sama dalam tim?',
+                kategori: 'Kolaborasi Tim',
+                bobot: 20,
+                pilihan: [
+                    { value: 0, text: 'Lebih suka bekerja sendiri' },
+                    { value: 10, text: 'Bisa bekerja dalam tim tapi pasif' },
+                    { value: 15, text: 'Aktif berkontribusi dalam tim' },
+                    { value: 20, text: 'Sangat aktif dan bisa memimpin tim' }
+                ]
+            },
+            {
+                id: 'resolusi_konflik',
+                pertanyaan: 'Seberapa baik kemampuan kamu dalam menyelesaikan konflik dalam tim?',
+                kategori: 'Kolaborasi Tim',
+                bobot: 15,
+                pilihan: [
+                    { value: 0, text: 'Menghindari konflik dan tidak tahu cara menyelesaikan' },
+                    { value: 8, text: 'Bisa menyelesaikan konflik sederhana' },
+                    { value: 12, text: 'Baik dalam mediasi dan mencari solusi' },
+                    { value: 15, text: 'Sangat baik dalam menyelesaikan konflik kompleks' }
+                ]
+            },
+            {
+                id: 'empati',
+                pertanyaan: 'Seberapa baik kemampuan kamu dalam memahami perasaan dan perspektif orang lain?',
+                kategori: 'Kolaborasi Tim',
+                bobot: 10,
+                pilihan: [
+                    { value: 0, text: 'Sulit memahami perasaan orang lain' },
+                    { value: 5, text: 'Kadang bisa memahami perasaan orang lain' },
+                    { value: 8, text: 'Cukup baik dalam berempati' },
+                    { value: 10, text: 'Sangat baik dalam memahami dan berempati' }
+                ]
+            },
+            {
+                id: 'kepemimpinan',
+                pertanyaan: 'Seberapa sering kamu mengambil peran kepemimpinan dalam proyek atau kegiatan?',
+                kategori: 'Kepemimpinan',
+                bobot: 15,
+                pilihan: [
+                    { value: 0, text: 'Tidak pernah memimpin' },
+                    { value: 8, text: 'Jarang memimpin, hanya saat diminta' },
+                    { value: 12, text: 'Sering memimpin dalam proyek kecil' },
+                    { value: 15, text: 'Sering memimpin dan diakui kemampuannya' }
+                ]
+            },
+            {
+                id: 'delegasi',
+                pertanyaan: 'Seberapa baik kemampuan kamu dalam mendelegasikan tugas kepada orang lain?',
+                kategori: 'Kepemimpinan',
+                bobot: 10,
+                pilihan: [
+                    { value: 0, text: 'Tidak pernah mendelegasikan, lebih suka mengerjakan sendiri' },
+                    { value: 5, text: 'Kadang mendelegasikan tapi tidak jelas instruksinya' },
+                    { value: 8, text: 'Bisa mendelegasikan dengan instruksi yang jelas' },
+                    { value: 10, text: 'Sangat baik mendelegasikan dan monitoring progress' }
+                ]
+            }
+        ];
+
+        const kategoriHasil = [
+            { min: 90, label: 'Sangat Baik', color: 'bg-success' },
+            { min: 75, label: 'Baik', color: 'bg-info' },
+            { min: 60, label: 'Cukup', color: 'bg-warning' },
+            { min: 40, label: 'Perlu Perbaikan', color: 'bg-danger' },
+            { min: 0, label: 'Sangat Perlu Perbaikan', color: 'bg-dark' }
+        ];
+
+        const rekomendasi = {
+            rendah: {
+                title: 'Perlu Fokus Pengembangan Soft Skills',
+                items: [
+                    'Ikuti pelatihan komunikasi dan presentasi',
+                    'Aktif dalam kegiatan organisasi untuk melatih kerja tim',
+                    'Cari mentor untuk guidance pengembangan kepemimpinan',
+                    'Praktik public speaking dan diskusi kelompok'
+                ],
+                color: 'warning'
+            },
+            sedang: {
+                title: 'Tingkatkan Keterampilan yang Sudah Ada',
+                items: [
+                    'Ambil peran leadership dalam proyek-proyek',
+                    'Perbanyak latihan presentasi dan public speaking',
+                    'Join komunitas professional untuk networking',
+                    'Volunteer untuk melatih empati dan komunikasi'
+                ],
+                color: 'info'
+            },
+            tinggi: {
+                title: 'Soft Skills Sudah Baik - Pertahankan dan Kembangkan',
+                items: [
+                    'Jadilah mentor bagi junior atau teman',
+                    'Ambil tantangan leadership yang lebih besar',
+                    'Develop advanced communication skills',
+                    'Share pengalaman melalui blog atau speaking'
+                ],
+                color: 'success'
+            }
+        };
+
+        // Inisialisasi
+        let totalSkorMaksimal = 0;
+        let kategoriGrup = {};
+
+        function init() {
+            // Hitung total skor maksimal
+            totalSkorMaksimal = soalEvaluasi.reduce((sum, soal) => sum + soal.bobot, 0);
+            
+            // Kelompokkan soal berdasarkan kategori
+            soalEvaluasi.forEach(soal => {
+                if (!kategoriGrup[soal.kategori]) {
+                    kategoriGrup[soal.kategori] = { soal: [], totalBobot: 0 };
+                }
+                kategoriGrup[soal.kategori].soal.push(soal);
+                kategoriGrup[soal.kategori].totalBobot += soal.bobot;
+            });
+
+            // Update header info
+            document.getElementById('totalSoal').textContent = soalEvaluasi.length;
+            document.getElementById('totalPoin').textContent = totalSkorMaksimal;
+            document.getElementById('totalKategori').textContent = Object.keys(kategoriGrup).length;
+
+            renderSoal();
+        }
+
+        function renderSoal() {
+            const container = document.getElementById('soalContainer');
+            let html = '';
+            let noSoal = 1;
+
+            Object.keys(kategoriGrup).forEach(namaKategori => {
+                const data = kategoriGrup[namaKategori];
+                html += `
+                    <div class="kategori-header">
+                        <h4>
+                            <i class="fas fa-folder-open"></i> ${namaKategori}
+                            <span class="badge bg-light text-dark ms-2">${data.soal.length} soal</span>
+                            <span class="badge bg-secondary ms-1">${data.totalBobot} poin</span>
+                        </h4>
+                    </div>
+                `;
+
+                data.soal.forEach(soal => {
+                    html += `
+                        <div class="card question-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <h6 class="card-title mb-0">
+                                        <span class="badge bg-primary me-2">${noSoal}</span>
+                                        ${soal.pertanyaan}
+                                    </h6>
+                                    <span class="badge bg-secondary">${soal.bobot} poin</span>
+                                </div>
+                                <div class="custom-radio">
+                                    ${soal.pilihan.map((pilihan, index) => `
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="${soal.id}" 
+                                                   id="${soal.id}_${index}" value="${pilihan.value}" required>
+                                            <label class="form-check-label" for="${soal.id}_${index}">
+                                                ${pilihan.text}
+                                                <span class="badge badge-poin ms-2">${pilihan.value} poin</span>
+                                            </label>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    noSoal++;
+                });
+            });
+
+            container.innerHTML = html;
+        }
+
+        function hitungHasil() {
+            const formData = new FormData(document.getElementById('evaluasiForm'));
+            let totalSkor = 0;
+            let detailSkor = {};
+
+            // Hitung skor total
+            soalEvaluasi.forEach(soal => {
+                const nilai = parseInt(formData.get(soal.id) || 0);
+                detailSkor[soal.id] = nilai;
+                totalSkor += nilai;
+            });
+
+            // Hitung skor per kategori
+            let skorKategori = {};
+            Object.keys(kategoriGrup).forEach(namaKategori => {
+                skorKategori[namaKategori] = { total: 0, skor: 0 };
+                kategoriGrup[namaKategori].soal.forEach(soal => {
+                    skorKategori[namaKategori].total += soal.bobot;
+                    skorKategori[namaKategori].skor += detailSkor[soal.id];
+                });
+                skorKategori[namaKategori].persentase = Math.round((skorKategori[namaKategori].skor / skorKategori[namaKategori].total) * 100);
+            });
+
+            // Tentukan kategori hasil
+            const persentase = (totalSkor / totalSkorMaksimal) * 100;
+            const kategori = kategoriHasil.find(k => persentase >= k.min);
+
+            // Tentukan rekomendasi
+            let rekomendasiTerpilih;
+            if (persentase < 60) rekomendasiTerpilih = rekomendasi.rendah;
+            else if (persentase < 80) rekomendasiTerpilih = rekomendasi.sedang;
+            else rekomendasiTerpilih = rekomendasi.tinggi;
+
+            tampilkanHasil(totalSkor, persentase, kategori, skorKategori, rekomendasiTerpilih);
+        }
+
+        function tampilkanHasil(totalSkor, persentase, kategori, skorKategori, rekomendasiTerpilih) {
+            // Update hasil utama
+            document.getElementById('skorTotal').textContent = totalSkor;
+            document.getElementById('skorMaksimal').textContent = totalSkorMaksimal;
+            document.getElementById('persentase').textContent = persentase.toFixed(1) + '%';
+            document.getElementById('kategoriLabel').textContent = kategori.label;
+            document.getElementById('kategoriLabel').className = `badge fs-5 p-3 ${kategori.color}`;
+            document.getElementById('progressBar').style.width = persentase + '%';
+
+            // Update detail kategori
+            let detailHtml = '';
+            Object.keys(skorKategori).forEach(namaKategori => {
+                const data = skorKategori[namaKategori];
+                const colSize = Object.keys(skorKategori).length <= 3 ? (12 / Object.keys(skorKategori).length) : 4;
+                const progressColor = data.persentase >= 80 ? 'success' : (data.persentase >= 60 ? 'warning' : 'danger');
+                
+                detailHtml += `
+                    <div class="col-md-${colSize} mb-3">
+                        <div class="card h-100 kategori-card">
+                            <div class="card-body text-center">
+                                <h6 class="card-title">${namaKategori}</h6>
+                                <h4 class="text-primary">${data.skor}/${data.total}</h4>
+                                <div class="progress mb-2">
+                                    <div class="progress-bar bg-${progressColor}" style="width: ${data.persentase}%"></div>
+                                </div>
+                                <small class="text-muted">${data.persentase}%</small>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            document.getElementById('detailKategori').innerHTML = detailHtml;
+
+            // Update rekomendasi
+            const rekomendasiHtml = `
+                <div class="alert alert-${rekomendasiTerpilih.color}">
+                    <h6>${rekomendasiTerpilih.title}</h6>
+                    <ul class="mb-0">
+                        ${rekomendasiTerpilih.items.map(item => `<li>${item}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+            document.getElementById('rekomendasiContent').innerHTML = rekomendasiHtml;
+
+            // Tampilkan hasil, sembunyikan form
+            document.getElementById('formSection').style.display = 'none';
+            document.getElementById('hasilSection').style.display = 'block';
+        }
+
+        function resetEvaluasi() {
+            document.getElementById('evaluasiForm').reset();
+            document.getElementById('formSection').style.display = 'block';
+            document.getElementById('hasilSection').style.display = 'none';
+            window.scrollTo(0, 0);
+        }
+
+        // Event listeners
+        document.getElementById('evaluasiForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Validasi form
+            const radioGroups = {};
+            const radios = document.querySelectorAll('input[type="radio"]');
+            
+            radios.forEach(radio => {
+                if (!radioGroups[radio.name]) radioGroups[radio.name] = false;
+                if (radio.checked) radioGroups[radio.name] = true;
+            });
+            
+            const unanswered = Object.keys(radioGroups).filter(name => !radioGroups[name]);
+            
+            if (unanswered.length > 0) {
+                alert(`Mohon jawab semua pertanyaan sebelum melanjutkan. Masih ada ${unanswered.length} pertanyaan yang belum dijawab.`);
+                const firstUnanswered = document.querySelector(`input[name="${unanswered[0]}"]`);
+                if (firstUnanswered) {
+                    firstUnanswered.closest('.card').scrollIntoView({ behavior: 'smooth' });
+                }
+                return;
+            }
+
+            hitungHasil();
+        });
+
+        // Inisialisasi aplikasi
+        init();
+    </script>
+</body>
+</html>

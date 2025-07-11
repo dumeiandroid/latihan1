@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluasi Bab 9: Sukses di Hari Pertama Kerja</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .kategori-header{background:linear-gradient(135deg,#28a745,#20c997);color:white;border-radius:10px;padding:15px;margin:20px 0 15px 0;}
+        .question-card{border-left:4px solid #28a745;margin-bottom:20px;transition:all 0.3s ease;}
+        .question-card:hover{box-shadow:0 4px 15px rgba(0,0,0,0.1);transform:translateY(-2px);}
+        .hasil-card{background:linear-gradient(135deg,#28a745,#20c997);color:white;border-radius:15px;}
+        .custom-radio{margin-left:35px;margin-top:15px;}
+        .custom-radio .form-check{background:#f8f9fa;border:2px solid #e9ecef;border-radius:8px;padding:12px 15px;margin-bottom:8px;transition:all 0.3s ease;cursor:pointer;}
+        .custom-radio .form-check:hover{background:#d4edda;border-color:#28a745;transform:translateX(5px);}
+        .custom-radio .form-check:has(.form-check-input:checked){background:#d4edda;border-color:#28a745;box-shadow:0 2px 8px rgba(40,167,69,0.2);}
+        .badge-poin{background:#28a745!important;color:white!important;font-size:0.75rem;padding:4px 8px;border-radius:12px;}
+        #results{display:none;}
+        .progress-custom{height:25px;border-radius:15px;}
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="text-center mb-5">
+                    <h1 class="display-5 fw-bold text-success">
+                        <i class="fas fa-calendar-day"></i> Evaluasi Bab 9: Sukses di Hari Pertama Kerja
+                    </h1>
+                    <p class="lead text-muted">Sukses di Hari Pertama Kerja</p>
+                    <div class="badge bg-success fs-6">Siap Kerja dalam 12 Bulan</div>
+                </div>
+
+                <div id="results" class="mb-5">
+                    <div class="card hasil-card mb-4">
+                        <div class="card-body text-center">
+                            <h3><i class="fas fa-trophy"></i> Hasil Evaluasi</h3>
+                            <div class="row mt-4">
+                                <div class="col-md-4">
+                                    <h2 class="fw-bold" id="total-score">0</h2>
+                                    <p>dari 100 poin</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <h2 class="fw-bold" id="percentage">0%</h2>
+                                    <p>Kesiapan</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <span class="badge fs-5 p-3" id="category-badge">Evaluasi</span>
+                                </div>
+                            </div>
+                            <div class="progress progress-custom mt-3">
+                                <div class="progress-bar bg-success" id="progress-bar" style="width:0%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mb-4">
+                        <div class="card-header bg-success text-white">
+                            <h5><i class="fas fa-chart-bar"></i> Detail Skor per Aspek</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row" id="category-details"></div>
+                        </div>
+                    </div>
+
+                    <div class="card mb-4">
+                        <div class="card-header bg-info text-white">
+                            <h5><i class="fas fa-lightbulb"></i> Rekomendasi</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="alert" id="recommendation"></div>
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <button class="btn btn-outline-success btn-lg" onclick="resetForm()">
+                            <i class="fas fa-redo"></i> Evaluasi Ulang
+                        </button>
+                    </div>
+                </div>
+
+                <form id="evaluationForm">
+                    <div class="kategori-header">
+                        <h4><i class="fas fa-folder-open"></i> Persiapan Mental dan Pengetahuan</h4>
+                    </div>
+
+                    <div class="card question-card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <h6 class="card-title mb-0">
+                                    <span class="badge bg-success me-2">1</span>
+                                    Apakah kamu sudah melakukan riset mendalam tentang perusahaan sebelum hari pertama kerja?
+                                </h6>
+                                <span class="badge bg-secondary">15 poin</span>
+                            </div>
+                            <div class="custom-radio">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="q1" value="0">
+                                    <label class="form-check-label">Belum melakukan riset perusahaan <span class="badge badge-poin">0 poin</span></label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="q1" value="8">
+                                    <label class="form-check-label">Riset dasar (website, profil singkat) <span class="badge badge-poin">8 poin</span></label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="q1" value="12">
+                                    <label class="form-check-label">Riset cukup detail (kultur, produk, kompetitor) <span class="badge badge-poin">12 poin</span></label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="q1" value="15">
+                                    <label class="form-check-label">Riset sangat detail dan mendalam <span class="badge badge-poin">15 poin</span></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card question-card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <h6 class="card-title mb-0">
+                                    <span class="badge bg-success me-2">2</span>
+                                    Apakah kamu sudah menetapkan ekspektasi yang realistis untuk 3 bulan pertama?
+                                </h6>
+                                <span class="badge bg-secondary">15 poin</span>
+                            </div>
+                            <div class="custom-radio">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="q2" value="0">
+                                    <label class="form-check-label">Belum menetapkan ekspektasi yang jelas <span class="badge badge-poin">0 poin</span></label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="q2" value="8">
+                                    <label class="form-check-label">Ekspektasi masih terlalu tinggi atau rendah <span class="badge badge-poin">8 poin</span></label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="q2" value="12">
+                                    <label class="form-check-label">Ekspektasi cukup realistis <span class="badge badge-poin">12 poin</span></label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="q2" value="15">
+                                    <label class="form-check-label">Ekspektasi sangat realistis dan terukur <span class="badge badge-poin">15 poin</span></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card question-card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <h6 class="card-title mb-0">
+                                    <span class="badge bg-success me-2">3</span>
+                                    Bagaimana tingkat kesiapan mentalmu menghadapi tantangan dan tekanan kerja?
+                                </h6>
+                                <span class="badge bg-secondary">10 poin</span>
+                            </div>
+                            <div class="custom-radio">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="q3" value="0">
+                                    <label class="form-check-label">Masih sangat cemas dan tidak siap <span class="badge badge-poin">0 poin</span></label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="q3" value="5">
+                                    <label class="form-check-label">Cukup siap tapi masih ada kekhawatiran <span class="badge badge-poin">5 poin</span></label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="q3" value="8">
+                                    <label class="form-check-label">Siap dan percaya diri <span class="badge badge-poin">8 poin</span></label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="q3" value="10">
+                                    <label class="form-check-label">Sangat siap dan antusias menghadapi tantangan <span class="badge badge-poin">10 poin</span></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="kategori-header">
+                        <h4><i class="fas fa-folder-open"></i> Adaptasi Lingkungan Kerja</h4>
+                    </div>
+
+                    <div class="card question-card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <h6 class="card-title mb-0">
+                                    <span class="badge bg-success me-2">4</span>
+                                    Apakah kamu sudah mempersiapkan penampilan dan cara berinteraksi untuk kesan pertama yang baik?
+                                </h6>
+                                <span class="badge bg-secondary">10 poin</span>
+                            </div>
+                            <div class="custom-radio">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="q4" value="0">
+                                    <label class="form-check-label">Belum mempersiapkan penampilan dan cara berinteraksi <span class="badge badge-poin">0 poin</span></label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="q4" value="5">
+                                    <label class="form-check-label">Sudah mempersiapkan penampilan saja <span class="badge badge-poin">5 poin</span></label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="q4" value="8">
+                                    <label class="form-check-label">Sudah mempersiapkan penampilan dan cara berinteraksi <span class="badge badge-poin">8 poin</span></label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="q4" value="10">
+                                    <label class="form-check-label">Sangat siap dengan penampilan dan strategi interaksi <span class="badge badge-poin">10 poin</span></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card question-card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <h6 class="card-title mb-0">
+                                    <span class="badge bg-success me-2">5</span>
+                                    Seberapa siap kamu untuk berintegrasi dengan tim dan membangun hubungan kerja?
+                                </h6>
+                                <span class="badge bg-secondary">15 poin</span>
+                            </div>
+                            <div class="custom-radio">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="q5" value="0">
+                                    <label class="form-check-label">Masih canggung dan sulit berinteraksi <span class="badge badge-poin">0 poin</span></label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="q5" value="8">
+                                    <label class="form-check-label">Cukup siap tapi masih perlu penyesuaian <span class="badge badge-poin">8 poin</span></label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="q5" value="12">
+                                    <label class="form-check-label">Siap dan mudah beradaptasi <span class="badge badge-poin">12 poin</span></label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="q5" value="15">
+                                    <label class="form-check-label">Sangat siap dan proaktif membangun hubungan <span class="badge badge-poin">15 poin</span></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card question-card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <h6 class="card-title mb-0">
+                                    <span class="badge bg-success me-2">6</span>
+                                    Apakah kamu sudah memahami etika dan norma kerja yang berlaku di lingkungan profesional?
+                                </h6>
+                                <span class="badge bg-secondary">10 poin</span>
+                            </div>
+                            <div class="custom-radio">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="q6" value="0">
+                                    <label class="form-check-label">Belum memahami etika kerja profesional <span class="badge badge-poin">0 poin</span></label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="q6" value="5">
+                                    <label class="form-check-label">Memahami etika dasar saja <span class="badge badge-poin">5 poin</span></label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="q6" value="8">
+                                    <label class="form-check-label">Memahami etika kerja dengan baik <span class="badge badge-poin">8 poin</span></label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="q6" value="10">
+                                    <label class="form-check-label">Sangat memahami dan siap menerapkan etika kerja <span class="badge badge-poin">10 poin</span></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="kategori-header">
+                        <h4><i class="fas fa-folder-open"></i> Orientasi dan Target Awal</h4>
+                    </div>
+
+                    <div class="card question-card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <h6 class="card-title mb-0">
+                                    <span class="badge bg-success me-2">7</span>
+                                    Apakah kamu sudah menetapkan target pembelajaran dan pengembangan untuk bulan pertama?
+                                </h6>
+                                <span class="badge bg-secondary">15 poin</span>
+                            </div>
+                            <div class="custom-radio">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="q7" value="0">
+                                    <label class="form-check-label">Belum menetapkan target pembelajaran <span class="badge badge-poin">0 poin</span></label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="q7" value="8">
+                                    <label class="form-check-label">Target pembelajaran masih umum <span class="badge badge-poin">8 poin</span></label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="q7" value="12">
+                                    <label class="form-check-label">Target pembelajaran cukup spesifik <span class="badge badge-poin">12 poin</span></label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="q7" value="15">
+                                    <label class="form-check-label">Target pembelajaran sangat spesifik dan terukur <span class="badge badge-poin">15 poin</span></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card question-card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <h6 class="card-title mb-0">
+                                    <span class="badge bg-success me-2">8</span>
+                                    Seberapa siap kamu menerima feedback dan kritik konstruktif dari atasan dan rekan kerja?
+                                </h6>
+                                <span class="badge bg-secondary">10 poin</span>
+                            </div>
+                            <div class="custom-radio">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="q8" value="0">
+                                    <label class="form-check-label">Sulit menerima feedback dan kritik <span class="badge badge-poin">0 poin</span></label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="q8" value="5">
+                                    <label class="form-check-label">Bisa menerima tapi kadang defensif <span class="badge badge-poin">5 poin</span></label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="q8" value="8">
+                                    <label class="form-check-label">Terbuka menerima feedback <span class="badge badge-poin">8 poin</span></label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="q8" value="10">
+                                    <label class="form-check-label">Sangat terbuka dan proaktif meminta feedback <span class="badge badge-poin">10 poin</span></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-5">
+                        <button type="submit" class="btn btn-success btn-lg px-5">
+                            <i class="fas fa-calculator"></i> Lihat Hasil Evaluasi
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const categories = {
+            'Persiapan Mental dan Pengetahuan': [1, 2, 3],
+            'Adaptasi Lingkungan Kerja': [4, 5, 6],
+            'Orientasi dan Target Awal': [7, 8]
+        };
+
+        const maxScores = {
+            'Persiapan Mental dan Pengetahuan': 40,
+            'Adaptasi Lingkungan Kerja': 35,
+            'Orientasi dan Target Awal': 25
+        };
+
+        const recommendations = {
+            90: {icon: 'fas fa-star', class: 'success', title: 'Excellent! Kamu sangat siap menghadapi hari pertama kerja!', text: 'Pertahankan persiapan yang sudah sangat baik ini. Tetap fleksibel dan terbuka untuk pembelajaran baru di lingkungan kerja.'},
+            75: {icon: 'fas fa-thumbs-up', class: 'info', title: 'Good! Kamu sudah cukup siap menghadapi hari pertama kerja!', text: 'Fokus pada aspek-aspek yang masih perlu diperbaiki. Tetap percaya diri dan proaktif dalam beradaptasi.'},
+            60: {icon: 'fas fa-exclamation-triangle', class: 'warning', title: 'Persiapan masih perlu ditingkatkan!', text: 'Fokus pada persiapan mental, riset perusahaan, dan menetapkan ekspektasi yang realistis. Latih kemampuan adaptasi dan komunikasi.'},
+            0: {icon: 'fas fa-times-circle', class: 'danger', title: 'Persiapan masih sangat kurang!', text: 'Segera tingkatkan persiapan di semua aspek. Mulai dengan riset perusahaan, persiapan mental, dan pembelajaran etika kerja profesional.'}
+        };
+
+        const categoryLabels = {
+            90: {label: 'Sangat Siap', class: 'bg-success'},
+            75: {label: 'Siap', class: 'bg-info'},
+            60: {label: 'Cukup Siap', class: 'bg-warning'},
+            40: {label: 'Perlu Persiapan', class: 'bg-danger'},
+            0: {label: 'Sangat Perlu Persiapan', class: 'bg-dark'}
+        };
+
+        document.getElementById('evaluationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            let totalScore = 0;
+            const categoryScores = {};
+            
+            // Initialize category scores
+            Object.keys(categories).forEach(cat => {
+                categoryScores[cat] = 0;
+            });
+            
+            // Calculate scores
+            for (let i = 1; i <= 8; i++) {
+                const selected = document.querySelector(`input[name="q${i}"]:checked`);
+                if (selected) {
+                    const score = parseInt(selected.value);
+                    totalScore += score;
+                    
+                    // Add to category score
+                    Object.keys(categories).forEach(cat => {
+                        if (categories[cat].includes(i)) {
+                            categoryScores[cat] += score;
+                        }
+                    });
+                }
+            }
+            
+            const percentage = Math.round((totalScore / 100) * 100);
+            
+            // Get category and recommendation
+            const category = Object.keys(categoryLabels).reverse().find(threshold => percentage >= threshold);
+            const recommendation = Object.keys(recommendations).reverse().find(threshold => percentage >= threshold);
+            
+            // Display results
+            document.getElementById('total-score').textContent = totalScore;
+            document.getElementById('percentage').textContent = percentage + '%';
+            document.getElementById('progress-bar').style.width = percentage + '%';
+            
+            const categoryBadge = document.getElementById('category-badge');
+            categoryBadge.textContent = categoryLabels[category].label;
+            categoryBadge.className = 'badge fs-5 p-3 ' + categoryLabels[category].class;
+            
+            // Category details
+            const categoryDetails = document.getElementById('category-details');
+            categoryDetails.innerHTML = '';
+            Object.keys(categoryScores).forEach(cat => {
+                const score = categoryScores[cat];
+                const maxScore = maxScores[cat];
+                const catPercentage = Math.round((score / maxScore) * 100);
+                
+                categoryDetails.innerHTML += `
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <h6 class="card-title">${cat}</h6>
+                                <h4 class="text-success">${score}/${maxScore}</h4>
+                                <div class="progress">
+                                    <div class="progress-bar bg-success" style="width: ${catPercentage}%"></div>
+                                </div>
+                                <small class="text-muted">${catPercentage}%</small>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            // Recommendation
+            const rec = recommendations[recommendation];
+            const recElement = document.getElementById('recommendation');
+            recElement.className = `alert alert-${rec.class}`;
+            recElement.innerHTML = `
+                <h6><i class="${rec.icon}"></i> ${rec.title}</h6>
+                <p>${rec.text}</p>
+            `;
+            
+            // Show results, hide form
+            document.getElementById('results').style.display = 'block';
+            document.getElementById('evaluationForm').style.display = 'none';
+        });
+        
+        function resetForm() {
+            document.getElementById('evaluationForm').reset();
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('evaluationForm').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

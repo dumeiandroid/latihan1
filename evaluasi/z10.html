@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluasi Bab 10: Negosiasi Gaji dan Benefit</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .kategori-header { background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: white; border-radius: 10px; padding: 15px; margin: 20px 0 15px 0; }
+        .question-card { border-left: 4px solid #28a745; margin-bottom: 20px; transition: all 0.3s ease; }
+        .question-card:hover { box-shadow: 0 4px 15px rgba(0,0,0,0.1); transform: translateY(-2px); }
+        .hasil-card { background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: white; border-radius: 15px; }
+        .progress-custom { height: 25px; border-radius: 15px; }
+        .custom-radio { margin-left: 35px; margin-top: 15px; }
+        .custom-radio .form-check { background: #f8f9fa; border: 2px solid #e9ecef; border-radius: 8px; padding: 12px 15px; margin-bottom: 8px; transition: all 0.3s ease; cursor: pointer; }
+        .custom-radio .form-check:hover { background: #d4edda; border-color: #28a745; transform: translateX(5px); }
+        .custom-radio .form-check-input:checked + .form-check-label { color: #155724; font-weight: 500; }
+        .custom-radio .form-check:has(.form-check-input:checked) { background: #d4edda; border-color: #28a745; box-shadow: 0 2px 8px rgba(40, 167, 69, 0.2); }
+        .number-input-wrapper { margin-left: 35px; margin-top: 15px; }
+        .number-input-wrapper .form-control { border: 2px solid #e9ecef; border-radius: 8px; padding: 12px 15px; font-size: 16px; transition: all 0.3s ease; }
+        .number-input-wrapper .form-control:focus { border-color: #28a745; box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25); }
+        .hidden { display: none; }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="text-center mb-5">
+                    <h1 class="display-5 fw-bold text-success">
+                        <i class="fas fa-handshake"></i> Evaluasi Bab 10: Negosiasi Gaji dan Benefit
+                    </h1>
+                    <p class="lead text-muted">Negosiasi Gaji dan Benefit</p>
+                    <div class="badge bg-success fs-6">Siap Kerja dalam 12 Bulan</div>
+                </div>
+
+                <!-- Form Evaluasi -->
+                <div id="form-evaluasi">
+                    <form id="evaluasiForm">
+                        <!-- Riset dan Persiapan -->
+                        <div class="kategori-header">
+                            <h4><i class="fas fa-search"></i> Riset dan Persiapan</h4>
+                        </div>
+
+                        <div class="card question-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <h6 class="card-title mb-0">
+                                        <span class="badge bg-success me-2">1</span>
+                                        Berapa banyak perusahaan yang sudah kamu riset untuk mengetahui standar gaji posisi yang kamu lamar?
+                                    </h6>
+                                    <span class="badge bg-secondary">20 poin</span>
+                                </div>
+                                <div class="number-input-wrapper">
+                                    <input type="number" class="form-control" name="riset_gaji" min="0" max="15" placeholder="Jumlah perusahaan yang diriset">
+                                    <small class="text-muted mt-2 d-block">
+                                        <i class="fas fa-info-circle"></i> Target: 10+ perusahaan untuk mendapat gambaran gaji yang akurat
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card question-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <h6 class="card-title mb-0">
+                                        <span class="badge bg-success me-2">2</span>
+                                        Apakah kamu sudah menggunakan berbagai sumber untuk riset gaji (Glassdoor, PayScale, survey gaji, dll)?
+                                    </h6>
+                                    <span class="badge bg-secondary">15 poin</span>
+                                </div>
+                                <div class="custom-radio">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="sumber_data" value="0">
+                                        <label class="form-check-label">
+                                            Belum melakukan riset dari sumber manapun
+                                            <span class="badge bg-success ms-2">0 poin</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="sumber_data" value="8">
+                                        <label class="form-check-label">
+                                            Menggunakan 1-2 sumber data gaji
+                                            <span class="badge bg-success ms-2">8 poin</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="sumber_data" value="12">
+                                        <label class="form-check-label">
+                                            Menggunakan 3-4 sumber data gaji
+                                            <span class="badge bg-success ms-2">12 poin</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="sumber_data" value="15">
+                                        <label class="form-check-label">
+                                            Menggunakan 5+ sumber data gaji yang terpercaya
+                                            <span class="badge bg-success ms-2">15 poin</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card question-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <h6 class="card-title mb-0">
+                                        <span class="badge bg-success me-2">3</span>
+                                        Apakah kamu sudah membuat benchmark gaji berdasarkan level posisi dan pengalaman?
+                                    </h6>
+                                    <span class="badge bg-secondary">15 poin</span>
+                                </div>
+                                <div class="custom-radio">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="benchmark_posisi" value="0">
+                                        <label class="form-check-label">
+                                            Belum membuat benchmark sama sekali
+                                            <span class="badge bg-success ms-2">0 poin</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="benchmark_posisi" value="8">
+                                        <label class="form-check-label">
+                                            Punya gambaran kasar range gaji
+                                            <span class="badge bg-success ms-2">8 poin</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="benchmark_posisi" value="12">
+                                        <label class="form-check-label">
+                                            Punya benchmark yang cukup detail
+                                            <span class="badge bg-success ms-2">12 poin</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="benchmark_posisi" value="15">
+                                        <label class="form-check-label">
+                                            Punya benchmark yang sangat detail dan akurat
+                                            <span class="badge bg-success ms-2">15 poin</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Strategi Negosiasi -->
+                        <div class="kategori-header">
+                            <h4><i class="fas fa-chess"></i> Strategi Negosiasi</h4>
+                        </div>
+
+                        <div class="card question-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <h6 class="card-title mb-0">
+                                        <span class="badge bg-success me-2">4</span>
+                                        Apakah kamu sudah menyiapkan strategi negosiasi yang tepat?
+                                    </h6>
+                                    <span class="badge bg-secondary">20 poin</span>
+                                </div>
+                                <div class="custom-radio">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="strategi_negosiasi" value="0">
+                                        <label class="form-check-label">
+                                            Belum menyiapkan strategi negosiasi
+                                            <span class="badge bg-success ms-2">0 poin</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="strategi_negosiasi" value="10">
+                                        <label class="form-check-label">
+                                            Punya strategi dasar untuk negosiasi
+                                            <span class="badge bg-success ms-2">10 poin</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="strategi_negosiasi" value="15">
+                                        <label class="form-check-label">
+                                            Punya strategi yang cukup matang
+                                            <span class="badge bg-success ms-2">15 poin</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="strategi_negosiasi" value="20">
+                                        <label class="form-check-label">
+                                            Punya strategi yang sangat matang dan fleksibel
+                                            <span class="badge bg-success ms-2">20 poin</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card question-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <h6 class="card-title mb-0">
+                                        <span class="badge bg-success me-2">5</span>
+                                        Apakah kamu sudah menyiapkan value proposition yang kuat untuk mendukung negosiasi?
+                                    </h6>
+                                    <span class="badge bg-secondary">15 poin</span>
+                                </div>
+                                <div class="custom-radio">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="value_proposition" value="0">
+                                        <label class="form-check-label">
+                                            Belum menyiapkan value proposition
+                                            <span class="badge bg-success ms-2">0 poin</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="value_proposition" value="8">
+                                        <label class="form-check-label">
+                                            Punya beberapa poin value proposition
+                                            <span class="badge bg-success ms-2">8 poin</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="value_proposition" value="12">
+                                        <label class="form-check-label">
+                                            Punya value proposition yang kuat
+                                            <span class="badge bg-success ms-2">12 poin</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="value_proposition" value="15">
+                                        <label class="form-check-label">
+                                            Punya value proposition yang sangat kuat dan terukur
+                                            <span class="badge bg-success ms-2">15 poin</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Praktik dan Simulasi -->
+                        <div class="kategori-header">
+                            <h4><i class="fas fa-dumbbell"></i> Praktik dan Simulasi</h4>
+                        </div>
+
+                        <div class="card question-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <h6 class="card-title mb-0">
+                                        <span class="badge bg-success me-2">6</span>
+                                        Berapa kali kamu sudah berlatih simulasi negosiasi gaji?
+                                    </h6>
+                                    <span class="badge bg-secondary">15 poin</span>
+                                </div>
+                                <div class="number-input-wrapper">
+                                    <input type="number" class="form-control" name="simulasi_negosiasi" min="0" max="10" placeholder="Jumlah simulasi negosiasi">
+                                    <small class="text-muted mt-2 d-block">
+                                        <i class="fas fa-info-circle"></i> Target: 5+ simulasi untuk meningkatkan kepercayaan diri dan kemampuan negosiasi
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-center mt-5">
+                            <button type="submit" class="btn btn-success btn-lg px-5">
+                                <i class="fas fa-calculator"></i> Lihat Hasil Evaluasi
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Hasil Evaluasi -->
+                <div id="hasil-evaluasi" class="hidden">
+                    <div class="card hasil-card mb-5">
+                        <div class="card-body text-center">
+                            <h3><i class="fas fa-trophy"></i> Hasil Evaluasi</h3>
+                            <div class="row mt-4">
+                                <div class="col-md-4">
+                                    <h2 class="fw-bold" id="total-skor">0</h2>
+                                    <p>dari 100 poin</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <h2 class="fw-bold" id="persentase">0%</h2>
+                                    <p>Pencapaian</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <span class="badge fs-5 p-3" id="kategori-badge">
+                                        <span id="kategori-label">-</span>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="progress progress-custom mt-3">
+                                <div class="progress-bar bg-warning" id="progress-bar" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mb-4">
+                        <div class="card-header bg-success text-white">
+                            <h5><i class="fas fa-chart-bar"></i> Detail Skor per Aspek</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row" id="detail-kategori">
+                                <!-- Akan diisi dengan JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mb-4">
+                        <div class="card-header bg-info text-white">
+                            <h5><i class="fas fa-lightbulb"></i> Rekomendasi Perbaikan</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="alert" id="rekomendasi-alert">
+                                <h6 id="rekomendasi-title">-</h6>
+                                <p id="rekomendasi-message">-</p>
+                            </div>
+                            <ul class="list-unstyled mt-3">
+                                <li><i class="fas fa-check text-success"></i> Pelajari teknik negosiasi yang efektif</li>
+                                <li><i class="fas fa-check text-success"></i> Buat daftar value proposition yang kuat</li>
+                                <li><i class="fas fa-check text-success"></i> Latihan simulasi negosiasi dengan teman atau mentor</li>
+                                <li><i class="fas fa-check text-success"></i> Pelajari tentang benefit selain gaji yang bisa dinegosiasi</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <button class="btn btn-outline-success btn-lg" onclick="resetForm()">
+                            <i class="fas fa-redo"></i> Evaluasi Ulang
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card mt-5 border-0 bg-transparent">
+                    <div class="card-body text-center">
+                        <p class="text-muted mb-0">
+                            <i class="fas fa-lightbulb"></i> Evaluasi ini membantu kamu mengukur kesiapan dalam negosiasi gaji dan benefit ketika mendapat tawaran kerja
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const kategoriData = {
+            'Riset dan Persiapan': { total: 50, skor: 0, icon: 'fas fa-search' },
+            'Strategi Negosiasi': { total: 35, skor: 0, icon: 'fas fa-chess' },
+            'Praktik dan Simulasi': { total: 15, skor: 0, icon: 'fas fa-dumbbell' }
+        };
+
+        const scoreRanges = [
+            { min: 90, label: 'Sangat Baik', class: 'success', icon: 'fas fa-star' },
+            { min: 75, label: 'Baik', class: 'info', icon: 'fas fa-thumbs-up' },
+            { min: 60, label: 'Cukup', class: 'warning', icon: 'fas fa-exclamation-triangle' },
+            { min: 40, label: 'Perlu Perbaikan', class: 'danger', icon: 'fas fa-exclamation-circle' },
+            { min: 0, label: 'Sangat Perlu Perbaikan', class: 'dark', icon: 'fas fa-times-circle' }
+        ];
+
+        const recommendations = {
+            excellent: { title: 'Excellent!', message: 'Kamu sudah sangat siap untuk melakukan negosiasi gaji dan benefit. Pertahankan persiapan yang sudah sangat baik ini dan percaya diri saat negosiasi!', class: 'success' },
+            good: { title: 'Good Job!', message: 'Persiapan negosiasi kamu sudah baik. Tingkatkan lagi riset dan latihan simulasi untuk hasil yang lebih maksimal.', class: 'info' },
+            fair: { title: 'Perlu Peningkatan', message: 'Kamu perlu meningkatkan persiapan negosiasi. Fokus pada riset gaji yang lebih mendalam dan latihan negosiasi yang lebih intensif.', class: 'warning' },
+            poor: { title: 'Butuh Perbaikan Signifikan', message: 'Persiapan negosiasi masih sangat kurang. Mulai dari riset gaji yang komprehensif, buat strategi negosiasi, dan perbanyak latihan simulasi.', class: 'danger' }
+        };
+
+        document.getElementById('evaluasiForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            let totalSkor = 0;
+            
+            // Reset kategori data
+            Object.keys(kategoriData).forEach(k => kategoriData[k].skor = 0);
+            
+            // Hitung skor riset gaji
+            const risetGaji = Math.min(parseInt(formData.get('riset_gaji') || 0), 10) * 2;
+            totalSkor += risetGaji;
+            kategoriData['Riset dan Persiapan'].skor += risetGaji;
+            
+            // Hitung skor lainnya
+            const sumberData = parseInt(formData.get('sumber_data') || 0);
+            const benchmarkPosisi = parseInt(formData.get('benchmark_posisi') || 0);
+            const strategiNegosiasi = parseInt(formData.get('strategi_negosiasi') || 0);
+            const valueProposition = parseInt(formData.get('value_proposition') || 0);
+            
+            totalSkor += sumberData + benchmarkPosisi + strategiNegosiasi + valueProposition;
+            kategoriData['Riset dan Persiapan'].skor += sumberData + benchmarkPosisi;
+            kategoriData['Strategi Negosiasi'].skor += strategiNegosiasi + valueProposition;
+            
+            // Hitung skor simulasi
+            const simulasiNegosiasi = Math.min(parseInt(formData.get('simulasi_negosiasi') || 0), 5) * 3;
+            totalSkor += simulasiNegosiasi;
+            kategoriData['Praktik dan Simulasi'].skor += simulasiNegosiasi;
+            
+            // Tampilkan hasil
+            showResults(totalSkor);
+        });
+
+        function showResults(totalSkor) {
+            const persentase = Math.round((totalSkor / 100) * 100);
+            
+            // Cari kategori hasil
+            const kategoriHasil = scoreRanges.find(range => totalSkor >= range.min);
+            
+            // Tampilkan hasil utama
+            document.getElementById('total-skor').textContent = totalSkor;
+            document.getElementById('persentase').textContent = persentase + '%';
+            document.getElementById('kategori-label').textContent = kategoriHasil.label;
+            document.getElementById('kategori-badge').className = `badge bg-${kategoriHasil.class} fs-5 p-3`;
+            document.getElementById('progress-bar').style.width = persentase + '%';
+            
+            // Tampilkan detail per kategori
+            let detailHtml = '';
+            Object.entries(kategoriData).forEach(([nama, data]) => {
+                const persen = data.total > 0 ? Math.round((data.skor / data.total) * 100) : 0;
+                detailHtml += `
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <h6 class="card-title">
+                                    <i class="${data.icon}"></i> ${nama}
+                                </h6>
+                                <h4 class="text-success">${data.skor}/${data.total}</h4>
+                                <div class="progress">
+                                    <div class="progress-bar bg-success" style="width: ${persen}%"></div>
+                                </div>
+                                <small class="text-muted">${persen}%</small>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            document.getElementById('detail-kategori').innerHTML = detailHtml;
+            
+            // Tampilkan rekomendasi
+            let rekomendasi;
+            if (totalSkor >= 90) rekomendasi = recommendations.excellent;
+            else if (totalSkor >= 75) rekomendasi = recommendations.good;
+            else if (totalSkor >= 60) rekomendasi = recommendations.fair;
+            else rekomendasi = recommendations.poor;
+            
+            document.getElementById('rekomendasi-title').innerHTML = `<i class="${kategoriHasil.icon}"></i> ${rekomendasi.title}`;
+            document.getElementById('rekomendasi-message').textContent = rekomendasi.message;
+            document.getElementById('rekomendasi-alert').className = `alert alert-${rekomendasi.class}`;
+            
+            // Sembunyikan form dan tampilkan hasil
+            document.getElementById('form-evaluasi').classList.add('hidden');
+            document.getElementById('hasil-evaluasi').classList.remove('hidden');
+        }
+
+        function resetForm() {
+            document.getElementById('evaluasiForm').reset();
+            document.getElementById('form-evaluasi').classList.remove('hidden');
+            document.getElementById('hasil-evaluasi').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>

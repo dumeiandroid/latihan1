@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluasi Bab 5: Bangun Jaringan Profesional</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .question-card{border-left:4px solid #6c757d;margin-bottom:20px;transition:all 0.3s ease}
+        .question-card:hover{box-shadow:0 4px 15px rgba(0,0,0,0.1);transform:translateY(-2px)}
+        .hasil-card{background:linear-gradient(135deg,#6c757d 0%,#495057 100%);color:white;border-radius:15px}
+        .custom-radio{margin-left:35px;margin-top:15px}
+        .custom-radio .form-check{background:#f8f9fa;border:2px solid #e9ecef;border-radius:8px;padding:12px 15px;margin-bottom:8px;transition:all 0.3s ease;cursor:pointer}
+        .custom-radio .form-check:hover{background:#f1f3f4;border-color:#6c757d;transform:translateX(5px)}
+        .custom-radio .form-check:has(.form-check-input:checked){background:#f1f3f4;border-color:#6c757d}
+        .number-input-wrapper{margin-left:35px;margin-top:15px}
+        .number-input-wrapper .form-control{border:2px solid #e9ecef;border-radius:8px;padding:12px 15px;transition:all 0.3s ease}
+        .number-input-wrapper .form-control:focus{border-color:#6c757d;box-shadow:0 0 0 0.2rem rgba(108,117,125,0.25)}
+        .badge-poin{background:#6c757d!important;color:white!important;font-size:0.75rem;padding:4px 8px;border-radius:12px}
+        .kategori-header{background:linear-gradient(135deg,#6c757d 0%,#495057 100%);color:white;border-radius:10px;padding:15px;margin:20px 0 15px 0}
+        .main-icon{color:#6c757d}
+        .d-none{display:none!important}
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="text-center mb-5">
+                    <h1 class="display-5 fw-bold main-icon">
+                        <i class="fas fa-network-wired"></i> Evaluasi Bab 5
+                    </h1>
+                    <p class="lead text-muted">Bangun Jaringan Profesional</p>
+                    <div class="badge bg-secondary fs-6">Siap Kerja dalam 12 Bulan</div>
+                </div>
+
+                <!-- Form Evaluasi -->
+                <div id="formSection">
+                    <form id="evaluationForm">
+                        <div class="kategori-header">
+                            <h4><i class="fas fa-folder-open"></i> Partisipasi Aktif</h4>
+                        </div>
+                        
+                        <div class="card question-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <h6 class="card-title mb-0">
+                                        <span class="badge bg-primary me-2">1</span>
+                                        Berapa banyak event networking yang sudah kamu hadiri?
+                                    </h6>
+                                    <span class="badge bg-primary">20 poin</span>
+                                </div>
+                                <div class="number-input-wrapper">
+                                    <input type="number" class="form-control" name="kehadiran_event" min="0" max="12" placeholder="Jumlah event" required>
+                                    <small class="text-muted mt-2 d-block"><i class="fas fa-info-circle"></i> Target: 8+ event (20 poin penuh)</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card question-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <h6 class="card-title mb-0">
+                                        <span class="badge bg-primary me-2">2</span>
+                                        Berapa banyak coffee chat yang sudah kamu lakukan dengan profesional?
+                                    </h6>
+                                    <span class="badge bg-primary">20 poin</span>
+                                </div>
+                                <div class="number-input-wrapper">
+                                    <input type="number" class="form-control" name="coffee_chat" min="0" max="20" placeholder="Jumlah coffee chat" required>
+                                    <small class="text-muted mt-2 d-block"><i class="fas fa-info-circle"></i> Target: 15+ coffee chat (20 poin penuh)</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="kategori-header">
+                            <h4><i class="fas fa-folder-open"></i> Kualitas Komunikasi</h4>
+                        </div>
+
+                        <div class="card question-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <h6 class="card-title mb-0">
+                                        <span class="badge bg-success me-2">3</span>
+                                        Apakah kamu sudah mempersiapkan elevator pitch yang baik?
+                                    </h6>
+                                    <span class="badge bg-success">20 poin</span>
+                                </div>
+                                <div class="custom-radio">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="elevator_pitch" value="0" required>
+                                        <label class="form-check-label">Belum punya elevator pitch <span class="badge badge-poin ms-2">0 poin</span></label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="elevator_pitch" value="10" required>
+                                        <label class="form-check-label">Punya 1 versi elevator pitch <span class="badge badge-poin ms-2">10 poin</span></label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="elevator_pitch" value="15" required>
+                                        <label class="form-check-label">Punya 2 versi elevator pitch <span class="badge badge-poin ms-2">15 poin</span></label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="elevator_pitch" value="20" required>
+                                        <label class="form-check-label">Punya 3+ versi sesuai konteks yang berbeda <span class="badge badge-poin ms-2">20 poin</span></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card question-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <h6 class="card-title mb-0">
+                                        <span class="badge bg-success me-2">4</span>
+                                        Seberapa baik kamu melakukan follow-up setelah bertemu dengan koneksi baru?
+                                    </h6>
+                                    <span class="badge bg-success">15 poin</span>
+                                </div>
+                                <div class="custom-radio">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="followup_networking" value="0" required>
+                                        <label class="form-check-label">Jarang melakukan follow-up <span class="badge badge-poin ms-2">0 poin</span></label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="followup_networking" value="8" required>
+                                        <label class="form-check-label">Kadang-kadang melakukan follow-up <span class="badge badge-poin ms-2">8 poin</span></label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="followup_networking" value="12" required>
+                                        <label class="form-check-label">Sering melakukan follow-up <span class="badge badge-poin ms-2">12 poin</span></label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="followup_networking" value="15" required>
+                                        <label class="form-check-label">Selalu melakukan follow-up dengan baik <span class="badge badge-poin ms-2">15 poin</span></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="kategori-header">
+                            <h4><i class="fas fa-folder-open"></i> Hasil Networking</h4>
+                        </div>
+
+                        <div class="card question-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <h6 class="card-title mb-0">
+                                        <span class="badge bg-info me-2">5</span>
+                                        Berapa banyak koneksi profesional baru yang berhasil kamu bangun?
+                                    </h6>
+                                    <span class="badge bg-info">15 poin</span>
+                                </div>
+                                <div class="number-input-wrapper">
+                                    <input type="number" class="form-control" name="koneksi_baru" min="0" max="100" placeholder="Jumlah koneksi baru" required>
+                                    <small class="text-muted mt-2 d-block"><i class="fas fa-info-circle"></i> Target: 50+ koneksi (15 poin penuh)</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card question-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <h6 class="card-title mb-0">
+                                        <span class="badge bg-info me-2">6</span>
+                                        Bagaimana kualitas hubungan yang kamu bangun dengan koneksi profesional?
+                                    </h6>
+                                    <span class="badge bg-info">10 poin</span>
+                                </div>
+                                <div class="custom-radio">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="kualitas_hubungan" value="0" required>
+                                        <label class="form-check-label">Hubungan masih superficial/dangkal <span class="badge badge-poin ms-2">0 poin</span></label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="kualitas_hubungan" value="5" required>
+                                        <label class="form-check-label">Beberapa hubungan yang bermakna <span class="badge badge-poin ms-2">5 poin</span></label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="kualitas_hubungan" value="8" required>
+                                        <label class="form-check-label">Banyak hubungan yang bermakna <span class="badge badge-poin ms-2">8 poin</span></label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="kualitas_hubungan" value="10" required>
+                                        <label class="form-check-label">Hubungan yang sangat bermakna dan saling menguntungkan <span class="badge badge-poin ms-2">10 poin</span></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-center mt-5">
+                            <button type="submit" class="btn btn-secondary btn-lg px-5">
+                                <i class="fas fa-calculator"></i> Lihat Hasil Evaluasi
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Hasil -->
+                <div id="resultSection" class="d-none">
+                    <div class="card hasil-card mb-5">
+                        <div class="card-body text-center">
+                            <h3><i class="fas fa-trophy"></i> Hasil Evaluasi</h3>
+                            <div class="row mt-4">
+                                <div class="col-md-4">
+                                    <h2 class="fw-bold" id="totalScore">0</h2>
+                                    <p>dari 100 poin</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <h2 class="fw-bold" id="percentage">0%</h2>
+                                    <p>Pencapaian</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <span class="badge fs-5 p-3" id="categoryBadge">-</span>
+                                </div>
+                            </div>
+                            <div class="progress mt-3" style="height:25px;border-radius:15px;">
+                                <div class="progress-bar bg-warning" id="progressBar" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mb-4">
+                        <div class="card-header bg-secondary text-white">
+                            <h5><i class="fas fa-chart-bar"></i> Detail Skor per Aspek</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row" id="detailScores"></div>
+                        </div>
+                    </div>
+
+                    <div class="card mb-4">
+                        <div class="card-header bg-info text-white">
+                            <h5><i class="fas fa-lightbulb"></i> Rekomendasi Pengembangan</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="alert" id="recommendations"></div>
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <button type="button" class="btn btn-outline-secondary btn-lg" onclick="resetForm()">
+                            <i class="fas fa-redo"></i> Evaluasi Ulang
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card mt-5 border-0 bg-transparent">
+                    <div class="card-body text-center">
+                        <p class="text-muted mb-0">
+                            <i class="fas fa-lightbulb"></i> Evaluasi ini membantu kamu mengukur kemampuan dalam membangun jaringan profesional yang kuat
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const config = {
+            categories: {
+                'Partisipasi Aktif': {total: 40, color: 'primary'},
+                'Kualitas Komunikasi': {total: 35, color: 'success'},
+                'Hasil Networking': {total: 25, color: 'info'}
+            },
+            questions: {
+                kehadiran_event: {category: 'Partisipasi Aktif', weight: 20, formula: v => Math.min(v * 2.5, 20)},
+                coffee_chat: {category: 'Partisipasi Aktif', weight: 20, formula: v => Math.min(v * 1.33, 20)},
+                elevator_pitch: {category: 'Kualitas Komunikasi', weight: 20, formula: v => +v},
+                followup_networking: {category: 'Kualitas Komunikasi', weight: 15, formula: v => +v},
+                koneksi_baru: {category: 'Hasil Networking', weight: 15, formula: v => Math.min(v * 0.3, 15)},
+                kualitas_hubungan: {category: 'Hasil Networking', weight: 10, formula: v => +v}
+            },
+            recommendations: {
+                high: {title: 'Networking Skills Excellent!', class: 'alert-success', items: ['Pertahankan konsistensi dalam membangun jaringan profesional', 'Mulai membantu orang lain dalam networking (menjadi connector)', 'Manfaatkan jaringan yang sudah ada untuk referensi pekerjaan', 'Bagikan pengalaman networking dengan teman-teman']},
+                medium: {title: 'Tingkatkan Kualitas Networking', class: 'alert-info', items: ['Fokus pada membangun hubungan yang lebih bermakna', 'Variasikan elevator pitch sesuai dengan konteks yang berbeda', 'Tingkatkan frekuensi coffee chat dengan profesional', 'Konsisten dalam melakukan follow-up dan maintain relationship']},
+                low: {title: 'Perlu Peningkatan Networking', class: 'alert-warning', items: ['Mulai aktif menghadiri event-event industri dan networking', 'Latih kemampuan komunikasi dan buat elevator pitch yang menarik', 'Manfaatkan LinkedIn untuk membangun koneksi profesional', 'Jangan lupa untuk selalu melakukan follow-up setelah bertemu orang baru']}
+            }
+        };
+
+        document.getElementById('evaluationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            let totalScore = 0;
+            let categoryScores = {};
+            
+            // Initialize category scores
+            Object.keys(config.categories).forEach(cat => {
+                categoryScores[cat] = {score: 0, total: config.categories[cat].total};
+            });
+            
+            // Calculate scores
+            Object.keys(config.questions).forEach(qId => {
+                const question = config.questions[qId];
+                const value = formData.get(qId) || 0;
+                const score = question.formula(+value);
+                
+                totalScore += score;
+                categoryScores[question.category].score += score;
+            });
+            
+            const percentage = Math.round((totalScore / 100) * 100);
+            
+            // Update UI
+            document.getElementById('totalScore').textContent = Math.round(totalScore * 10) / 10;
+            document.getElementById('percentage').textContent = percentage + '%';
+            document.getElementById('progressBar').style.width = percentage + '%';
+            
+            // Category badge
+            const categoryBadge = document.getElementById('categoryBadge');
+            if (percentage >= 90) {
+                categoryBadge.textContent = 'Sangat Baik';
+                categoryBadge.className = 'badge bg-success fs-5 p-3';
+            } else if (percentage >= 75) {
+                categoryBadge.textContent = 'Baik';
+                categoryBadge.className = 'badge bg-info fs-5 p-3';
+            } else if (percentage >= 60) {
+                categoryBadge.textContent = 'Cukup';
+                categoryBadge.className = 'badge bg-warning fs-5 p-3';
+            } else if (percentage >= 40) {
+                categoryBadge.textContent = 'Perlu Perbaikan';
+                categoryBadge.className = 'badge bg-danger fs-5 p-3';
+            } else {
+                categoryBadge.textContent = 'Sangat Perlu Perbaikan';
+                categoryBadge.className = 'badge bg-dark fs-5 p-3';
+            }
+            
+            // Detail scores
+            const detailDiv = document.getElementById('detailScores');
+            detailDiv.innerHTML = '';
+            Object.keys(categoryScores).forEach(cat => {
+                const data = categoryScores[cat];
+                const catPercentage = Math.round((data.score / data.total) * 100);
+                const color = config.categories[cat].color;
+                
+                detailDiv.innerHTML += `
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <h6 class="card-title">${cat}</h6>
+                                <h4 class="text-secondary">${Math.round(data.score * 10) / 10}/${data.total}</h4>
+                                <div class="progress">
+                                    <div class="progress-bar bg-${color}" style="width: ${catPercentage}%"></div>
+                                </div>
+                                <small class="text-muted">${catPercentage}%</small>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            // Recommendations
+            const recDiv = document.getElementById('recommendations');
+            const rec = percentage >= 80 ? config.recommendations.high : 
+                       percentage >= 60 ? config.recommendations.medium : 
+                       config.recommendations.low;
+            
+            recDiv.className = 'alert ' + rec.class;
+            recDiv.innerHTML = `
+                <h6><i class="fas fa-${rec.class.includes('success') ? 'check-circle' : rec.class.includes('info') ? 'arrow-up' : 'exclamation-triangle'}"></i> ${rec.title}</h6>
+                <ul class="mb-0">
+                    ${rec.items.map(item => `<li>${item}</li>`).join('')}
+                </ul>
+            `;
+            
+            // Show results
+            document.getElementById('formSection').classList.add('d-none');
+            document.getElementById('resultSection').classList.remove('d-none');
+        });
+
+        function resetForm() {
+            document.getElementById('evaluationForm').reset();
+            document.getElementById('formSection').classList.remove('d-none');
+            document.getElementById('resultSection').classList.add('d-none');
+        }
+    </script>
+</body>
+</html>

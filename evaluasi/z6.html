@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluasi Bab 6: Tingkatkan Kemampuan Teknis</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .kategori-header { background: linear-gradient(135deg, #212529 0%, #495057 100%); color: white; border-radius: 10px; padding: 15px; margin: 20px 0 15px 0; }
+        .question-card { border-left: 4px solid #212529; margin-bottom: 20px; transition: all 0.3s ease; }
+        .question-card:hover { box-shadow: 0 4px 15px rgba(0,0,0,0.1); transform: translateY(-2px); }
+        .hasil-card { background: linear-gradient(135deg, #212529 0%, #495057 100%); color: white; border-radius: 15px; }
+        .custom-radio { margin-left: 35px; margin-top: 15px; }
+        .custom-radio .form-check { background: #f8f9fa; border: 2px solid #e9ecef; border-radius: 8px; padding: 12px 15px; margin-bottom: 8px; transition: all 0.3s ease; cursor: pointer; }
+        .custom-radio .form-check:hover { background: #e3f2fd; border-color: #2196f3; transform: translateX(5px); }
+        .custom-radio .form-check:has(.form-check-input:checked) { background: #e3f2fd; border-color: #2196f3; box-shadow: 0 2px 8px rgba(33, 150, 243, 0.2); }
+        .number-input-wrapper { margin-left: 35px; margin-top: 15px; }
+        .number-input-wrapper .form-control { border: 2px solid #e9ecef; border-radius: 8px; padding: 12px 15px; font-size: 16px; transition: all 0.3s ease; }
+        .badge-poin { background: #212529 !important; color: white !important; font-size: 0.75rem; padding: 4px 8px; border-radius: 12px; }
+        #hasil { display: none; }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="text-center mb-5">
+                    <h1 class="display-5 fw-bold text-dark">
+                        <i class="fas fa-code"></i> Tingkatkan Kemampuan Teknis
+                    </h1>
+                    <p class="lead text-muted">Evaluasi ini membantu kamu mengukur kesiapan kemampuan teknis untuk dunia kerja</p>
+                    <div class="badge bg-dark fs-6">Siap Kerja dalam 12 Bulan</div>
+                </div>
+
+                <!-- Hasil -->
+                <div id="hasil" class="mb-5">
+                    <div class="card hasil-card mb-5">
+                        <div class="card-body text-center">
+                            <h3><i class="fas fa-trophy"></i> Hasil Evaluasi</h3>
+                            <div class="row mt-4">
+                                <div class="col-md-4">
+                                    <h2 class="fw-bold" id="totalSkor">0</h2>
+                                    <p>dari 100 poin</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <h2 class="fw-bold" id="persentase">0%</h2>
+                                    <p>Pencapaian</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <span class="badge fs-5 p-3" id="kategori">-</span>
+                                </div>
+                            </div>
+                            <div class="progress mt-3" style="height: 25px; border-radius: 15px;">
+                                <div class="progress-bar bg-warning" id="progressBar" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mb-4">
+                        <div class="card-header bg-dark text-white">
+                            <h5><i class="fas fa-chart-bar"></i> Detail Skor per Aspek</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row" id="detailSkor"></div>
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <button class="btn btn-outline-dark btn-lg" onclick="resetForm()">
+                            <i class="fas fa-redo"></i> Evaluasi Ulang
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Form -->
+                <form id="evaluasiForm">
+                    <div class="kategori-header">
+                        <h4><i class="fas fa-folder-open"></i> Pembelajaran Terstruktur</h4>
+                    </div>
+
+                    <div class="card question-card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <h6 class="card-title mb-0">
+                                    <span class="badge bg-dark me-2">1</span>
+                                    Berapa banyak kursus teknis yang sudah kamu selesaikan?
+                                </h6>
+                                <span class="badge bg-secondary">25 poin</span>
+                            </div>
+                            <div class="number-input-wrapper">
+                                <input type="number" class="form-control" name="kursus" min="0" max="5" placeholder="Jumlah kursus selesai (maksimal 5)">
+                                <small class="text-muted mt-2 d-block">
+                                    <i class="fas fa-info-circle"></i> 12.5 poin per kursus, maksimal 2 kursus (25 poin)
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card question-card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <h6 class="card-title mb-0">
+                                    <span class="badge bg-dark me-2">2</span>
+                                    Berapa banyak sertifikat teknis yang sudah kamu peroleh?
+                                </h6>
+                                <span class="badge bg-secondary">10 poin</span>
+                            </div>
+                            <div class="number-input-wrapper">
+                                <input type="number" class="form-control" name="sertifikat" min="0" max="10" placeholder="Jumlah sertifikat">
+                                <small class="text-muted mt-2 d-block">
+                                    <i class="fas fa-info-circle"></i> 2 poin per sertifikat (maksimal 10 poin)
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="kategori-header">
+                        <h4><i class="fas fa-folder-open"></i> Praktik dan Aplikasi</h4>
+                    </div>
+
+                    <div class="card question-card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <h6 class="card-title mb-0">
+                                    <span class="badge bg-dark me-2">3</span>
+                                    Berapa banyak proyek berkualitas yang ada di portfolio kamu?
+                                </h6>
+                                <span class="badge bg-secondary">30 poin</span>
+                            </div>
+                            <div class="number-input-wrapper">
+                                <input type="number" class="form-control" name="proyek" min="0" max="5" placeholder="Jumlah proyek berkualitas (maksimal 5)">
+                                <small class="text-muted mt-2 d-block">
+                                    <i class="fas fa-info-circle"></i> 10 poin per proyek, target 3+ proyek (maksimal 30 poin)
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card question-card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <h6 class="card-title mb-0">
+                                    <span class="badge bg-dark me-2">4</span>
+                                    Seberapa aktif kamu dalam komunitas teknis/profesional?
+                                </h6>
+                                <span class="badge bg-secondary">10 poin</span>
+                            </div>
+                            <div class="custom-radio">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="komunitas" value="0">
+                                    <label class="form-check-label">
+                                        Tidak aktif di komunitas manapun
+                                        <span class="badge badge-poin ms-2">0 poin</span>
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="komunitas" value="5">
+                                    <label class="form-check-label">
+                                        Aktif di 1-2 komunitas
+                                        <span class="badge badge-poin ms-2">5 poin</span>
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="komunitas" value="8">
+                                    <label class="form-check-label">
+                                        Aktif di 3+ komunitas
+                                        <span class="badge badge-poin ms-2">8 poin</span>
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="komunitas" value="10">
+                                    <label class="form-check-label">
+                                        Sangat aktif dan berkontribusi
+                                        <span class="badge badge-poin ms-2">10 poin</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="kategori-header">
+                        <h4><i class="fas fa-folder-open"></i> Sertifikasi Profesional</h4>
+                    </div>
+
+                    <div class="card question-card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <h6 class="card-title mb-0">
+                                    <span class="badge bg-dark me-2">5</span>
+                                    Apakah kamu memiliki sertifikat profesional yang diakui industri?
+                                </h6>
+                                <span class="badge bg-secondary">25 poin</span>
+                            </div>
+                            <div class="custom-radio">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="sertifikat_pro" value="0">
+                                    <label class="form-check-label">
+                                        Belum memiliki sertifikat profesional
+                                        <span class="badge badge-poin ms-2">0 poin</span>
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="sertifikat_pro" value="10">
+                                    <label class="form-check-label">
+                                        Sedang dalam proses mendapatkan 1 sertifikat
+                                        <span class="badge badge-poin ms-2">10 poin</span>
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="sertifikat_pro" value="15">
+                                    <label class="form-check-label">
+                                        Memiliki 1 sertifikat profesional
+                                        <span class="badge badge-poin ms-2">15 poin</span>
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="sertifikat_pro" value="20">
+                                    <label class="form-check-label">
+                                        Memiliki 2 sertifikat profesional
+                                        <span class="badge badge-poin ms-2">20 poin</span>
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="sertifikat_pro" value="25">
+                                    <label class="form-check-label">
+                                        Memiliki 3+ sertifikat profesional
+                                        <span class="badge badge-poin ms-2">25 poin</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-5">
+                        <button type="submit" class="btn btn-dark btn-lg px-5">
+                            <i class="fas fa-calculator"></i> Lihat Hasil Evaluasi
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const kategoriSkor = [
+            {min: 90, label: 'Sangat Baik', class: 'bg-success'},
+            {min: 75, label: 'Baik', class: 'bg-info'},
+            {min: 60, label: 'Cukup', class: 'bg-warning'},
+            {min: 40, label: 'Perlu Perbaikan', class: 'bg-danger'},
+            {min: 0, label: 'Sangat Perlu Perbaikan', class: 'bg-dark'}
+        ];
+
+        const kategoriData = {
+            'Pembelajaran Terstruktur': {skor: 0, total: 35},
+            'Praktik dan Aplikasi': {skor: 0, total: 40},
+            'Sertifikasi Profesional': {skor: 0, total: 25}
+        };
+
+        document.getElementById('evaluasiForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            
+            // Hitung skor
+            const kursus = Math.min(parseInt(formData.get('kursus') || 0), 5);
+            const sertifikat = Math.min(parseInt(formData.get('sertifikat') || 0), 10);
+            const proyek = Math.min(parseInt(formData.get('proyek') || 0), 5);
+            const komunitas = parseInt(formData.get('komunitas') || 0);
+            const sertifikatPro = parseInt(formData.get('sertifikat_pro') || 0);
+            
+            const skorKursus = Math.min(kursus * 12.5, 25);
+            const skorSertifikat = Math.min(sertifikat * 2, 10);
+            const skorProyek = Math.min(proyek * 10, 30);
+            
+            const totalSkor = skorKursus + skorSertifikat + skorProyek + komunitas + sertifikatPro;
+            const persentase = Math.round((totalSkor / 100) * 100);
+            
+            // Update kategori data
+            kategoriData['Pembelajaran Terstruktur'].skor = skorKursus + skorSertifikat;
+            kategoriData['Praktik dan Aplikasi'].skor = skorProyek + komunitas;
+            kategoriData['Sertifikasi Profesional'].skor = sertifikatPro;
+            
+            // Tentukan kategori
+            const kategori = kategoriSkor.find(k => totalSkor >= k.min);
+            
+            // Update UI
+            document.getElementById('totalSkor').textContent = totalSkor;
+            document.getElementById('persentase').textContent = persentase + '%';
+            document.getElementById('kategori').textContent = kategori.label;
+            document.getElementById('kategori').className = `badge fs-5 p-3 ${kategori.class}`;
+            document.getElementById('progressBar').style.width = persentase + '%';
+            
+            // Update detail skor
+            let detailHtml = '';
+            Object.entries(kategoriData).forEach(([nama, data]) => {
+                const persen = Math.round((data.skor / data.total) * 100);
+                detailHtml += `
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <h6 class="card-title">${nama}</h6>
+                                <h4 class="text-dark">${data.skor}/${data.total}</h4>
+                                <div class="progress">
+                                    <div class="progress-bar bg-dark" style="width: ${persen}%"></div>
+                                </div>
+                                <small class="text-muted">${persen}%</small>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            document.getElementById('detailSkor').innerHTML = detailHtml;
+            
+            // Tampilkan hasil
+            document.getElementById('evaluasiForm').style.display = 'none';
+            document.getElementById('hasil').style.display = 'block';
+        });
+
+        function resetForm() {
+            document.getElementById('evaluasiForm').reset();
+            document.getElementById('evaluasiForm').style.display = 'block';
+            document.getElementById('hasil').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

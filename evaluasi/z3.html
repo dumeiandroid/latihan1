@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluasi Bab 3: Kuasai Seni Melamar Kerja</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .kategori-header { background: linear-gradient(135deg, #17a2b8 0%, #138496 100%); color: white; border-radius: 10px; padding: 15px; margin: 20px 0 15px 0; }
+        .question-card { border-left: 4px solid #17a2b8; margin-bottom: 20px; transition: all 0.3s ease; }
+        .question-card:hover { box-shadow: 0 4px 15px rgba(0,0,0,0.1); transform: translateY(-2px); }
+        .hasil-card { background: linear-gradient(135deg, #17a2b8 0%, #138496 100%); color: white; border-radius: 15px; }
+        .progress-custom { height: 25px; border-radius: 15px; }
+        .custom-radio { margin-left: 35px; margin-top: 15px; }
+        .custom-radio .form-check { background: #f8f9fa; border: 2px solid #e9ecef; border-radius: 8px; padding: 12px 15px; margin-bottom: 8px; transition: all 0.3s ease; cursor: pointer; }
+        .custom-radio .form-check:hover { background: #e8f4f8; border-color: #17a2b8; transform: translateX(5px); }
+        .custom-radio .form-check-input:checked + .form-check-label { color: #138496; font-weight: 500; }
+        .custom-radio .form-check:has(.form-check-input:checked) { background: #e8f4f8; border-color: #17a2b8; box-shadow: 0 2px 8px rgba(23, 162, 184, 0.2); }
+        .badge-poin { background: #17a2b8 !important; color: white !important; font-size: 0.75rem; padding: 4px 8px; border-radius: 12px; }
+        .number-input-wrapper { margin-left: 35px; margin-top: 15px; }
+        .number-input-wrapper .form-control { border: 2px solid #e9ecef; border-radius: 8px; padding: 12px 15px; font-size: 16px; transition: all 0.3s ease; }
+        .number-input-wrapper .form-control:focus { border-color: #17a2b8; box-shadow: 0 0 0 0.2rem rgba(23, 162, 184, 0.25); }
+        .hero-icon { font-size: 3rem; color: #17a2b8; margin-bottom: 1rem; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="text-center mb-5">
+                    <div class="hero-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <h1 class="display-5 fw-bold text-info">Evaluasi Bab 3</h1>
+                    <p class="lead text-muted">Kuasai Seni Melamar Kerja</p>
+                    <div class="badge bg-info fs-6">Siap Kerja dalam 12 Bulan</div>
+                </div>
+
+                <!-- Form Evaluasi -->
+                <div id="evaluationForm">
+                    <form id="mainForm">
+                        <div class="kategori-header">
+                            <h4><i class="fas fa-folder-open"></i> Kualitas Dokumen</h4>
+                        </div>
+                        
+                        <div class="card question-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <h6 class="card-title mb-0">
+                                        <span class="badge bg-info me-2">1</span>
+                                        Bagaimana kualitas CV yang sudah kamu buat?
+                                    </h6>
+                                    <span class="badge bg-secondary">25 poin</span>
+                                </div>
+                                <div class="custom-radio">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="cv_kualitas" value="0">
+                                        <label class="form-check-label">
+                                            Belum membuat CV
+                                            <span class="badge badge-poin ms-2">0 poin</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="cv_kualitas" value="10">
+                                        <label class="form-check-label">
+                                            CV standar biasa
+                                            <span class="badge badge-poin ms-2">10 poin</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="cv_kualitas" value="18">
+                                        <label class="form-check-label">
+                                            CV yang menarik dan eye-catching
+                                            <span class="badge badge-poin ms-2">18 poin</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="cv_kualitas" value="25">
+                                        <label class="form-check-label">
+                                            CV sangat menarik dan ATS-friendly
+                                            <span class="badge badge-poin ms-2">25 poin</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card question-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <h6 class="card-title mb-0">
+                                        <span class="badge bg-info me-2">2</span>
+                                        Bagaimana kualitas surat lamaran yang kamu buat?
+                                    </h6>
+                                    <span class="badge bg-secondary">15 poin</span>
+                                </div>
+                                <div class="custom-radio">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="surat_lamaran" value="0">
+                                        <label class="form-check-label">
+                                            Belum membuat surat lamaran
+                                            <span class="badge badge-poin ms-2">0 poin</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="surat_lamaran" value="8">
+                                        <label class="form-check-label">
+                                            Menggunakan template standar
+                                            <span class="badge badge-poin ms-2">8 poin</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="surat_lamaran" value="12">
+                                        <label class="form-check-label">
+                                            Cukup personal dan disesuaikan
+                                            <span class="badge badge-poin ms-2">12 poin</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="surat_lamaran" value="15">
+                                        <label class="form-check-label">
+                                            Sangat personal dan menarik
+                                            <span class="badge badge-poin ms-2">15 poin</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="kategori-header">
+                            <h4><i class="fas fa-folder-open"></i> Kuantitas dan Konsistensi</h4>
+                        </div>
+
+                        <div class="card question-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <h6 class="card-title mb-0">
+                                        <span class="badge bg-info me-2">3</span>
+                                        Berapa jumlah lamaran yang sudah kamu kirim?
+                                    </h6>
+                                    <span class="badge bg-secondary">25 poin</span>
+                                </div>
+                                <div class="number-input-wrapper">
+                                    <input type="number" class="form-control" name="jumlah_lamaran" 
+                                           min="0" max="100" placeholder="Jumlah lamaran yang telah dikirim">
+                                    <small class="text-muted mt-2 d-block">
+                                        <i class="fas fa-info-circle"></i> Target ideal: 50 lamaran untuk hasil maksimal
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card question-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <h6 class="card-title mb-0">
+                                        <span class="badge bg-info me-2">4</span>
+                                        Seberapa teratur kamu mengirim lamaran kerja?
+                                    </h6>
+                                    <span class="badge bg-secondary">10 poin</span>
+                                </div>
+                                <div class="custom-radio">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="keteraturan_kirim" value="0">
+                                        <label class="form-check-label">
+                                            Tidak teratur, hanya kadang-kadang
+                                            <span class="badge badge-poin ms-2">0 poin</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="keteraturan_kirim" value="5">
+                                        <label class="form-check-label">
+                                            Kadang-kadang mengirim lamaran
+                                            <span class="badge badge-poin ms-2">5 poin</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="keteraturan_kirim" value="8">
+                                        <label class="form-check-label">
+                                            Cukup teratur mengirim lamaran
+                                            <span class="badge badge-poin ms-2">8 poin</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="keteraturan_kirim" value="10">
+                                        <label class="form-check-label">
+                                            Sangat teratur dan konsisten
+                                            <span class="badge badge-poin ms-2">10 poin</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="kategori-header">
+                            <h4><i class="fas fa-folder-open"></i> Sistem Organisasi</h4>
+                        </div>
+
+                        <div class="card question-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <h6 class="card-title mb-0">
+                                        <span class="badge bg-info me-2">5</span>
+                                        Apakah kamu memiliki sistem untuk melacak lamaran yang sudah dikirim?
+                                    </h6>
+                                    <span class="badge bg-secondary">15 poin</span>
+                                </div>
+                                <div class="custom-radio">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="tracking_lamaran" value="0">
+                                        <label class="form-check-label">
+                                            Tidak ada sistem tracking sama sekali
+                                            <span class="badge badge-poin ms-2">0 poin</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="tracking_lamaran" value="8">
+                                        <label class="form-check-label">
+                                            Sistem sederhana (catatan manual)
+                                            <span class="badge badge-poin ms-2">8 poin</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="tracking_lamaran" value="12">
+                                        <label class="form-check-label">
+                                            Sistem yang cukup baik (spreadsheet)
+                                            <span class="badge badge-poin ms-2">12 poin</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="tracking_lamaran" value="15">
+                                        <label class="form-check-label">
+                                            Sistem yang sangat detail dan terorganisir
+                                            <span class="badge badge-poin ms-2">15 poin</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card question-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <h6 class="card-title mb-0">
+                                        <span class="badge bg-info me-2">6</span>
+                                        Seberapa sering kamu melakukan follow-up terhadap lamaran yang sudah dikirim?
+                                    </h6>
+                                    <span class="badge bg-secondary">10 poin</span>
+                                </div>
+                                <div class="custom-radio">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="followup_lamaran" value="0">
+                                        <label class="form-check-label">
+                                            Tidak pernah melakukan follow-up
+                                            <span class="badge badge-poin ms-2">0 poin</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="followup_lamaran" value="5">
+                                        <label class="form-check-label">
+                                            Jarang melakukan follow-up
+                                            <span class="badge badge-poin ms-2">5 poin</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="followup_lamaran" value="8">
+                                        <label class="form-check-label">
+                                            Sering melakukan follow-up
+                                            <span class="badge badge-poin ms-2">8 poin</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="followup_lamaran" value="10">
+                                        <label class="form-check-label">
+                                            Selalu follow-up tepat waktu
+                                            <span class="badge badge-poin ms-2">10 poin</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-center mt-5">
+                            <button type="submit" class="btn btn-info btn-lg px-5">
+                                <i class="fas fa-calculator"></i> Lihat Hasil Evaluasi
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Hasil Evaluasi -->
+                <div id="resultSection" class="hidden">
+                    <div class="card hasil-card mb-5">
+                        <div class="card-body text-center">
+                            <h3><i class="fas fa-trophy"></i> Hasil Evaluasi</h3>
+                            <div class="row mt-4">
+                                <div class="col-md-4">
+                                    <h2 class="fw-bold" id="totalScore">0</h2>
+                                    <p>dari 100 poin</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <h2 class="fw-bold" id="percentage">0%</h2>
+                                    <p>Pencapaian</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <span class="badge fs-5 p-3" id="categoryBadge">-</span>
+                                </div>
+                            </div>
+                            <div class="progress progress-custom mt-3">
+                                <div class="progress-bar bg-warning" id="progressBar" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mb-4">
+                        <div class="card-header bg-info text-white">
+                            <h5><i class="fas fa-chart-bar"></i> Detail Skor per Aspek</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row" id="categoryDetails">
+                                <!-- Dynamic content -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mb-4">
+                        <div class="card-header bg-light">
+                            <h5><i class="fas fa-lightbulb"></i> Rekomendasi Perbaikan</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="alert" id="recommendations">
+                                <!-- Dynamic content -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <button onclick="resetEvaluation()" class="btn btn-outline-info btn-lg">
+                            <i class="fas fa-redo"></i> Evaluasi Ulang
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card mt-5 border-0 bg-transparent">
+                    <div class="card-body text-center">
+                        <p class="text-muted mb-0">
+                            <i class="fas fa-lightbulb"></i> Evaluasi ini membantu kamu mengukur kemampuan dalam seni melamar kerja dan strategi pencarian kerja
+                        </p>
+                        <small class="text-muted">Fokus pada kualitas dokumen, konsistensi pengiriman, dan sistem organisasi yang baik</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const categories = {
+            'Kualitas Dokumen': { total: 40, score: 0 },
+            'Kuantitas dan Konsistensi': { total: 35, score: 0 },
+            'Sistem Organisasi': { total: 25, score: 0 }
+        };
+
+        const recommendations = {
+            low: {
+                title: 'Perlu Fokus Perbaikan:',
+                class: 'alert-warning',
+                icon: 'fas fa-exclamation-triangle',
+                items: [
+                    'Perbaiki kualitas CV dan surat lamaran',
+                    'Tingkatkan kuantitas lamaran yang dikirim',
+                    'Buat sistem tracking lamaran yang lebih baik',
+                    'Lakukan follow-up secara konsisten'
+                ]
+            },
+            medium: {
+                title: 'Sudah Baik, Bisa Ditingkatkan:',
+                class: 'alert-info',
+                icon: 'fas fa-info-circle',
+                items: [
+                    'Optimalkan CV agar lebih ATS-friendly',
+                    'Personalisasi surat lamaran untuk setiap perusahaan',
+                    'Tingkatkan konsistensi dalam mengirim lamaran',
+                    'Perbaiki sistem follow-up'
+                ]
+            },
+            high: {
+                title: 'Excellent! Pertahankan:',
+                class: 'alert-success',
+                icon: 'fas fa-check-circle',
+                items: [
+                    'Kualitas dokumen yang sudah sangat baik',
+                    'Konsistensi dalam mengirim lamaran',
+                    'Sistem organisasi yang teratur',
+                    'Follow-up yang tepat waktu'
+                ]
+            }
+        };
+
+        document.getElementById('mainForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            let totalScore = 0;
+            
+            // Reset categories
+            Object.keys(categories).forEach(key => categories[key].score = 0);
+            
+            // Calculate scores
+            const cvKualitas = parseInt(formData.get('cv_kualitas') || 0);
+            const suratLamaran = parseInt(formData.get('surat_lamaran') || 0);
+            const jumlahLamaran = parseInt(formData.get('jumlah_lamaran') || 0);
+            const keteraturanKirim = parseInt(formData.get('keteraturan_kirim') || 0);
+            const trackingLamaran = parseInt(formData.get('tracking_lamaran') || 0);
+            const followupLamaran = parseInt(formData.get('followup_lamaran') || 0);
+            
+            // Calculate jumlah_lamaran score (max 25 points, target 50)
+            const jumlahLamaranScore = Math.min(25, Math.round((jumlahLamaran / 50) * 25));
+            
+            // Add to categories
+            categories['Kualitas Dokumen'].score = cvKualitas + suratLamaran;
+            categories['Kuantitas dan Konsistensi'].score = jumlahLamaranScore + keteraturanKirim;
+            categories['Sistem Organisasi'].score = trackingLamaran + followupLamaran;
+            
+            totalScore = Object.values(categories).reduce((sum, cat) => sum + cat.score, 0);
+            
+            // Validate form
+            if (!validateForm()) {
+                alert('Mohon lengkapi semua pertanyaan sebelum mengirim evaluasi!');
+                return;
+            }
+            
+            displayResults(totalScore);
+        });
+
+        function validateForm() {
+            const radioGroups = ['cv_kualitas', 'surat_lamaran', 'keteraturan_kirim', 'tracking_lamaran', 'followup_lamaran'];
+            const numberInputs = ['jumlah_lamaran'];
+            
+            for (let group of radioGroups) {
+                if (!document.querySelector(`input[name="${group}"]:checked`)) {
+                    return false;
+                }
+            }
+            
+            for (let input of numberInputs) {
+                const value = document.querySelector(`input[name="${input}"]`).value;
+                if (value === '' || value < 0) {
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+
+        function displayResults(totalScore) {
+            const percentage = Math.round((totalScore / 100) * 100);
+            
+            // Update main results
+            document.getElementById('totalScore').textContent = totalScore;
+            document.getElementById('percentage').textContent = percentage + '%';
+            document.getElementById('progressBar').style.width = percentage + '%';
+            
+            // Determine category
+            let category, badgeClass;
+            if (percentage >= 90) {
+                category = 'Sangat Baik';
+                badgeClass = 'bg-success';
+            } else if (percentage >= 75) {
+                category = 'Baik';
+                badgeClass = 'bg-info';
+            } else if (percentage >= 60) {
+                category = 'Cukup';
+                badgeClass = 'bg-warning';
+            } else if (percentage >= 40) {
+                category = 'Perlu Perbaikan';
+                badgeClass = 'bg-danger';
+            } else {
+                category = 'Sangat Perlu Perbaikan';
+                badgeClass = 'bg-dark';
+            }
+            
+            const categoryBadge = document.getElementById('categoryBadge');
+            categoryBadge.textContent = category;
+            categoryBadge.className = `badge fs-5 p-3 ${badgeClass}`;
+            
+            // Update category details
+            const categoryDetails = document.getElementById('categoryDetails');
+            categoryDetails.innerHTML = '';
+            
+            Object.entries(categories).forEach(([name, data]) => {
+                const categoryPercentage = Math.round((data.score / data.total) * 100);
+                categoryDetails.innerHTML += `
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <h6 class="card-title">${name}</h6>
+                                <h4 class="text-info">${data.score}/${data.total}</h4>
+                                <div class="progress">
+                                    <div class="progress-bar bg-info" style="width: ${categoryPercentage}%"></div>
+                                </div>
+                                <small class="text-muted">${categoryPercentage}%</small>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            // Update recommendations
+            let recType = percentage < 60 ? 'low' : percentage < 80 ? 'medium' : 'high';
+            const rec = recommendations[recType];
+            
+            document.getElementById('recommendations').innerHTML = `
+                <h6><i class="${rec.icon}"></i> ${rec.title}</h6>
+                <ul class="mb-0">
+                    ${rec.items.map(item => `<li>${item}</li>`).join('')}
+                </ul>
+            `;
+            document.getElementById('recommendations').className = `alert ${rec.class}`;
+            
+            // Show results, hide form
+            document.getElementById('evaluationForm').classList.add('hidden');
+            document.getElementById('resultSection').classList.remove('hidden');
+            
+            // Scroll to results
+            document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function resetEvaluation() {
+            document.getElementById('mainForm').reset();
+            document.getElementById('evaluationForm').classList.remove('hidden');
+            document.getElementById('resultSection').classList.add('hidden');
+            document.getElementById('evaluationForm').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluasi Bab 8: Kembangkan Jiwa Entrepreneur</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root { --primary-color: #f5576c; }
+        .kategori-header { background: linear-gradient(135deg, #f093fb 0%, var(--primary-color) 100%); color: white; border-radius: 10px; padding: 15px; margin: 20px 0 15px 0; }
+        .question-card { border-left: 4px solid var(--primary-color); margin-bottom: 20px; transition: all 0.3s ease; }
+        .question-card:hover { box-shadow: 0 4px 15px rgba(0,0,0,0.1); transform: translateY(-2px); }
+        .hasil-card { background: linear-gradient(135deg, #f093fb 0%, var(--primary-color) 100%); color: white; border-radius: 15px; }
+        .progress-custom { height: 25px; border-radius: 15px; }
+        .custom-radio { margin-left: 35px; margin-top: 15px; }
+        .custom-radio .form-check { background: #f8f9fa; border: 2px solid #e9ecef; border-radius: 8px; padding: 12px 15px; margin-bottom: 8px; transition: all 0.3s ease; cursor: pointer; }
+        .custom-radio .form-check:hover { background: #fce4ec; border-color: var(--primary-color); transform: translateX(5px); }
+        .custom-radio .form-check:has(.form-check-input:checked) { background: #fce4ec; border-color: var(--primary-color); box-shadow: 0 2px 8px rgba(245, 87, 108, 0.2); }
+        .badge-poin { background: var(--primary-color) !important; color: white !important; font-size: 0.75rem; padding: 4px 8px; border-radius: 12px; }
+        .number-input-wrapper { margin-left: 35px; margin-top: 15px; }
+        .number-input-wrapper .form-control { border: 2px solid #e9ecef; border-radius: 8px; padding: 12px 15px; transition: all 0.3s ease; }
+        .number-input-wrapper .form-control:focus { border-color: var(--primary-color); box-shadow: 0 0 0 0.2rem rgba(245, 87, 108, 0.25); }
+        .btn-primary-custom { background-color: var(--primary-color); border-color: var(--primary-color); color: white; }
+        .btn-outline-primary-custom { border-color: var(--primary-color); color: var(--primary-color); }
+        .btn-outline-primary-custom:hover { background-color: var(--primary-color); border-color: var(--primary-color); color: white; }
+        .kategori-detail-card { border-left: 4px solid var(--primary-color); }
+        .d-none { display: none !important; }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="text-center mb-5">
+                    <h1 class="display-5 fw-bold" style="color: var(--primary-color);">
+                        <i class="fas fa-lightbulb"></i> Evaluasi Bab 8: Kembangkan Jiwa Entrepreneur
+                    </h1>
+                    <p class="lead text-muted">Kembangkan Jiwa Entrepreneur</p>
+                    <div class="badge bg-info fs-6">Siap Kerja dalam 12 Bulan</div>
+                </div>
+
+                <!-- Hasil Evaluasi -->
+                <div id="hasil-section" class="d-none">
+                    <div class="card hasil-card mb-5">
+                        <div class="card-body text-center">
+                            <h3><i class="fas fa-trophy"></i> Hasil Evaluasi</h3>
+                            <div class="row mt-4">
+                                <div class="col-md-4">
+                                    <h2 class="fw-bold" id="total-skor">0</h2>
+                                    <p>dari <span id="max-skor">100</span> poin</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <h2 class="fw-bold" id="persentase">0%</h2>
+                                    <p>Pencapaian</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <span class="badge fs-5 p-3" id="kategori-badge">
+                                        <span id="kategori-text">-</span>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="progress progress-custom mt-3">
+                                <div class="progress-bar bg-warning" id="progress-bar" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mb-4">
+                        <div class="card-header text-white" style="background-color: var(--primary-color);">
+                            <h5><i class="fas fa-chart-bar"></i> Detail Skor per Aspek</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row" id="detail-kategori">
+                                <!-- Detail kategori akan diisi oleh JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <button onclick="resetEvaluasi()" class="btn btn-outline-primary-custom btn-lg">
+                            <i class="fas fa-redo"></i> Evaluasi Ulang
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Form Evaluasi -->
+                <div id="form-section">
+                    <form id="evaluasi-form">
+                        <!-- Konsep dan Perencanaan Bisnis -->
+                        <div class="kategori-header">
+                            <h4><i class="fas fa-folder-open"></i> Konsep dan Perencanaan Bisnis</h4>
+                        </div>
+
+                        <div class="card question-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <h6 class="card-title mb-0">
+                                        <span class="badge me-2" style="background-color: var(--primary-color);">1</span>
+                                        Apakah kamu sudah mengidentifikasi dan mengembangkan ide bisnis yang potensial?
+                                    </h6>
+                                    <span class="badge bg-secondary">15 poin</span>
+                                </div>
+                                <div class="custom-radio">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="ide_bisnis" value="0">
+                                        <label class="form-check-label">
+                                            Belum ada ide bisnis <span class="badge badge-poin ms-2">0 poin</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="ide_bisnis" value="5">
+                                        <label class="form-check-label">
+                                            Sudah ada 1 ide bisnis <span class="badge badge-poin ms-2">5 poin</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="ide_bisnis" value="10">
+                                        <label class="form-check-label">
+                                            Sudah ada 2-3 ide bisnis <span class="badge badge-poin ms-2">10 poin</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="ide_bisnis" value="15">
+                                        <label class="form-check-label">
+                                            Sudah ada 3+ ide bisnis yang tervalidasi <span class="badge badge-poin ms-2">15 poin</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card question-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <h6 class="card-title mb-0">
+                                        <span class="badge me-2" style="background-color: var(--primary-color);">2</span>
+                                        Apakah kamu sudah membuat business plan atau business model canvas?
+                                    </h6>
+                                    <span class="badge bg-secondary">20 poin</span>
+                                </div>
+                                <div class="custom-radio">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="business_plan" value="0">
+                                        <label class="form-check-label">
+                                            Belum membuat business plan <span class="badge badge-poin ms-2">0 poin</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="business_plan" value="8">
+                                        <label class="form-check-label">
+                                            Sudah draft sederhana <span class="badge badge-poin ms-2">8 poin</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="business_plan" value="15">
+                                        <label class="form-check-label">
+                                            Sudah business model canvas lengkap <span class="badge badge-poin ms-2">15 poin</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="business_plan" value="20">
+                                        <label class="form-check-label">
+                                            Sudah business plan detail dan komprehensif <span class="badge badge-poin ms-2">20 poin</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card question-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <h6 class="card-title mb-0">
+                                        <span class="badge me-2" style="background-color: var(--primary-color);">3</span>
+                                        Seberapa dalam riset pasar yang sudah kamu lakukan?
+                                    </h6>
+                                    <span class="badge bg-secondary">15 poin</span>
+                                </div>
+                                <div class="custom-radio">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="market_research" value="0">
+                                        <label class="form-check-label">
+                                            Belum melakukan riset pasar <span class="badge badge-poin ms-2">0 poin</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="market_research" value="5">
+                                        <label class="form-check-label">
+                                            Riset dasar (online research) <span class="badge badge-poin ms-2">5 poin</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="market_research" value="10">
+                                        <label class="form-check-label">
+                                            Riset mendalam dengan survei <span class="badge badge-poin ms-2">10 poin</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="market_research" value="15">
+                                        <label class="form-check-label">
+                                            Riset komprehensif dengan wawancara target market <span class="badge badge-poin ms-2">15 poin</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Networking dan Mentoring -->
+                        <div class="kategori-header">
+                            <h4><i class="fas fa-users"></i> Networking dan Mentoring</h4>
+                        </div>
+
+                        <div class="card question-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <h6 class="card-title mb-0">
+                                        <span class="badge me-2" style="background-color: var(--primary-color);">4</span>
+                                        Berapa banyak mentor bisnis atau entrepreneur yang sudah kamu hubungi untuk belajar?
+                                    </h6>
+                                    <span class="badge bg-secondary">20 poin</span>
+                                </div>
+                                <div class="number-input-wrapper">
+                                    <input type="number" class="form-control" name="networking_bisnis" min="0" max="10" placeholder="Jumlah mentor/entrepreneur (maksimal 10)">
+                                    <small class="text-muted mt-2 d-block">
+                                        <i class="fas fa-info-circle"></i> 2 poin per mentor, maksimal 10 orang (20 poin)
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pengembangan Kemampuan -->
+                        <div class="kategori-header">
+                            <h4><i class="fas fa-chart-line"></i> Pengembangan Kemampuan</h4>
+                        </div>
+
+                        <div class="card question-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <h6 class="card-title mb-0">
+                                        <span class="badge me-2" style="background-color: var(--primary-color);">5</span>
+                                        Apakah kamu sudah mengembangkan skill entrepreneurship melalui kursus atau pelatihan?
+                                    </h6>
+                                    <span class="badge bg-secondary">15 poin</span>
+                                </div>
+                                <div class="custom-radio">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="skill_entrepreneurship" value="0">
+                                        <label class="form-check-label">
+                                            Belum mengikuti pelatihan <span class="badge badge-poin ms-2">0 poin</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="skill_entrepreneurship" value="5">
+                                        <label class="form-check-label">
+                                            Sudah 1 pelatihan/kursus <span class="badge badge-poin ms-2">5 poin</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="skill_entrepreneurship" value="10">
+                                        <label class="form-check-label">
+                                            Sudah 2-3 pelatihan/kursus <span class="badge badge-poin ms-2">10 poin</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="skill_entrepreneurship" value="15">
+                                        <label class="form-check-label">
+                                            Sudah 3+ pelatihan dan aktif di komunitas bisnis <span class="badge badge-poin ms-2">15 poin</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Implementasi dan Eksekusi -->
+                        <div class="kategori-header">
+                            <h4><i class="fas fa-rocket"></i> Implementasi dan Eksekusi</h4>
+                        </div>
+
+                        <div class="card question-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <h6 class="card-title mb-0">
+                                        <span class="badge me-2" style="background-color: var(--primary-color);">6</span>
+                                        Apakah kamu sudah mulai mengimplementasikan ide bisnis dalam bentuk nyata?
+                                    </h6>
+                                    <span class="badge bg-secondary">15 poin</span>
+                                </div>
+                                <div class="custom-radio">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="implementasi_bisnis" value="0">
+                                        <label class="form-check-label">
+                                            Belum ada implementasi <span class="badge badge-poin ms-2">0 poin</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="implementasi_bisnis" value="5">
+                                        <label class="form-check-label">
+                                            Masih tahap persiapan <span class="badge badge-poin ms-2">5 poin</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="implementasi_bisnis" value="10">
+                                        <label class="form-check-label">
+                                            Sudah soft launching/testing <span class="badge badge-poin ms-2">10 poin</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="implementasi_bisnis" value="15">
+                                        <label class="form-check-label">
+                                            Sudah berjalan dan generating revenue <span class="badge badge-poin ms-2">15 poin</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-center mt-5">
+                            <button type="submit" class="btn btn-primary-custom btn-lg px-5">
+                                <i class="fas fa-calculator"></i> Lihat Hasil Evaluasi
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="card mt-5 border-0 bg-transparent">
+                    <div class="card-body text-center">
+                        <p class="text-muted mb-0">
+                            <i class="fas fa-lightbulb"></i> Evaluasi ini membantu kamu mengukur kesiapan dalam mengembangkan jiwa entrepreneur dan memulai bisnis
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const MAX_SKOR = 100;
+        const KRITERIA = [
+            {min: 90, kategori: 'Sangat Baik', badge: 'bg-success'},
+            {min: 75, kategori: 'Baik', badge: 'bg-info'},
+            {min: 60, kategori: 'Cukup', badge: 'bg-warning'},
+            {min: 40, kategori: 'Perlu Perbaikan', badge: 'bg-danger'},
+            {min: 0, kategori: 'Sangat Perlu Perbaikan', badge: 'bg-dark'}
+        ];
+
+        const KATEGORI_BOBOT = {
+            'Konsep dan Perencanaan Bisnis': 50,
+            'Networking dan Mentoring': 20,
+            'Pengembangan Kemampuan': 15,
+            'Implementasi dan Eksekusi': 15
+        };
+
+        document.getElementById('evaluasi-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            hitungHasil();
+        });
+
+        function hitungHasil() {
+            let totalSkor = 0;
+            let detailKategori = {};
+            
+            // Inisialisasi detail kategori
+            Object.keys(KATEGORI_BOBOT).forEach(kategori => {
+                detailKategori[kategori] = {skor: 0, total: KATEGORI_BOBOT[kategori]};
+            });
+
+            // Hitung skor radio buttons
+            const radios = document.querySelectorAll('input[type="radio"]:checked');
+            radios.forEach(radio => {
+                const nilai = parseInt(radio.value);
+                totalSkor += nilai;
+                
+                // Kategorikan berdasarkan nama
+                if (radio.name === 'ide_bisnis' || radio.name === 'business_plan' || radio.name === 'market_research') {
+                    detailKategori['Konsep dan Perencanaan Bisnis'].skor += nilai;
+                } else if (radio.name === 'skill_entrepreneurship') {
+                    detailKategori['Pengembangan Kemampuan'].skor += nilai;
+                } else if (radio.name === 'implementasi_bisnis') {
+                    detailKategori['Implementasi dan Eksekusi'].skor += nilai;
+                }
+            });
+
+            // Hitung networking (number input)
+            const networking = document.querySelector('input[name="networking_bisnis"]').value;
+            if (networking) {
+                const nilaiNetworking = Math.min(parseInt(networking), 10) * 2;
+                totalSkor += nilaiNetworking;
+                detailKategori['Networking dan Mentoring'].skor += nilaiNetworking;
+            }
+
+            // Tentukan kategori hasil
+            const persentase = Math.round((totalSkor / MAX_SKOR) * 100);
+            const kategoriHasil = KRITERIA.find(k => persentase >= k.min);
+
+            // Tampilkan hasil
+            document.getElementById('total-skor').textContent = totalSkor;
+            document.getElementById('max-skor').textContent = MAX_SKOR;
+            document.getElementById('persentase').textContent = persentase + '%';
+            document.getElementById('kategori-text').textContent = kategoriHasil.kategori;
+            document.getElementById('kategori-badge').className = 'badge fs-5 p-3 ' + kategoriHasil.badge;
+            document.getElementById('progress-bar').style.width = persentase + '%';
+
+            // Tampilkan detail kategori
+            tampilkanDetailKategori(detailKategori);
+
+            // Toggle tampilan
+            document.getElementById('form-section').classList.add('d-none');
+            document.getElementById('hasil-section').classList.remove('d-none');
+        }
+
+        function tampilkanDetailKategori(detailKategori) {
+            const container = document.getElementById('detail-kategori');
+            container.innerHTML = '';
+
+            const icons = {
+                'Konsep dan Perencanaan Bisnis': 'fas fa-folder-open',
+                'Networking dan Mentoring': 'fas fa-users',
+                'Pengembangan Kemampuan': 'fas fa-chart-line',
+                'Implementasi dan Eksekusi': 'fas fa-rocket'
+            };
+
+            Object.entries(detailKategori).forEach(([kategori, data]) => {
+                const persen = data.total > 0 ? Math.round((data.skor / data.total) * 100) : 0;
+                const html = `
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100 kategori-detail-card">
+                            <div class="card-body text-center">
+                                <h6 class="card-title">
+                                    <i class="${icons[kategori]}"></i> ${kategori}
+                                </h6>
+                                <h4 style="color: var(--primary-color);">${data.skor}/${data.total}</h4>
+                                <div class="progress">
+                                    <div class="progress-bar" style="background-color: var(--primary-color); width: ${persen}%"></div>
+                                </div>
+                                <small class="text-muted">${persen}%</small>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += html;
+            });
+        }
+
+        function resetEvaluasi() {
+            document.getElementById('evaluasi-form').reset();
+            document.getElementById('form-section').classList.remove('d-none');
+            document.getElementById('hasil-section').classList.add('d-none');
+        }
+    </script>
+</body>
+</html>

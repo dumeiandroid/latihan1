@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sprint Final - Evaluasi Bab 12</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .sprint-header { background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%); border-radius: 15px; padding: 30px; text-align: center; color: white; margin-bottom: 30px; }
+        .kategori-header { background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%); color: white; border-radius: 10px; padding: 15px; margin: 20px 0 15px 0; }
+        .question-card { border-left: 4px solid #ff6b6b; margin-bottom: 20px; transition: all 0.3s ease; }
+        .question-card:hover { box-shadow: 0 4px 15px rgba(0,0,0,0.1); transform: translateY(-2px); }
+        .hasil-card { background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%); color: white; border-radius: 15px; }
+        .custom-radio { margin-left: 35px; margin-top: 15px; }
+        .custom-radio .form-check { background: #f8f9fa; border: 2px solid #e9ecef; border-radius: 8px; padding: 12px 15px; margin-bottom: 8px; transition: all 0.3s ease; cursor: pointer; }
+        .custom-radio .form-check:hover { background: #ffe6e6; border-color: #ff6b6b; }
+        .custom-radio .form-check:has(.form-check-input:checked) { background: #ffe6e6; border-color: #ff6b6b; box-shadow: 0 2px 8px rgba(255, 107, 107, 0.2); }
+        .number-input-wrapper { margin-left: 35px; margin-top: 15px; }
+        .number-input-wrapper .form-control { border: 2px solid #e9ecef; border-radius: 8px; padding: 12px 15px; }
+        .number-input-wrapper .form-control:focus { border-color: #ff6b6b; box-shadow: 0 0 0 0.2rem rgba(255, 107, 107, 0.25); }
+        .final-message { background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%); color: white; border-radius: 15px; padding: 20px; text-align: center; margin-top: 30px; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="sprint-header">
+                    <h1 class="display-4 fw-bold">
+                        <i class="fas fa-flag-checkered"></i> SPRINT FINAL
+                    </h1>
+                    <h2 class="mb-3">Evaluasi Bab 12: Persiapan Terakhir</h2>
+                    <p class="lead mb-0">Saatnya mengukur pencapaian 12 bulan perjalanan menuju karier impian!</p>
+                    <div class="badge bg-light text-dark fs-6 mt-3">
+                        <i class="fas fa-trophy"></i> Siap Kerja dalam 12 Bulan - Final Assessment
+                    </div>
+                </div>
+
+                <div id="form-container">
+                    <form id="evaluasiForm">
+                        <!-- Implementasi Strategi -->
+                        <div class="kategori-header">
+                            <h4><i class="fas fa-rocket"></i> Implementasi Strategi</h4>
+                        </div>
+
+                        <div class="card question-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <h6 class="card-title mb-0">
+                                        <span class="badge bg-danger me-2">1</span>
+                                        Berapa total lamaran kerja yang sudah kamu kirim dalam program 12 bulan ini?
+                                    </h6>
+                                    <span class="badge bg-secondary">20 poin</span>
+                                </div>
+                                <div class="number-input-wrapper">
+                                    <input type="number" class="form-control" name="target_lamaran" min="0" placeholder="Total lamaran (target: 50+)">
+                                    <small class="text-muted mt-2 d-block">
+                                        <i class="fas fa-info-circle"></i> Skor maksimal untuk 50+ lamaran (20 poin)
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card question-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <h6 class="card-title mb-0">
+                                        <span class="badge bg-danger me-2">2</span>
+                                        Berapa persen response rate yang kamu dapatkan dari lamaran yang dikirim?
+                                    </h6>
+                                    <span class="badge bg-secondary">15 poin</span>
+                                </div>
+                                <div class="custom-radio">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="response_rate" value="0">
+                                        <label class="form-check-label">Kurang dari 5%</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="response_rate" value="5">
+                                        <label class="form-check-label">5-10%</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="response_rate" value="10">
+                                        <label class="form-check-label">11-15%</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="response_rate" value="15">
+                                        <label class="form-check-label">Lebih dari 15%</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card question-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <h6 class="card-title mb-0">
+                                        <span class="badge bg-danger me-2">3</span>
+                                        Berapa kali kamu sudah mengikuti proses wawancara kerja?
+                                    </h6>
+                                    <span class="badge bg-secondary">15 poin</span>
+                                </div>
+                                <div class="number-input-wrapper">
+                                    <input type="number" class="form-control" name="wawancara_selesai" min="0" placeholder="Jumlah wawancara (target: 10+)">
+                                    <small class="text-muted mt-2 d-block">
+                                        <i class="fas fa-info-circle"></i> 1.5 poin per wawancara, maksimal 10 wawancara (15 poin)
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Hasil Pencapaian -->
+                        <div class="kategori-header">
+                            <h4><i class="fas fa-trophy"></i> Hasil Pencapaian</h4>
+                        </div>
+
+                        <div class="card question-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <h6 class="card-title mb-0">
+                                        <span class="badge bg-danger me-2">4</span>
+                                        Berapa job offer yang sudah kamu terima?
+                                    </h6>
+                                    <span class="badge bg-secondary">25 poin</span>
+                                </div>
+                                <div class="custom-radio">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="job_offer" value="0">
+                                        <label class="form-check-label">Belum ada job offer</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="job_offer" value="10">
+                                        <label class="form-check-label">1 job offer</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="job_offer" value="18">
+                                        <label class="form-check-label">2 job offer</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="job_offer" value="25">
+                                        <label class="form-check-label">3 job offer atau lebih</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card question-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <h6 class="card-title mb-0">
+                                        <span class="badge bg-danger me-2">5</span>
+                                        Apakah kamu sudah melakukan negosiasi salary dengan calon employer?
+                                    </h6>
+                                    <span class="badge bg-secondary">10 poin</span>
+                                </div>
+                                <div class="custom-radio">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="salary_negotiation" value="0">
+                                        <label class="form-check-label">Belum pernah negosiasi</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="salary_negotiation" value="5">
+                                        <label class="form-check-label">Sudah 1 kali negosiasi</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="salary_negotiation" value="8">
+                                        <label class="form-check-label">Sudah 2 kali negosiasi</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="salary_negotiation" value="10">
+                                        <label class="form-check-label">Sudah 3 kali negosiasi atau lebih</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pengembangan Diri -->
+                        <div class="kategori-header">
+                            <h4><i class="fas fa-user-graduate"></i> Pengembangan Diri</h4>
+                        </div>
+
+                        <div class="card question-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <h6 class="card-title mb-0">
+                                        <span class="badge bg-danger me-2">6</span>
+                                        Berapa skill baru yang berhasil kamu kuasai selama program 12 bulan?
+                                    </h6>
+                                    <span class="badge bg-secondary">10 poin</span>
+                                </div>
+                                <div class="number-input-wrapper">
+                                    <input type="number" class="form-control" name="skill_improvement" min="0" placeholder="Jumlah skill baru (target: 5+)">
+                                    <small class="text-muted mt-2 d-block">
+                                        <i class="fas fa-info-circle"></i> 2 poin per skill, maksimal 5 skill (10 poin)
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card question-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <h6 class="card-title mb-0">
+                                        <span class="badge bg-danger me-2">7</span>
+                                        Berapa sertifikat profesional yang berhasil kamu peroleh?
+                                    </h6>
+                                    <span class="badge bg-secondary">5 poin</span>
+                                </div>
+                                <div class="custom-radio">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="sertifikat_baru" value="0">
+                                        <label class="form-check-label">Belum ada sertifikat baru</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="sertifikat_baru" value="2">
+                                        <label class="form-check-label">1 sertifikat</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="sertifikat_baru" value="4">
+                                        <label class="form-check-label">2 sertifikat</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="sertifikat_baru" value="5">
+                                        <label class="form-check-label">3 sertifikat atau lebih</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-center mt-5">
+                            <button type="submit" class="btn btn-danger btn-lg px-5">
+                                <i class="fas fa-flag-checkered"></i> Selesaikan Sprint Final
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div id="hasil-container" class="hidden">
+                    <div class="card hasil-card mb-5">
+                        <div class="card-body text-center">
+                            <h3><i class="fas fa-medal"></i> Hasil Sprint Final</h3>
+                            <div class="row mt-4">
+                                <div class="col-md-4">
+                                    <h2 class="fw-bold" id="total-skor">0</h2>
+                                    <p>dari 100 poin</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <h2 class="fw-bold" id="persentase">0%</h2>
+                                    <p>Pencapaian</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <span class="badge fs-5 p-3" id="kategori-badge">-</span>
+                                </div>
+                            </div>
+                            <div class="progress mt-3" style="height: 25px; border-radius: 15px;">
+                                <div class="progress-bar bg-warning" id="progress-bar" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mb-4">
+                        <div class="card-header bg-danger text-white">
+                            <h5><i class="fas fa-chart-pie"></i> Detail Pencapaian per Aspek</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row" id="detail-kategori">
+                                <!-- Detail akan diisi JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="final-message">
+                        <h4><i class="fas fa-graduation-cap"></i> Selamat!</h4>
+                        <p class="mb-0" id="final-message">
+                            Kamu telah menyelesaikan program "Siap Kerja dalam 12 Bulan"!
+                        </p>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <button class="btn btn-outline-danger btn-lg" onclick="resetForm()">
+                            <i class="fas fa-redo"></i> Evaluasi Ulang
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card mt-5 border-0 bg-transparent">
+                    <div class="card-body text-center">
+                        <p class="text-muted mb-0">
+                            <i class="fas fa-star"></i> Sprint Final ini mengukur pencapaian konkret dari seluruh program 12 bulan persiapan kariermu
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const evaluasiForm = document.getElementById('evaluasiForm');
+        const formContainer = document.getElementById('form-container');
+        const hasilContainer = document.getElementById('hasil-container');
+
+        evaluasiForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Ambil data form
+            const formData = new FormData(evaluasiForm);
+            let totalSkor = 0;
+            
+            // Hitung skor
+            const lamaran = parseInt(formData.get('target_lamaran') || 0);
+            const skorLamaran = Math.min(lamaran >= 50 ? 20 : (lamaran * 20 / 50), 20);
+            totalSkor += skorLamaran;
+            
+            const responseRate = parseInt(formData.get('response_rate') || 0);
+            totalSkor += responseRate;
+            
+            const wawancara = parseInt(formData.get('wawancara_selesai') || 0);
+            const skorWawancara = Math.min(wawancara, 10) * 1.5;
+            totalSkor += skorWawancara;
+            
+            const jobOffer = parseInt(formData.get('job_offer') || 0);
+            totalSkor += jobOffer;
+            
+            const salaryNego = parseInt(formData.get('salary_negotiation') || 0);
+            totalSkor += salaryNego;
+            
+            const skills = parseInt(formData.get('skill_improvement') || 0);
+            const skorSkills = Math.min(skills, 5) * 2;
+            totalSkor += skorSkills;
+            
+            const sertifikat = parseInt(formData.get('sertifikat_baru') || 0);
+            totalSkor += sertifikat;
+            
+            // Hitung per kategori
+            const skorImplementasi = skorLamaran + responseRate + skorWawancara;
+            const skorPencapaian = jobOffer + salaryNego;
+            const skorPengembangan = skorSkills + sertifikat;
+            
+            // Tentukan kategori
+            let kategori, warna;
+            if (totalSkor >= 90) {
+                kategori = 'Luar Biasa';
+                warna = 'bg-success';
+            } else if (totalSkor >= 75) {
+                kategori = 'Sangat Baik';
+                warna = 'bg-info';
+            } else if (totalSkor >= 60) {
+                kategori = 'Baik';
+                warna = 'bg-warning';
+            } else if (totalSkor >= 40) {
+                kategori = 'Cukup';
+                warna = 'bg-danger';
+            } else {
+                kategori = 'Perlu Evaluasi Ulang';
+                warna = 'bg-dark';
+            }
+            
+            // Tampilkan hasil
+            document.getElementById('total-skor').textContent = Math.round(totalSkor);
+            document.getElementById('persentase').textContent = Math.round(totalSkor) + '%';
+            document.getElementById('kategori-badge').textContent = kategori;
+            document.getElementById('kategori-badge').className = `badge fs-5 p-3 ${warna}`;
+            document.getElementById('progress-bar').style.width = Math.round(totalSkor) + '%';
+            
+            // Detail kategori
+            const detailHtml = `
+                <div class="col-md-4 mb-3">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <h6 class="card-title">Implementasi Strategi</h6>
+                            <h4 class="text-danger">${Math.round(skorImplementasi)}/50</h4>
+                            <div class="progress">
+                                <div class="progress-bar bg-danger" style="width: ${(skorImplementasi/50)*100}%"></div>
+                            </div>
+                            <small class="text-muted">${Math.round((skorImplementasi/50)*100)}%</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <h6 class="card-title">Hasil Pencapaian</h6>
+                            <h4 class="text-danger">${Math.round(skorPencapaian)}/35</h4>
+                            <div class="progress">
+                                <div class="progress-bar bg-danger" style="width: ${(skorPencapaian/35)*100}%"></div>
+                            </div>
+                            <small class="text-muted">${Math.round((skorPencapaian/35)*100)}%</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <h6 class="card-title">Pengembangan Diri</h6>
+                            <h4 class="text-danger">${Math.round(skorPengembangan)}/15</h4>
+                            <div class="progress">
+                                <div class="progress-bar bg-danger" style="width: ${(skorPengembangan/15)*100}%"></div>
+                            </div>
+                            <small class="text-muted">${Math.round((skorPengembangan/15)*100)}%</small>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('detail-kategori').innerHTML = detailHtml;
+            
+            // Pesan final
+            let finalMsg = 'Kamu telah menyelesaikan program "Siap Kerja dalam 12 Bulan"! ';
+            if (totalSkor >= 75) {
+                finalMsg += 'Pencapaianmu sangat membanggakan. Terus pertahankan momentum ini!';
+            } else if (totalSkor >= 50) {
+                finalMsg += 'Kamu sudah di jalur yang tepat. Terus tingkatkan persiapan untuk hasil yang lebih optimal!';
+            } else {
+                finalMsg += 'Masih ada ruang untuk peningkatan. Gunakan feedback ini untuk memperkuat persiapanmu!';
+            }
+            document.getElementById('final-message').textContent = finalMsg;
+            
+            // Toggle tampilan
+            formContainer.classList.add('hidden');
+            hasilContainer.classList.remove('hidden');
+        });
+        
+        function resetForm() {
+            evaluasiForm.reset();
+            formContainer.classList.remove('hidden');
+            hasilContainer.classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
