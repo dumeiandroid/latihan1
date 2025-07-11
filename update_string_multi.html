@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Data - Grouped</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .form-container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .group-section {
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+            background-color: #f8f9fa;
+        }
+        
+        .group-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #dee2e6;
+            padding-bottom: 8px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+        }
+        
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+            box-sizing: border-box;
+        }
+        
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+        
+        button {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .btn-primary {
+            background-color: #4CAF50;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #45a049;
+        }
+        
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+        
+        .btn-warning {
+            background-color: #f0ad4e;
+            color: white;
+        }
+        
+        .btn-warning:hover {
+            background-color: #ec971f;
+        }
+        
+        .required {
+            color: #dc3545;
+        }
+        
+        .form-info {
+            background-color: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #6c757d;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+            font-size: 16px;
+            color: #6c757d;
+        }
+        
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Update Data - Grouped</h1>
+        
+        <div id="loadingMessage" class="loading" style="display: none;">
+            Memuat data...
+        </div>
+        
+        <div id="errorMessage" class="error" style="display: none;"></div>
+        
+        <form id="latihanForm" 
+              data-api-enabled="true" 
+              data-table="latihan" 
+              data-column="x_05"
+              data-update-id=""
+              data-reset="false" 
+              data-show-alert="true"
+              style="display: none;">
+            
+            <!-- Group 1: Data Pribadi -->
+            <div class="group-section">
+                <div class="group-title">📋 Data Pribadi</div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nama">Nama Lengkap <span class="required">*</span></label>
+                        <input type="text" id="nama" name="nama" data-group="pribadi" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email <span class="required">*</span></label>
+                        <input type="email" id="email" name="email" data-group="pribadi" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="telepon">Nomor Telepon</label>
+                    <input type="tel" id="telepon" name="telepon" data-group="pribadi">
+                </div>
+            </div>
+            
+            <!-- Group 2: Data Lainnya -->
+            <div class="group-section">
+                <div class="group-title">🏢 Data Lainnya</div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="alamat">Alamat</label>
+                        <input type="text" id="alamat" name="alamat" data-group="lainnya">
+                    </div>
+                    <div class="form-group">
+                        <label for="pekerjaan">Pekerjaan</label>
+                        <input type="text" id="pekerjaan" name="pekerjaan" data-group="lainnya">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="status">Status</label>
+                    <select id="status" name="status" data-group="lainnya">
+                        <option value="">Pilih Status</option>
+                        <option value="aktif">Aktif</option>
+                        <option value="tidak-aktif">Tidak Aktif</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="btn-group">
+                <button type="submit" class="btn-primary">Update Data</button>
+                <button type="button" class="btn-warning" onclick="loadData()">Reload Data</button>
+                <button type="reset" class="btn-secondary">Reset Form</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="update_string_multi.js"></script>
+</body>
+</html>
