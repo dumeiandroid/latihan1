@@ -397,99 +397,92 @@
                         <h2 class="section-title mb-4">Daftar Tes Minat Bakat</h2>
                         <p class="text-center text-muted mb-4">Isi formulir di bawah untuk memulai perjalanan menemukan potensi terbaik Anda</p>
                         
-        <form id="registrationForm" data-api-enabled="true" data-table="latihan" data-reset="true" data-show-alert="true">
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="firstName" class="form-label">Nama Depan *</label>
-                                    <input type="text" class="form-control" id="firstName" name="firstName" required>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="lastName" class="form-label">Nama Belakang *</label>
-                                    <input type="text" class="form-control" id="lastName" name="lastName" required>
-                                </div>
-                            </div>
-                            
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="email" class="form-label">Email *</label>
-                                    <input type="email" class="form-control" id="email" name="email" required>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="phone" class="form-label">Nomor Telepon *</label>
-                                    <input type="tel" class="form-control" id="phone" name="phone" required>
-                                </div>
-                            </div>
-                            
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="age" class="form-label">Usia *</label>
-                                    <select class="form-control" id="age" name="age" required>
-                                        <option value="Belum dipilih">Pilih Usia</option>
-                                        <option value="15-17">15-17 tahun</option>
-                                        <option value="18-22">18-22 tahun</option>
-                                        <option value="23-30">23-30 tahun</option>
-                                        <option value="31-40">31-40 tahun</option>
-                                        <option value="40+">40+ tahun</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="education" class="form-label">Pendidikan Terakhir *</label>
-                                    <select class="form-control" id="education" name="education" required>
-                                        <option value="Belum dipilih">Pilih Pendidikan</option>
-                                        <option value="SMA">SMA/SMK</option>
-                                        <option value="D3">Diploma 3</option>
-                                        <option value="S1">Sarjana (S1)</option>
-                                        <option value="S2">Magister (S2)</option>
-                                        <option value="S3">Doktor (S3)</option>
-                                    </select>
-                                </div>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label for="currentStatus" class="form-label">Status Saat Ini *</label>
-                                <select class="form-control" id="currentStatus" name="currentStatus" required>
-                                    <option value="Belum dipilih">Pilih Status</option>
-                                    <option value="Pelajar">Pelajar/Mahasiswa</option>
-                                    <option value="Karyawan">Karyawan</option>
-                                    <option value="Freelancer">Freelancer</option>
-                                    <option value="Pengangguran">Mencari Kerja</option>
-                                    <option value="Wirausaha">Wirausaha</option>
-                                </select>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label for="interests" class="form-label">Minat/Hobi (opsional)</label>
-                                <textarea class="form-control" id="interests" name="interests" rows="3" placeholder="Ceritakan tentang minat dan hobi Anda..."></textarea>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label for="testPurpose" class="form-label">Tujuan Mengikuti Tes *</label>
-                                <select class="form-control" id="testPurpose" name="testPurpose" required>
-                                    <option value="Belum dipilih">Pilih Tujuan</option>
-                                    <option value="Pemilihan Jurusan">Pemilihan Jurusan Kuliah</option>
-                                    <option value="Pencarian Karir">Pencarian Karir</option>
-                                    <option value="Pengembangan Diri">Pengembangan Diri</option>
-                                    <option value="Konsultasi Karir">Konsultasi Karir</option>
-                                    <option value="Lainnya">Lainnya</option>
-                                </select>
-                            </div>
-                            
-                            <div class="mb-4">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="agreement" required>
-                                    <input type="hidden" name="agreement" value="1">
-                                    <label class="form-check-label" for="agreement">
-                                        Saya menyetujui <a href="#" class="text-decoration-none">syarat dan ketentuan</a> yang berlaku *
-                                    </label>
-                                </div>
-                            </div>
-                            
-                            <div class="text-center">
-                                <button type="submit" class="btn btn-submit btn-lg">
-                                    <i class="fas fa-paper-plane me-2"></i>Daftar Sekarang
-                                </button>
-                            </div>
-                        </form>
+        <form data-api-enabled="true" data-table="latihan" data-reset="true" data-show-alert="true">
+            <div class="form-group">
+                <label for="firstName">Nama Depan:</label>
+                <input type="text" id="firstName" name="firstName" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="lastName">Nama Belakang:</label>
+                <input type="text" id="lastName" name="lastName" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="phone">Nomor Telepon:</label>
+                <input type="tel" id="phone" name="phone" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="age">Usia:</label>
+                <select id="age" name="age" required>
+                    <option value="">Pilih Usia</option>
+                    <option value="15-17">15-17 tahun</option>
+                    <option value="18-22">18-22 tahun</option>
+                    <option value="23-30">23-30 tahun</option>
+                    <option value="31-40">31-40 tahun</option>
+                    <option value="40+">40+ tahun</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="education">Pendidikan Terakhir:</label>
+                <select id="education" name="education" required>
+                    <option value="">Pilih Pendidikan</option>
+                    <option value="SMA">SMA/SMK</option>
+                    <option value="D3">Diploma 3</option>
+                    <option value="S1">Sarjana (S1)</option>
+                    <option value="S2">Magister (S2)</option>
+                    <option value="S3">Doktor (S3)</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="currentStatus">Status Saat Ini:</label>
+                <select id="currentStatus" name="currentStatus" required>
+                    <option value="">Pilih Status</option>
+                    <option value="Pelajar">Pelajar/Mahasiswa</option>
+                    <option value="Karyawan">Karyawan</option>
+                    <option value="Freelancer">Freelancer</option>
+                    <option value="Pengangguran">Mencari Kerja</option>
+                    <option value="Wirausaha">Wirausaha</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="interests">Minat/Hobi:</label>
+                <textarea id="interests" name="interests" rows="3" placeholder="Ceritakan tentang minat dan hobi Anda..."></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="testPurpose">Tujuan Mengikuti Tes:</label>
+                <select id="testPurpose" name="testPurpose" required>
+                    <option value="">Pilih Tujuan</option>
+                    <option value="Pemilihan Jurusan">Pemilihan Jurusan Kuliah</option>
+                    <option value="Pencarian Karir">Pencarian Karir</option>
+                    <option value="Pengembangan Diri">Pengembangan Diri</option>
+                    <option value="Konsultasi Karir">Konsultasi Karir</option>
+                    <option value="Lainnya">Lainnya</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Persetujuan:</label>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="agreement" name="agreement" value="1" required>
+                        <label for="agreement">Saya menyetujui syarat dan ketentuan yang berlaku</label>
+                    </div>
+                </div>
+            </div>
+            
+            <button type="submit">Daftar Sekarang</button>
+        </form>
                     </div>
                 </div>
             </div>
