@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Forms - HTML Only</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .form-container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        h2 {
+            color: #333;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="number"],
+        input[type="date"],
+        input[type="url"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+            box-sizing: border-box;
+        }
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+        .checkbox-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .radio-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .radio-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        button:hover:not(:disabled) {
+            background-color: #0056b3;
+        }
+        button:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+        .api-message {
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .api-message-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .api-message-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .api-message-info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        .code-example {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+        .form-attributes {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 4px;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 12px;
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <h1>Dynamic Form Handler - Contoh Penggunaan</h1>
+    
+    <!-- Form untuk tabel "latihan" -->
+    <div class="form-container">
+        <h2>Form untuk Tabel "latihan"</h2>
+        <div class="form-attributes">
+            Atribut: data-api-enabled="true" data-table="latihan" data-reset="true"
+        </div>
+        
+        <form data-api-enabled="true" data-table="latihan" data-reset="true" data-show-alert="true">
+            <div class="form-group">
+                <label for="nama">Nama Lengkap:</label>
+                <input type="text" id="nama" name="nama" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="telepon">Telepon:</label>
+                <input type="tel" id="telepon" name="telepon">
+            </div>
+            
+            <div class="form-group">
+                <label for="alamat">Alamat:</label>
+                <textarea id="alamat" name="alamat" rows="3"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="usia">Usia:</label>
+                <input type="number" id="usia" name="usia" min="1" max="120">
+            </div>
+            
+            <div class="form-group">
+                <label for="jenis_kelamin">Jenis Kelamin:</label>
+                <select id="jenis_kelamin" name="jenis_kelamin">
+                    <option value="">Pilih...</option>
+                    <option value="Laki-laki">Laki-laki</option>
+                    <option value="Perempuan">Perempuan</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Hobi:</label>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="hobi_baca" name="hobi" value="Membaca">
+                        <label for="hobi_baca">Membaca</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="hobi_olahraga" name="hobi" value="Olahraga">
+                        <label for="hobi_olahraga">Olahraga</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="hobi_musik" name="hobi" value="Musik">
+                        <label for="hobi_musik">Musik</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="hobi_travel" name="hobi" value="Travel">
+                        <label for="hobi_travel">Travel</label>
+                    </div>
+                </div>
+            </div>
+            
+            <button type="submit">Simpan Data</button>
+        </form>
+    </div>
+    
+    <!-- Form untuk tabel "contacts" (default) -->
+    <div class="form-container">
+        <h2>Form untuk Tabel "contacts" (Default)</h2>
+        <div class="form-attributes">
+            Atribut: data-api-enabled="true" (menggunakan tabel default)
+        </div>
+        
+        <form data-api-enabled="true">
+            <div class="form-group">
+                <label for="nama_contact">Nama:</label>
+                <input type="text" id="nama_contact" name="nama_contact" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="email_contact">Email:</label>
+                <input type="email" id="email_contact" name="email_contact" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="pesan">Pesan:</label>
+                <textarea id="pesan" name="pesan" rows="4"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="prioritas">Prioritas:</label>
+                <div class="radio-group">
+                    <div class="radio-item">
+                        <input type="radio" id="prioritas_rendah" name="prioritas" value="Rendah">
+                        <label for="prioritas_rendah">Rendah</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="prioritas_sedang" name="prioritas" value="Sedang" checked>
+                        <label for="prioritas_sedang">Sedang</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="prioritas_tinggi" name="prioritas" value="Tinggi">
+                        <label for="prioritas_tinggi">Tinggi</label>
+                    </div>
+                </div>
+            </div>
+            
+            <button type="submit">Kirim</button>
+        </form>
+    </div>
+    
+    <!-- Form dengan konfigurasi khusus -->
+    <div class="form-container">
+        <h2>Form dengan Redirect</h2>
+        <div class="form-attributes">
+            Atribut: data-table="latihan" data-reset="false" data-redirect="/success.html"
+        </div>
+        
+        <form data-api-enabled="true" 
+              data-table="latihan" 
+              data-reset="false" 
+              data-redirect="/success.html">
+            <div class="form-group">
+                <label for="nama_redirect">Nama:</label>
+                <input type="text" id="nama_redirect" name="nama_redirect" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="keterangan">Keterangan:</label>
+                <textarea id="keterangan" name="keterangan" rows="3"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="tanggal">Tanggal:</label>
+                <input type="date" id="tanggal" name="tanggal">
+            </div>
+            
+            <div class="form-group">
+                <label for="website">Website:</label>
+                <input type="url" id="website" name="website" placeholder="https://example.com">
+            </div>
+            
+            <button type="submit">Simpan & Redirect</button>
+        </form>
+    </div>
+    
+    <!-- Form untuk update data -->
+    <div class="form-container">
+        <h2>Form untuk Update Data</h2>
+        <div class="form-attributes">
+            Atribut: data-table="latihan" data-update-id="123" (akan menggunakan method PUT)
+        </div>
+        
+        <form data-api-enabled="true" 
+              data-table="latihan" 
+              data-update-id="123">
+            <div class="form-group">
+                <label for="nama_update">Nama:</label>
+                <input type="text" id="nama_update" name="nama_update" value="John Doe" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="email_update">Email:</label>
+                <input type="email" id="email_update" name="email_update" value="john@example.com" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="status">Status:</label>
+                <select id="status" name="status">
+                    <option value="aktif" selected>Aktif</option>
+                    <option value="nonaktif">Non-aktif</option>
+                    <option value="pending">Pending</option>
+                </select>
+            </div>
+            
+            <button type="submit">Update Data</button>
+        </form>
+    </div>
+    
+    <!-- Form dengan banyak field (untuk test maksimal kolom) -->
+    <div class="form-container">
+        <h2>Form dengan Banyak Field (Test Maksimal Kolom)</h2>
+        <div class="form-attributes">
+            Atribut: data-table="latihan" (akan mapping ke x_01 sampai x_20)
+        </div>
+        
+        <form data-api-enabled="true" data-table="latihan">
+            <div class="form-group">
+                <label for="field1">Field 1:</label>
+                <input type="text" id="field1" name="field1" placeholder="Akan jadi x_01">
+            </div>
+            
+            <div class="form-group">
+                <label for="field2">Field 2:</label>
+                <input type="text" id="field2" name="field2" placeholder="Akan jadi x_02">
+            </div>
+            
+            <div class="form-group">
+                <label for="field3">Field 3:</label>
+                <input type="text" id="field3" name="field3" placeholder="Akan jadi x_03">
+            </div>
+            
+            <div class="form-group">
+                <label for="field4">Field 4:</label>
+                <input type="text" id="field4" name="field4" placeholder="Akan jadi x_04">
+            </div>
+            
+            <div class="form-group">
+                <label for="field5">Field 5:</label>
+                <input type="text" id="field5" name="field5" placeholder="Akan jadi x_05">
+            </div>
+            
+            <div class="form-group">
+                <label for="field6">Field 6:</label>
+                <input type="text" id="field6" name="field6" placeholder="Akan jadi x_06">
+            </div>
+            
+            <div class="form-group">
+                <label for="field7">Field 7:</label>
+                <input type="text" id="field7" name="field7" placeholder="Akan jadi x_07">
+            </div>
+            
+            <div class="form-group">
+                <label for="field8">Field 8:</label>
+                <input type="text" id="field8" name="field8" placeholder="Akan jadi x_08">
+            </div>
+            
+            <div class="form-group">
+                <label for="field9">Field 9:</label>
+                <input type="text" id="field9" name="field9" placeholder="Akan jadi x_09">
+            </div>
+            
+            <div class="form-group">
+                <label for="field10">Field 10:</label>
+                <input type="text" id="field10" name="field10" placeholder="Akan jadi x_10">
+            </div>
+            
+            <button type="submit">Simpan 10 Field</button>
+        </form>
+    </div>
+    
+    <div class="form-container">
+        <h2>Cara Penggunaan</h2>
+        <p>Untuk menggunakan Dynamic Form Handler, Anda perlu:</p>
+        <ol>
+            <li>Include file JavaScript: <code>&lt;script src="tambah.js">&lt;/script></code></li>
+            <li>Tambahkan atribut pada form sesuai kebutuhan</li>
+            <li>Sesuaikan konfigurasi API di file JavaScript</li>
+        </ol>
+        
+        <h3>Atribut Form yang Tersedia:</h3>
+        <div class="code-example">
+data-api-enabled="true"     - Mengaktifkan form handler
+data-table="nama_tabel"     - Menentukan tabel tujuan
+data-reset="true/false"     - Reset form setelah sukses (default: true)
+data-show-alert="true/false" - Tampilkan pesan alert (default: true)
+data-redirect="/url"        - Redirect setelah sukses
+data-method="POST/PUT"      - HTTP method (default: POST)
+data-update-id="123"        - ID untuk update (otomatis jadi PUT)
+        </div>
+        
+        <h3>Include JavaScript:</h3>
+        <div class="code-example">
+&lt;script src="tambah.js">&lt;/script>
+        </div>
+        
+        <h3>Contoh Form Sederhana:</h3>
+        <div class="code-example">
+&lt;form data-api-enabled="true" data-table="latihan">
+    &lt;input type="text" name="nama" placeholder="Nama" required>
+    &lt;input type="email" name="email" placeholder="Email" required>
+    &lt;textarea name="pesan" placeholder="Pesan">&lt;/textarea>
+    &lt;button type="submit">Simpan&lt;/button>
+&lt;/form>
+        </div>
+    </div>
+
+    <!-- Include JavaScript dinamis -->
+    <script src="tambah.js"></script>
+</body>
+</html>
