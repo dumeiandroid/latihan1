@@ -452,7 +452,7 @@ class DynamicFormHandler {
 const dynamicFormHandler = new DynamicFormHandler({
     apiBaseUrl: '/api/contacts',  // Ganti dengan URL API Anda
     defaultTable: 'contacts',     // Tabel default
-    defaultColumn: 'x_01',        // Kolom default
+    defaultColumn: 'x_04',        // Kolom default
     separator: '|',               // Pemisah default
     debug: true                   // Set false untuk production
 });
