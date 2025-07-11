@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Form Handler - Update Data</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .form-container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        h2 {
+            color: #333;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        input:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        button:hover:not(:disabled) {
+            background-color: #0056b3;
+        }
+        button:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+        .api-message {
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .api-message-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .api-message-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .api-message-info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        .info-box {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .info-box h3 {
+            margin-top: 0;
+            color: #495057;
+        }
+        code {
+            background: #e9ecef;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+        .form-hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Dynamic Form Handler - Update Data</h1>
+    
+    <!-- Loading indicator -->
+    <div id="loading" class="loading">
+        <p>Memuat data...</p>
+    </div>
+    
+    <!-- Form update dengan custom columns -->
+    <div class="form-container form-hidden" id="formContainer">
+        <h2>Form Update Data</h2>
+        <div id="recordInfo" class="info-box">
+            <h3>Info Record</h3>
+            <p>ID: <span id="recordId">-</span></p>
+            <p>Tabel: <span id="recordTable">-</span></p>
+        </div>
+        
+        <form data-api-enabled="true" 
+              data-table="latihan" 
+              data-columns="x_01,x_05,x_10"
+              data-method="PUT"
+              data-update-id=""
+              data-reset="false" 
+              data-show-alert="true"
+              id="updateForm">
+            
+            <div class="form-group">
+                <label for="nama">Nama Lengkap (kolom x_01):</label>
+                <input type="text" id="nama" name="nama" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email (kolom x_05):</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="telepon">Telepon (kolom x_10):</label>
+                <input type="tel" id="telepon" name="telepon">
+            </div>
+            
+            <button type="submit">Update Data</button>
+        </form>
+    </div>
+
+    <!-- Info penggunaan -->
+    <div class="info-box">
+        <h3>Cara Penggunaan</h3>
+        <p>Untuk mengupdate data, gunakan URL dengan parameter ID:</p>
+        <code>update_kolom.html?id=123&table=latihan</code>
+        <p>Parameter:</p>
+        <ul>
+            <li><strong>id</strong> - ID record yang akan diupdate (wajib)</li>
+            <li><strong>table</strong> - Nama tabel (opsional, default: latihan)</li>
+        </ul>
+    </div>
+
+    <script src="update_kolom.js"></script>
+</body>
+</html>
