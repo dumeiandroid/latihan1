@@ -401,29 +401,29 @@
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="firstName" class="form-label">Nama Depan *</label>
-                                    <input type="text" class="form-control" id="firstName" required>
+                                    <input type="text" class="form-control" id="firstName" name="firstName" required>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="lastName" class="form-label">Nama Belakang *</label>
-                                    <input type="text" class="form-control" id="lastName" required>
+                                    <input type="text" class="form-control" id="lastName" name="lastName" required>
                                 </div>
                             </div>
                             
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="email" class="form-label">Email *</label>
-                                    <input type="email" class="form-control" id="email" required>
+                                    <input type="email" class="form-control" id="email" name="email" required>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="phone" class="form-label">Nomor Telepon *</label>
-                                    <input type="tel" class="form-control" id="phone" required>
+                                    <input type="tel" class="form-control" id="phone" name="phone" required>
                                 </div>
                             </div>
                             
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="age" class="form-label">Usia *</label>
-                                    <select class="form-control" id="age" required>
+                                    <select class="form-control" id="age" name="age" required>
                                         <option value="">Pilih Usia</option>
                                         <option value="15-17">15-17 tahun</option>
                                         <option value="18-22">18-22 tahun</option>
@@ -434,7 +434,7 @@
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="education" class="form-label">Pendidikan Terakhir *</label>
-                                    <select class="form-control" id="education" required>
+                                    <select class="form-control" id="education" name="education" required>
                                         <option value="">Pilih Pendidikan</option>
                                         <option value="SMA">SMA/SMK</option>
                                         <option value="D3">Diploma 3</option>
@@ -447,7 +447,7 @@
                             
                             <div class="mb-3">
                                 <label for="currentStatus" class="form-label">Status Saat Ini *</label>
-                                <select class="form-control" id="currentStatus" required>
+                                <select class="form-control" id="currentStatus" name="currentStatus" required>
                                     <option value="">Pilih Status</option>
                                     <option value="Pelajar">Pelajar/Mahasiswa</option>
                                     <option value="Karyawan">Karyawan</option>
@@ -459,12 +459,12 @@
                             
                             <div class="mb-3">
                                 <label for="interests" class="form-label">Minat/Hobi (opsional)</label>
-                                <textarea class="form-control" id="interests" rows="3" placeholder="Ceritakan tentang minat dan hobi Anda..."></textarea>
+                                <textarea class="form-control" id="interests" name="interests" rows="3" placeholder="Ceritakan tentang minat dan hobi Anda..."></textarea>
                             </div>
                             
                             <div class="mb-3">
                                 <label for="testPurpose" class="form-label">Tujuan Mengikuti Tes *</label>
-                                <select class="form-control" id="testPurpose" required>
+                                <select class="form-control" id="testPurpose" name="testPurpose" required>
                                     <option value="">Pilih Tujuan</option>
                                     <option value="Pemilihan Jurusan">Pemilihan Jurusan Kuliah</option>
                                     <option value="Pencarian Karir">Pencarian Karir</option>
@@ -476,7 +476,7 @@
                             
                             <div class="mb-4">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="agreement" required>
+                                    <input class="form-check-input" type="checkbox" id="agreement" name="agreement" required>
                                     <label class="form-check-label" for="agreement">
                                         Saya menyetujui <a href="#" class="text-decoration-none">syarat dan ketentuan</a> yang berlaku *
                                     </label>
