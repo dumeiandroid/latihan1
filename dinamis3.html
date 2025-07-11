@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Form Handler - HTTP 500 Analysis</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .error-analysis {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            color: #721c24;
+        }
+        .solution {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            color: #155724;
+        }
+        .code-block {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+        }
+        .debug-form {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin: 20px 0;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        button:hover:not(:disabled) {
+            background-color: #0056b3;
+        }
+        button:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+        .log-output {
+            background: #212529;
+            color: #ffffff;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .log-entry {
+            margin: 5px 0;
+            padding: 2px 0;
+        }
+        .log-error {
+            color: #ff6b6b;
+        }
+        .log-success {
+            color: #51cf66;
+        }
+        .log-info {
+            color: #74c0fc;
+        }
+        .test-results {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Debug Form Handler - Analisis Error HTTP 500</h1>
+    
+    <div class="error-analysis">
+        <h2>🚨 Kemungkinan Penyebab Error HTTP 500:</h2>
+        <ol>
+            <li><strong>Database Connection Issue:</strong> Database DB_LATIHAN1 tidak tersedia atau tidak bisa diakses</li>
+            <li><strong>Table Creation Error:</strong> Gagal membuat tabel 'contacts' karena permission atau syntax error</li>
+            <li><strong>SQL Injection Protection:</strong> Nama tabel tidak valid atau mengandung karakter berbahaya</li>
+            <li><strong>Memory/Resource Limit:</strong> Cloudflare Workers mencapai limit memori atau waktu eksekusi</li>
+            <li><strong>Environment Variable:</strong> DB_LATIHAN1 tidak dikonfigurasi dengan benar</li>
+            <li><strong>API Endpoint Issue:</strong> Path /api/contacts tidak ditemukan atau tidak dikonfigurasi</li>
+        </ol>
+    </div>
+    
+    <div class="solution">
+        <h2>✅ Solusi dan Langkah Debugging:</h2>
+        <h3>1. Cek Environment Database</h3>
+        <div class="code-block">
+// Tambahkan logging di awal onRequest function
+console.log('Environment check:');
+console.log('DB_LATIHAN1 exists:', !!env.DB_LATIHAN1);
+console.log('DB_LATIHAN1 type:', typeof env.DB_LATIHAN1);
+        </div>
+        
+        <h3>2. Validasi Table Name</h3>
+        <div class="code-block">
+// Pastikan function isValidTableName bekerja dengan benar
+function isValidTableName(tableName) {
+    console.log('Validating table name:', tableName);
+    const isValid = /^[a-zA-Z_][a-zA-Z0-9_]*$/.test(tableName) && tableName.length <= 50;
+    console.log('Table name valid:', isValid);
+    return isValid;
+}
+        </div>
+        
+        <h3>3. Test Database Connection</h3>
+        <div class="code-block">
+// Test koneksi database sebelum operasi
+try {
+    const testQuery = "SELECT 1 as test";
+    const testResult = await DB_LATIHAN1.prepare(testQuery).first();
+    console.log('Database connection test:', testResult);
+} catch (error) {
+    console.error('Database connection failed:', error);
+    throw error;
+}
+        </div>
+        
+        <h3>4. Improved Error Handling</h3>
+        <div class="code-block">
+// Wrap semua operasi database dengan try-catch yang lebih detail
+try {
+    // Database operations here
+} catch (error) {
+    console.error('Detailed error:', {
+        message: error.message,
+        stack: error.stack,
+        cause: error.cause,
+        tableName: tableName
+    });
+    
+    return new Response(JSON.stringify({
+        error: `Database error: ${error.message}`,
+        details: error.stack,
+        table: tableName,
+        timestamp: new Date().toISOString()
+    }), {
+        status: 500,
+        headers: { 'Content-Type': 'application/json', ...corsHeaders }
+    });
+}
+        </div>
+    </div>
+    
+    <div class="debug-form">
+        <h2>🧪 Test Form dengan Debug Mode</h2>
+        <p>Form ini akan menampilkan informasi debug lengkap untuk membantu troubleshooting:</p>
+        
+        <form id="debugForm" data-api-enabled="true" data-table="contacts">
+            <div class="form-group">
+                <label for="nama_debug">Nama:</label>
+                <input type="text" id="nama_debug" name="nama_debug" value="Test User" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="email_debug">Email:</label>
+                <input type="email" id="email_debug" name="email_debug" value="test@example.com" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="pesan_debug">Pesan:</label>
+                <textarea id="pesan_debug" name="pesan_debug">Test message for debugging</textarea>
+            </div>
+            
+            <button type="submit">Test Submit</button>
+            <button type="button" onclick="testApiEndpoint()">Test API Endpoint</button>
+            <button type="button" onclick="clearLogs()">Clear Logs</button>
+        </form>
+    </div>
+    
+    <div class="test-results">
+        <h3>📊 Test Results & Debug Information:</h3>
+        <div id="logOutput" class="log-output">
+            <div class="log-entry log-info">Debug logger initialized. Waiting for form submission...</div>
+        </div>
+    </div>
+    
+    <div class="solution">
+        <h2>🔧 Kode Perbaikan untuk API Handler:</h2>
+        <div class="code-block">
+// functions/api/contacts.js - Improved version with better error handling
+export async function onRequest(context) {
+  const { request, env } = context;
+  const { DB_LATIHAN1 } = env;
+  const method = request.method;
+  const url = new URL(request.url);
+  
+  // Enhanced logging
+  console.log('=== API Request Debug ===');
+  console.log('Method:', method);
+  console.log('URL:', request.url);
+  console.log('DB_LATIHAN1 available:', !!DB_LATIHAN1);
+  
+  // Get table name from query parameter or header
+  const tableName = url.searchParams.get('table') || 
+                   request.headers.get('X-Table-Name') || 
+                   'contacts';
+  
+  console.log('Table name:', tableName);
+  
+  // CORS headers
+  const corsHeaders = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, X-Table-Name',
+  };
+  
+  // Handle preflight
+  if (method === 'OPTIONS') {
+    console.log('Handling OPTIONS request');
+    return new Response(null, { headers: corsHeaders });
+  }
+  
+  // Check database availability
+  if (!DB_LATIHAN1) {
+    console.error('Database not available');
+    return new Response(JSON.stringify({ 
+      error: 'Database not available',
+      details: 'DB_LATIHAN1 environment variable not set or accessible'
+    }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json', ...corsHeaders }
+    });
+  }
+  
+  // Test database connection
+  try {
+    const testQuery = "SELECT 1 as test";
+    const testResult = await DB_LATIHAN1.prepare(testQuery).first();
+    console.log('Database connection test passed:', testResult);
+  } catch (dbError) {
+    console.error('Database connection test failed:', dbError);
+    return new Response(JSON.stringify({
+      error: 'Database connection failed',
+      details: dbError.message
+    }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json', ...corsHeaders }
+    });
+  }
+  
+  // Validate table name
+  if (!isValidTableName(tableName)) {
+    console.error('Invalid table name:', tableName);
+    return new Response(JSON.stringify({ 
+      error: 'Invalid table name',
+      details: 'Only alphanumeric characters and underscores allowed',
+      tableName: tableName
+    }), { 
+      status: 400, 
+      headers: { 'Content-Type': 'application/json', ...corsHeaders }
+    });
+  }
+  
+  try {
+    switch (method) {
+      case 'GET':
+        return await getContacts(DB_LATIHAN1, tableName, corsHeaders);
+      case 'POST':
+        return await createContact(request, DB_LATIHAN1, tableName, corsHeaders);
+      default:
+        return new Response(JSON.stringify({ 
+          error: `Method ${method} not allowed` 
+        }), { 
+          status: 405, 
+          headers: { 'Content-Type': 'application/json', ...corsHeaders }
+        });
+    }
+  } catch (error) {
+    console.error('Unhandled API Error:', {
+      message: error.message,
+      stack: error.stack,
+      tableName: tableName,
+      method: method
+    });
+    
+    return new Response(JSON.stringify({ 
+      error: 'Internal server error',
+      details: error.message,
+      stack: error.stack,
+      timestamp: new Date().toISOString()
+    }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json', ...corsHeaders }
+    });
+  }
+}
+
+// Enhanced table validation
+function isValidTableName(tableName) {
+  if (!tableName || typeof tableName !== 'string') {
+    return false;
+  }
+  
+  // Check length
+  if (tableName.length === 0 || tableName.length > 50) {
+    return false;
+  }
+  
+  // Check pattern: must start with letter or underscore, followed by letters, numbers, or underscores
+  const pattern = /^[a-zA-Z_][a-zA-Z0-9_]*$/;
+  return pattern.test(tableName);
+}
+        </div>
+    </div>
+
+    <script>
+        // Enhanced DynamicFormHandler with better debugging
+        class DebugFormHandler {
+            constructor() {
+                this.apiBaseUrl = '/api/contacts';
+                this.logOutput = document.getElementById('logOutput');
+                this.init();
+            }
+            
+            init() {
+                const form = document.getElementById('debugForm');
+                if (form) {
+                    form.addEventListener('submit', (e) => this.handleSubmit(e));
+                    this.log('Debug form handler initialized', 'info');
+                }
+            }
+            
+            async handleSubmit(event) {
+                event.preventDefault();
+                
+                const form = event.target;
+                const submitButton = form.querySelector('button[type="submit"]');
+                const originalText = submitButton.textContent;
+                
+                try {
+                    this.log('Form submission started', 'info');
+                    submitButton.disabled = true;
+                    submitButton.textContent = 'Testing...';
+                    
+                    // Collect form data
+                    const formData = new FormData(form);
+                    const data = {};
+                    for (let [key, value] of formData.entries()) {
+                        data[key] = value;
+                    }
+                    
+                    this.log('Form data collected: ' + JSON.stringify(data), 'info');
+                    
+                    // Transform to API format
+                    const apiData = this.transformToApiFormat(data);
+                    this.log('Transformed to API format: ' + JSON.stringify(apiData), 'info');
+                    
+                    // Get table name
+                    const tableName = form.getAttribute('data-table') || 'contacts';
+                    this.log('Using table: ' + tableName, 'info');
+                    
+                    // Prepare request
+                    const headers = {
+                        'Content-Type': 'application/json',
+                        'X-Table-Name': tableName
+                    };
+                    
+                    this.log('Request headers: ' + JSON.stringify(headers), 'info');
+                    this.log('Request URL: ' + this.apiBaseUrl, 'info');
+                    this.log('Request method: POST', 'info');
+                    
+                    // Send request
+                    const response = await fetch(this.apiBaseUrl, {
+                        method: 'POST',
+                        headers: headers,
+                        body: JSON.stringify(apiData)
+                    });
+                    
+                    this.log('Response status: ' + response.status, response.ok ? 'success' : 'error');
+                    this.log('Response headers: ' + JSON.stringify(Object.fromEntries(response.headers)), 'info');
+                    
+                    // Handle response
+                    const responseText = await response.text();
+                    this.log('Response body: ' + responseText, 'info');
+                    
+                    if (!response.ok) {
+                        let errorData;
+                        try {
+                            errorData = JSON.parse(responseText);
+                        } catch (e) {
+                            errorData = { message: responseText };
+                        }
+                        
+                        this.log('Error details: ' + JSON.stringify(errorData), 'error');
+                        throw new Error(errorData.message || `HTTP ${response.status}`);
+                    }
+                    
+                    const result = JSON.parse(responseText);
+                    this.log('Success: ' + JSON.stringify(result), 'success');
+                    
+                } catch (error) {
+                    this.log('Error occurred: ' + error.message, 'error');
+                    console.error('Debug error:', error);
+                } finally {
+                    submitButton.disabled = false;
+                    submitButton.textContent = originalText;
+                }
+            }
+            
+            transformToApiFormat(formData) {
+                const apiData = {};
+                const keys = Object.keys(formData);
+                
+                keys.forEach((key, index) => {
+                    if (index >= 20) return; // Max 20 columns
+                    
+                    const columnIndex = (index + 1).toString().padStart(2, '0');
+                    const columnName = `x_${columnIndex}`;
+                    apiData[columnName] = String(formData[key]);
+                });
+                
+                return apiData;
+            }
+            
+            log(message, type = 'info') {
+                const timestamp = new Date().toLocaleTimeString();
+                const logEntry = document.createElement('div');
+                logEntry.className = `log-entry log-${type}`;
+                logEntry.textContent = `[${timestamp}] ${message}`;
+                
+                this.logOutput.appendChild(logEntry);
+                this.logOutput.scrollTop = this.logOutput.scrollHeight;
+            }
+        }
+        
+        // Test API endpoint directly
+        async function testApiEndpoint() {
+            const logger = new DebugFormHandler();
+            logger.log('Testing API endpoint directly...', 'info');
+            
+            try {
+                const response = await fetch('/api/contacts', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Table-Name': 'contacts'
+                    }
+                });
+                
+                logger.log('GET response status: ' + response.status, response.ok ? 'success' : 'error');
+                
+                const responseText = await response.text();
+                logger.log('GET response: ' + responseText, 'info');
+                
+            } catch (error) {
+                logger.log('GET test failed: ' + error.message, 'error');
+            }
+        }
+        
+        // Clear logs
+        function clearLogs() {
+            const logOutput = document.getElementById('logOutput');
+            logOutput.innerHTML = '<div class="log-entry log-info">Logs cleared. Ready for new tests...</div>';
+        }
+        
+        // Initialize debug handler
+        const debugHandler = new DebugFormHandler();
+    </script>
+</body>
+</html>
