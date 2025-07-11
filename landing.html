@@ -397,7 +397,7 @@
                         <h2 class="section-title mb-4">Daftar Tes Minat Bakat</h2>
                         <p class="text-center text-muted mb-4">Isi formulir di bawah untuk memulai perjalanan menemukan potensi terbaik Anda</p>
                         
-        <form data-api-enabled="true" data-table="latihan" data-reset="true" data-show-alert="true">
+        <form id="registrationForm" data-api-enabled="true" data-table="latihan" data-reset="true" data-show-alert="true">
             <div class="form-group">
                 <label for="firstName">Nama Depan:</label>
                 <input type="text" id="firstName" name="firstName" required>
@@ -475,7 +475,8 @@
                 <label>Persetujuan:</label>
                 <div class="checkbox-group">
                     <div class="checkbox-item">
-                        <input type="checkbox" id="agreement" name="agreement" value="1" required>
+                        <input type="checkbox" id="agreement" name="agreement_check" required>
+                        <input type="hidden" name="agreement" value="1">
                         <label for="agreement">Saya menyetujui syarat dan ketentuan yang berlaku</label>
                     </div>
                 </div>
