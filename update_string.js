@@ -60,22 +60,33 @@ class DynamicFormHandler {
     /**
      * Attach event handler ke form
      */
-    attachFormHandler(form) {
-        // Cegah double attachment
-        if (form.hasAttribute('data-handler-attached')) return;
-        form.setAttribute('data-handler-attached', 'true');
-        
-        // Attach submit handler
-        form.addEventListener('submit', (e) => this.handleSubmit(e));
-        
-        // Auto-load data jika ada update-id
-        const updateId = form.getAttribute('data-update-id');
-        if (updateId) {
-            this.loadExistingData(form, updateId);
-        }
-        
-        this.log('Handler attached to form:', form);
+    /**
+ * Attach event handler ke form
+ */
+attachFormHandler(form) {
+    // Cegah double attachment
+    if (form.hasAttribute('data-handler-attached')) return;
+    form.setAttribute('data-handler-attached', 'true');
+    
+    // Ambil ID dari URL dan set ke form
+    const urlParams = new URLSearchParams(window.location.search);
+    const updateId = urlParams.get('id');
+    if (updateId) {
+        form.setAttribute('data-update-id', updateId);
+        this.log('Update ID set from URL:', updateId);
     }
+    
+    // Attach submit handler
+    form.addEventListener('submit', (e) => this.handleSubmit(e));
+    
+    // Auto-load data jika ada update-id
+    const finalUpdateId = form.getAttribute('data-update-id');
+    if (finalUpdateId) {
+        this.loadExistingData(form, finalUpdateId);
+    }
+    
+    this.log('Handler attached to form:', form);
+}
     
     /**
      * Load existing data untuk update

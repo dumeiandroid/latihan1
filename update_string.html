@@ -216,19 +216,7 @@
         </form>
     </div>
 
-    <script>
-        // Ambil parameter ID dari URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const updateId = urlParams.get('id');
-
-        // Update form attribute dengan ID dari URL
-        if (updateId) {
-            document.getElementById('latihanForm').setAttribute('data-update-id', updateId);
-            console.log('Update ID set to:', updateId);
-        } else {
-            console.warn('No ID parameter found in URL');
-        }
-    </script>
+    
     <script src="update_string.js"></script>
 </body>
 </html>
