@@ -3,134 +3,486 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Form dengan JavaScript Dinamis</title>
+    <title>Contoh Form Dinamis</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            max-width: 600px;
-            margin: 50px auto;
+            max-width: 800px;
+            margin: 0 auto;
             padding: 20px;
-            background-color: #f9f9f9;
+            background-color: #f5f5f5;
         }
-        
         .form-container {
             background: white;
             padding: 30px;
-            border-radius: 10px;
+            border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        
-        h1 {
-            color: #333;
-            text-align: center;
             margin-bottom: 30px;
         }
-        
+        h2 {
+            color: #333;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
         .form-group {
             margin-bottom: 20px;
         }
-        
         label {
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
             color: #555;
         }
-        
         input[type="text"],
         input[type="email"],
         input[type="tel"],
-        select,
-        textarea {
+        input[type="number"],
+        textarea,
+        select {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 14px;
-            box-sizing: border-box;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: border-color 0.3s;
         }
-        
-        textarea {
-            height: 100px;
-            resize: vertical;
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #007bff;
         }
-        
-        .btn-submit {
+        .checkbox-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        button {
             background-color: #007bff;
             color: white;
             padding: 12px 30px;
             border: none;
-            border-radius: 5px;
-            font-size: 16px;
+            border-radius: 4px;
             cursor: pointer;
-            width: 100%;
+            font-size: 16px;
             transition: background-color 0.3s;
         }
-        
-        .btn-submit:hover {
+        button:hover:not(:disabled) {
             background-color: #0056b3;
         }
-        
-        .btn-submit:disabled {
+        button:disabled {
             background-color: #6c757d;
             cursor: not-allowed;
         }
-        
-        .checkbox-group {
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .api-message {
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+            font-size: 14px;
         }
-        
-        .checkbox-group input[type="checkbox"] {
-            width: auto;
-            margin: 0;
+        .api-message-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
         }
-        
-        .checkbox-group label {
-            font-weight: normal;
-            margin: 0;
+        .api-message-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .code-example {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
         }
     </style>
 </head>
 <body>
+    <h1>Dynamic Form Handler - Contoh Penggunaan</h1>
+    
+    <!-- Form untuk tabel "latihan" -->
     <div class="form-container">
-        <h1>Form Kontak</h1>
-        
-        <!-- Form akan dikirim ke tabel 'contacts' -->
-        <form data-api-enabled="true" data-table="contacts" data-reset="true">
+        <h2>Form untuk Tabel "latihan"</h2>
+        <form data-api-enabled="true" data-table="latihan" data-reset="true" data-show-alert="true">
             <div class="form-group">
-                <label for="nama">Nama Lengkap</label>
+                <label for="nama">Nama Lengkap:</label>
                 <input type="text" id="nama" name="nama" required>
             </div>
             
             <div class="form-group">
-                <label for="email">Email</label>
+                <label for="email">Email:</label>
                 <input type="email" id="email" name="email" required>
             </div>
             
             <div class="form-group">
-                <label for="telepon">Nomor Telepon</label>
+                <label for="telepon">Telepon:</label>
                 <input type="tel" id="telepon" name="telepon">
             </div>
             
             <div class="form-group">
-                <label for="pesan">Pesan</label>
-                <textarea id="pesan" name="pesan" placeholder="Tulis pesan Anda..."></textarea>
+                <label for="alamat">Alamat:</label>
+                <textarea id="alamat" name="alamat" rows="3"></textarea>
             </div>
             
             <div class="form-group">
+                <label for="usia">Usia:</label>
+                <input type="number" id="usia" name="usia" min="1" max="120">
+            </div>
+            
+            <div class="form-group">
+                <label for="jenis_kelamin">Jenis Kelamin:</label>
+                <select id="jenis_kelamin" name="jenis_kelamin">
+                    <option value="">Pilih...</option>
+                    <option value="Laki-laki">Laki-laki</option>
+                    <option value="Perempuan">Perempuan</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Hobi:</label>
                 <div class="checkbox-group">
-                    <input type="checkbox" id="newsletter" name="newsletter" value="1">
-                    <label for="newsletter">Saya ingin menerima newsletter</label>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="hobi_baca" name="hobi" value="Membaca">
+                        <label for="hobi_baca">Membaca</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="hobi_olahraga" name="hobi" value="Olahraga">
+                        <label for="hobi_olahraga">Olahraga</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="hobi_musik" name="hobi" value="Musik">
+                        <label for="hobi_musik">Musik</label>
+                    </div>
                 </div>
             </div>
             
-            <button type="submit" class="btn-submit">Kirim Pesan</button>
+            <button type="submit">Simpan Data</button>
         </form>
     </div>
+    
+    <!-- Form untuk tabel "contacts" (default) -->
+    <div class="form-container">
+        <h2>Form untuk Tabel "contacts" (Default)</h2>
+        <form data-api-enabled="true">
+            <div class="form-group">
+                <label for="nama_contact">Nama:</label>
+                <input type="text" id="nama_contact" name="nama_contact" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="email_contact">Email:</label>
+                <input type="email" id="email_contact" name="email_contact" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="pesan">Pesan:</label>
+                <textarea id="pesan" name="pesan" rows="4"></textarea>
+            </div>
+            
+            <button type="submit">Kirim</button>
+        </form>
+    </div>
+    
+    <!-- Form dengan konfigurasi khusus -->
+    <div class="form-container">
+        <h2>Form dengan Redirect</h2>
+        <form data-api-enabled="true" 
+              data-table="latihan" 
+              data-reset="false" 
+              data-redirect="/success.html">
+            <div class="form-group">
+                <label for="nama_redirect">Nama:</label>
+                <input type="text" id="nama_redirect" name="nama_redirect" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="keterangan">Keterangan:</label>
+                <textarea id="keterangan" name="keterangan" rows="3"></textarea>
+            </div>
+            
+            <button type="submit">Simpan & Redirect</button>
+        </form>
+    </div>
+    
+    <div class="form-container">
+        <h2>Cara Penggunaan</h2>
+        <p>Untuk menggunakan Dynamic Form Handler, Anda perlu:</p>
+        <ol>
+            <li>Pastikan file <code>tambah.js</code> sudah di-load di halaman</li>
+            <li>Tambahkan atribut pada form sesuai kebutuhan</li>
+            <li>Sesuaikan konfigurasi API di file JavaScript</li>
+        </ol>
+        
+        <h3>Atribut Form yang Tersedia:</h3>
+        <div class="code-example">
+data-api-enabled="true"     - Mengaktifkan form handler
+data-table="nama_tabel"     - Menentukan tabel tujuan
+data-reset="true/false"     - Reset form setelah sukses (default: true)
+data-show-alert="true/false" - Tampilkan pesan alert (default: true)
+data-redirect="/url"        - Redirect setelah sukses
+data-method="POST/PUT"      - HTTP method (default: POST)
+data-update-id="123"        - ID untuk update (otomatis jadi PUT)
+        </div>
+        
+        <h3>Konfigurasi JavaScript yang Perlu Disesuaikan:</h3>
+        <div class="code-example">
+const dynamicFormHandler = new DynamicFormHandler({
+    apiBaseUrl: '/api/contacts',  // Sesuaikan dengan URL API Anda
+    defaultTable: 'contacts',     // Tabel default
+    maxColumns: 20,              // Maksimal kolom (x_01 - x_20)
+    debug: true                  // Set true untuk development
+});
+        </div>
+    </div>
 
-    <!-- Load JavaScript dinamis -->
-    <script src="tambah.js"></script>
+    <script>
+        // Simulasi Dynamic Form Handler untuk demo
+        class DynamicFormHandler {
+            constructor(config = {}) {
+                this.apiBaseUrl = config.apiBaseUrl || '/api/contacts';
+                this.defaultTable = config.defaultTable || 'contacts';
+                this.maxColumns = config.maxColumns || 20;
+                this.debug = config.debug || false;
+                
+                if (document.readyState === 'loading') {
+                    document.addEventListener('DOMContentLoaded', () => this.init());
+                } else {
+                    this.init();
+                }
+            }
+            
+            init() {
+                const forms = document.querySelectorAll('form[data-api-enabled="true"], form.api-form');
+                forms.forEach(form => this.attachFormHandler(form));
+                
+                const tableForms = document.querySelectorAll('form[data-table]');
+                tableForms.forEach(form => this.attachFormHandler(form));
+                
+                this.log('Dynamic Form Handler initialized for', forms.length + tableForms.length, 'forms');
+            }
+            
+            attachFormHandler(form) {
+                if (form.hasAttribute('data-handler-attached')) return;
+                form.setAttribute('data-handler-attached', 'true');
+                
+                form.addEventListener('submit', (e) => this.handleSubmit(e));
+                this.log('Handler attached to form:', form);
+            }
+            
+            async handleSubmit(event) {
+                event.preventDefault();
+                
+                const form = event.target;
+                const submitButton = form.querySelector('button[type="submit"], input[type="submit"]');
+                const originalText = submitButton ? submitButton.textContent || submitButton.value : '';
+                
+                try {
+                    this.setLoadingState(submitButton, true);
+                    
+                    const config = this.getFormConfig(form);
+                    const formData = this.collectFormData(form);
+                    const apiData = this.transformToApiFormat(formData);
+                    
+                    // Simulasi API call
+                    await this.simulateApiCall(apiData, config);
+                    
+                    this.handleSuccess(form, { message: 'Data berhasil disimpan!' }, config);
+                    
+                } catch (error) {
+                    this.handleError(form, error);
+                } finally {
+                    this.setLoadingState(submitButton, false, originalText);
+                }
+            }
+            
+            getFormConfig(form) {
+                return {
+                    table: form.getAttribute('data-table') || this.defaultTable,
+                    method: form.getAttribute('data-method') || 'POST',
+                    resetOnSuccess: form.getAttribute('data-reset') !== 'false',
+                    showAlert: form.getAttribute('data-show-alert') !== 'false',
+                    redirectUrl: form.getAttribute('data-redirect'),
+                    updateId: form.getAttribute('data-update-id') || null
+                };
+            }
+            
+            collectFormData(form) {
+                const formData = new FormData(form);
+                const data = {};
+                
+                for (let [key, value] of formData.entries()) {
+                    if (data[key]) {
+                        if (Array.isArray(data[key])) {
+                            data[key].push(value);
+                        } else {
+                            data[key] = [data[key], value];
+                        }
+                    } else {
+                        data[key] = value;
+                    }
+                }
+                
+                const uncheckedInputs = form.querySelectorAll('input[type="checkbox"]:not(:checked), input[type="radio"]:not(:checked)');
+                uncheckedInputs.forEach(input => {
+                    if (input.type === 'checkbox' && !data.hasOwnProperty(input.name)) {
+                        data[input.name] = false;
+                    }
+                });
+                
+                return data;
+            }
+            
+            transformToApiFormat(formData) {
+                const apiData = {};
+                const keys = Object.keys(formData);
+                
+                keys.forEach((key, index) => {
+                    const columnIndex = (index + 1).toString().padStart(2, '0');
+                    const columnName = `x_${columnIndex}`;
+                    
+                    let value = formData[key];
+                    
+                    if (Array.isArray(value)) {
+                        value = value.join(', ');
+                    }
+                    
+                    if (typeof value === 'boolean') {
+                        value = value ? '1' : '0';
+                    }
+                    
+                    apiData[columnName] = String(value);
+                    
+                    if (index + 1 >= this.maxColumns) {
+                        this.log('Warning: Form has more fields than maximum columns (', this.maxColumns, ')');
+                        return;
+                    }
+                });
+                
+                return apiData;
+            }
+            
+            async simulateApiCall(data, config) {
+                // Simulasi delay API
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                // Log data yang akan dikirim
+                this.log('Sending to table:', config.table);
+                this.log('API Data:', data);
+                
+                // Simulasi random error (10% chance)
+                if (Math.random() < 0.1) {
+                    throw new Error('Simulasi error jaringan');
+                }
+            }
+            
+            handleSuccess(form, result, config) {
+                this.log('Success:', result);
+                
+                if (config.showAlert) {
+                    this.showMessage(form, result.message || 'Data berhasil disimpan!', 'success');
+                }
+                
+                if (config.resetOnSuccess) {
+                    form.reset();
+                }
+                
+                if (config.redirectUrl) {
+                    this.showMessage(form, `Akan redirect ke ${config.redirectUrl} dalam 2 detik...`, 'info');
+                    setTimeout(() => {
+                        // window.location.href = config.redirectUrl;
+                        console.log('Redirect to:', config.redirectUrl);
+                    }, 2000);
+                }
+                
+                const event = new CustomEvent('formApiSuccess', {
+                    detail: { result, config, form }
+                });
+                form.dispatchEvent(event);
+            }
+            
+            handleError(form, error) {
+                this.log('Error:', error);
+                
+                this.showMessage(form, error.message || 'Terjadi kesalahan saat menyimpan data', 'error');
+                
+                const event = new CustomEvent('formApiError', {
+                    detail: { error, form }
+                });
+                form.dispatchEvent(event);
+            }
+            
+            showMessage(form, message, type = 'info') {
+                const existingMessages = form.querySelectorAll('.api-message');
+                existingMessages.forEach(msg => msg.remove());
+                
+                const messageEl = document.createElement('div');
+                messageEl.className = `api-message api-message-${type}`;
+                messageEl.textContent = message;
+                
+                form.insertBefore(messageEl, form.firstChild);
+                
+                setTimeout(() => {
+                    if (messageEl.parentNode) {
+                        messageEl.remove();
+                    }
+                }, 5000);
+            }
+            
+            setLoadingState(button, isLoading, originalText = '') {
+                if (!button) return;
+                
+                if (isLoading) {
+                    button.disabled = true;
+                    button.setAttribute('data-original-text', button.textContent || button.value);
+                    if (button.tagName === 'BUTTON') {
+                        button.textContent = 'Menyimpan...';
+                    } else {
+                        button.value = 'Menyimpan...';
+                    }
+                } else {
+                    button.disabled = false;
+                    const original = button.getAttribute('data-original-text') || originalText;
+                    if (button.tagName === 'BUTTON') {
+                        button.textContent = original;
+                    } else {
+                        button.value = original;
+                    }
+                    button.removeAttribute('data-original-text');
+                }
+            }
+            
+            log(...args) {
+                if (this.debug) {
+                    console.log('[Dynamic Form Handler]', ...args);
+                }
+            }
+        }
+
+        // Konfigurasi untuk demo
+        const dynamicFormHandler = new DynamicFormHandler({
+            apiBaseUrl: '/api/contacts',
+            defaultTable: 'contacts',
+            maxColumns: 20,
+            debug: true
+        });
+
+        // Event listeners untuk demo
+        document.addEventListener('formApiSuccess', (e) => {
+            console.log('Form API Success:', e.detail);
+        });
+
+        document.addEventListener('formApiError', (e) => {
+            console.log('Form API Error:', e.detail);
+        });
+    </script>
 </body>
 </html>
