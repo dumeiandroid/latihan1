@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Form Handler - Custom Columns</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .form-container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        h2 {
+            color: #333;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        input:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        button:hover:not(:disabled) {
+            background-color: #0056b3;
+        }
+        button:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+        .api-message {
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .api-message-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .api-message-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .api-message-info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        .info-box {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .info-box h3 {
+            margin-top: 0;
+            color: #495057;
+        }
+        code {
+            background: #e9ecef;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <h1>Dynamic Form Handler - Custom Columns</h1>
+    
+    <!-- Form dengan custom columns -->
+    <div class="form-container">
+        <h2>Form dengan Custom Columns</h2>
+        <form data-api-enabled="true" 
+              data-table="latihan" 
+              data-columns="x_01,x_05,x_10"
+              data-reset="true" 
+              data-show-alert="true">
+            
+            <div class="form-group">
+                <label for="nama">Nama Lengkap (akan ke kolom x_01):</label>
+                <input type="text" id="nama" name="nama" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email (akan ke kolom x_05):</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="telepon">Telepon (akan ke kolom x_10):</label>
+                <input type="tel" id="telepon" name="telepon">
+            </div>
+            
+            <button type="submit">Simpan Data</button>
+        </form>
+    </div>
+    
+    <!-- Form dengan columns berbeda -->
+    <div class="form-container">
+        <h2>Form dengan Columns Berbeda</h2>
+        <form data-api-enabled="true" 
+              data-table="users" 
+              data-columns="x_03,x_07,x_15"
+              data-reset="true" 
+              data-show-alert="true">
+            
+            <div class="form-group">
+                <label for="username">Username (akan ke kolom x_03):</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="email2">Email (akan ke kolom x_07):</label>
+                <input type="email" id="email2" name="email2" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="keterangan">Keterangan (akan ke kolom x_15):</label>
+                <input type="text" id="keterangan" name="keterangan">
+            </div>
+            
+            <button type="submit">Simpan User</button>
+        </form>
+    </div>
+    
+    <!-- Form tanpa data-columns (menggunakan urutan default) -->
+    <div class="form-container">
+        <h2>Form Default (Urutan Biasa)</h2>
+        <form data-api-enabled="true" 
+              data-table="contacts" 
+              data-reset="true" 
+              data-show-alert="true">
+            
+            <div class="form-group">
+                <label for="nama3">Nama (akan ke kolom x_01):</label>
+                <input type="text" id="nama3" name="nama3" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="email3">Email (akan ke kolom x_02):</label>
+                <input type="email" id="email3" name="email3" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="pesan">Pesan (akan ke kolom x_03):</label>
+                <input type="text" id="pesan" name="pesan">
+            </div>
+            
+            <button type="submit">Kirim Pesan</button>
+        </form>
+    </div>
+    
+    <div class="info-box">
+        <h3>Cara Penggunaan:</h3>
+        <p>Tambahkan atribut <code>data-columns</code> pada form untuk menentukan kolom yang diinginkan:</p>
+        <p><code>data-columns="x_01,x_05,x_10"</code> - Input pertama ke x_01, kedua ke x_05, ketiga ke x_10</p>
+        <p>Jika tidak ada <code>data-columns</code>, akan menggunakan urutan default: x_01, x_02, x_03, dst.</p>
+    </div>
+
+    
+    <script src="tambah_kolom.js"></script>
+</body>
+</html>
