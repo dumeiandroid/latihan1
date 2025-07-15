@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluasi Bab 1: Apa Itu Kecerdasan Emosional?</title>
+</head>
+<body>
+    <!-- API Status Indicator -->
+    <div id="apiStatus">
+        Connecting...
+    </div>
+
+    <!-- Alert Container -->
+    <div id="alertContainer"></div>
+
+    <center>
+        <h1>Evaluasi Bab 1: Apa Itu Kecerdasan Emosional?</h1>
+        <p>Kenali dan Kembangkan Kecerdasan Emosionalmu</p>
+        <div>Membangun EQ untuk Masa Depan</div>
+    </center>
+
+    <!-- Results Section -->
+    <div id="resultsSection">
+        <!-- Hasil Evaluasi -->
+        <center>
+            <h3>Hasil Evaluasi Kecerdasan Emosional</h3>
+            <table border="1" cellpadding="10">
+                <tr>
+                    <td>
+                        <h2 id="totalScore">0</h2>
+                        <p id="totalLabel">dari 100 poin</p>
+                    </td>
+                    <td>
+                        <h2 id="percentage">0%</h2>
+                        <p>Pencapaian</p>
+                    </td>
+                    <td>
+                        <div id="categoryBadge">Menghitung...</div>
+                    </td>
+                </tr>
+            </table>
+            
+            <p>Progress: <span id="progressText">0%</span></p>
+            
+            <div id="saveStatus">
+                <small>Hasil telah disimpan ke database</small>
+            </div>
+        </center>
+
+        <!-- Detail Skor -->
+        <h4>Detail Skor per Aspek Kecerdasan Emosional</h4>
+        <div id="categoryDetails">
+            <!-- Category details will be inserted here -->
+        </div>
+
+        <center>
+            <button onclick="resetEvaluation()">Evaluasi Ulang</button>
+        </center>
+    </div>
+
+    <!-- Form Section -->
+    <div id="formSection">
+        <form id="evaluationForm">
+            <!-- Questions will be inserted here -->
+        </form>
+    </div>
+
+    <center>
+        <p><em>Evaluasi ini membantu kamu mengukur pemahaman dan penerapan konsep kecerdasan emosional dalam kehidupan sehari-hari</em></p>
+    </center>
+
+    <script>
+        // Configuration
+        const CONFIG = {
+            API_BASE_URL: '/api/contacts',
+            TABLE_NAME: 'evaluasi_eq',
+            RECORD_ID: 1, // Fixed ID for update
+            HEADERS: {
+                'Content-Type': 'application/json',
+                'X-Table-Name': 'evaluasi_eq'
+            }
+        };
+
+        // Evaluation questions configuration
+        const SOAL_EVALUASI = [
+            {
+                id: 'kesadaran_diri',
+                pertanyaan: 'Apakah kamu sudah melakukan latihan kesadaran diri dengan mengenali emosi yang sedang kamu rasakan setiap hari?',
+                kategori: 'Kesadaran Diri (Self-Awareness)',
+                bobot: 15,
+                pilihan: [
+                    { value: 0, text: 'Belum pernah melakukan latihan kesadaran diri' },
+                    { value: 5, text: 'Kadang-kadang mengenali emosi yang dirasakan' },
+                    { value: 10, text: 'Sering melakukan refleksi emosi harian' },
+                    { value: 15, text: 'Selalu mengenali dan memahami emosi yang dirasakan' }
+                ]
+            },
+            {
+                id: 'pengaturan_diri',
+                pertanyaan: 'Apakah kamu sudah menerapkan teknik pengaturan diri seperti mengambil napas dalam ketika merasa frustrasi atau marah?',
+                kategori: 'Pengaturan Diri (Self-Regulation)',
+                bobot: 20,
+                pilihan: [
+                    { value: 0, text: 'Belum menerapkan teknik pengaturan diri' },
+                    { value: 8, text: 'Kadang-kadang berhasil mengendalikan emosi' },
+                    { value: 15, text: 'Sering berhasil mengelola emosi dengan baik' },
+                    { value: 20, text: 'Selalu berhasil mengendalikan emosi secara konstruktif' }
+                ]
+            },
+            {
+                id: 'empati_praktek',
+                pertanyaan: 'Apakah kamu sudah berlatih empati dengan mendengarkan dan memahami perasaan teman atau keluarga ketika mereka bercerita?',
+                kategori: 'Empati (Empathy)',
+                bobot: 15,
+                pilihan: [
+                    { value: 0, text: 'Belum berlatih empati secara sadar' },
+                    { value: 5, text: 'Kadang-kadang berusaha memahami perasaan orang lain' },
+                    { value: 10, text: 'Sering berlatih mendengarkan dengan empati' },
+                    { value: 15, text: 'Selalu berusaha memahami dan merasakan perasaan orang lain' }
+                ]
+            },
+            {
+                id: 'keterampilan_sosial',
+                pertanyaan: 'Apakah kamu sudah menerapkan keterampilan sosial dengan berkomunikasi efektif dan menyelesaikan konflik dengan cara yang konstruktif?',
+                kategori: 'Keterampilan Sosial (Social Skills)',
+                bobot: 20,
+                pilihan: [
+                    { value: 0, text: 'Belum menerapkan keterampilan sosial yang baik' },
+                    { value: 8, text: 'Kadang-kadang berkomunikasi dengan baik' },
+                    { value: 15, text: 'Sering berhasil berkomunikasi dan menyelesaikan konflik' },
+                    { value: 20, text: 'Selalu berkomunikasi efektif dan menyelesaikan konflik dengan bijak' }
+                ]
+            },
+            {
+                id: 'journaling_refleksi',
+                pertanyaan: 'Berapa kali dalam seminggu kamu melakukan journaling atau refleksi tertulis tentang emosi yang kamu rasakan?',
+                kategori: 'Latihan Pengembangan EQ',
+                bobot: 21,
+                tipe: 'number',
+                max: 7,
+                multiplier: 3,
+                placeholder: 'Jumlah hari per minggu (maksimal 7)',
+                keterangan: '3 poin per hari, maksimal 7 hari (21 poin)'
+            },
+            {
+                id: 'penilaian_diri',
+                pertanyaan: 'Apakah kamu sudah melakukan penilaian diri dengan menjawab pertanyaan refleksi seperti yang dijelaskan dalam materi?',
+                kategori: 'Penilaian Diri',
+                bobot: 9,
+                pilihan: [
+                    { value: 0, text: 'Belum melakukan penilaian diri' },
+                    { value: 3, text: 'Sudah menjawab beberapa pertanyaan refleksi' },
+                    { value: 6, text: 'Sudah menjawab sebagian besar pertanyaan refleksi' },
+                    { value: 9, text: 'Sudah melakukan penilaian diri secara lengkap dan jujur' }
+                ]
+            }
+        ];
+
+        // Category rating configuration
+        const KATEGORI_RATING = [
+            { min: 90, text: 'Sangat Baik' },
+            { min: 75, text: 'Baik' },
+            { min: 60, text: 'Cukup' },
+            { min: 40, text: 'Perlu Perbaikan' },
+            { min: 0, text: 'Sangat Perlu Perbaikan' }
+        ];
+
+        // Calculate total maximum points
+        const TOTAL_POIN_MAKSIMAL = SOAL_EVALUASI.reduce((total, soal) => total + soal.bobot, 0);
+
+        // API helper functions
+        async function apiRequest(url, options = {}) {
+            const defaultOptions = {
+                headers: CONFIG.HEADERS,
+                ...options
+            };
+
+            try {
+                showApiStatus('Menghubungi server...');
+                const response = await fetch(url, defaultOptions);
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.error || `HTTP error! status: ${response.status}`);
+                }
+                
+                showApiStatus('Berhasil terhubung');
+                return data;
+            } catch (error) {
+                showApiStatus('Gagal terhubung: ' + error.message);
+                throw error;
+            }
+        }
+
+        async function updateEvaluation(data) {
+            // Use PUT method to update specific record with ID
+            const url = `${CONFIG.API_BASE_URL}/${CONFIG.RECORD_ID}?table=${CONFIG.TABLE_NAME}`;
+            return await apiRequest(url, {
+                method: 'PUT',
+                body: JSON.stringify(data)
+            });
+        }
+
+        // UI helper functions
+        function showApiStatus(message) {
+            const statusEl = document.getElementById('apiStatus');
+            statusEl.textContent = message;
+            
+            setTimeout(() => {
+                statusEl.textContent = '';
+            }, 3000);
+        }
+
+        function showAlert(message) {
+            const alertContainer = document.getElementById('alertContainer');
+            alertContainer.innerHTML = `<p><strong>${message}</strong></p>`;
+            
+            setTimeout(() => {
+                alertContainer.innerHTML = '';
+            }, 5000);
+        }
+
+        // Question generation functions
+        function generateQuestions() {
+            const form = document.getElementById('evaluationForm');
+            let currentCategory = '';
+            let questionNumber = 1;
+            let questionsHTML = '';
+
+            SOAL_EVALUASI.forEach(soal => {
+                // Add category header if different
+                if (currentCategory !== soal.kategori) {
+                    currentCategory = soal.kategori;
+                    questionsHTML += `<h3>${currentCategory}</h3>`;
+                }
+
+                // Add question
+                questionsHTML += `
+                    <fieldset>
+                        <legend>${questionNumber}. ${soal.pertanyaan} (${soal.bobot} poin)</legend>
+                        ${generateQuestionInput(soal)}
+                    </fieldset>
+                    <br>
+                `;
+
+                questionNumber++;
+            });
+
+            // Add submit button
+            questionsHTML += `
+                <center>
+                    <button type="submit">Lihat Hasil Evaluasi</button>
+                </center>
+            `;
+
+            form.innerHTML = questionsHTML;
+        }
+
+        function generateQuestionInput(soal) {
+            if (soal.tipe === 'number') {
+                return `
+                    <input type="number" 
+                           name="${soal.id}" 
+                           min="0" 
+                           max="${soal.max || ''}"
+                           placeholder="${soal.placeholder || 'Masukkan nilai'}">
+                    ${soal.keterangan ? `<br><small>${soal.keterangan}</small>` : ''}
+                `;
+            } else {
+                // Radio buttons
+                let radioHTML = '';
+                soal.pilihan.forEach((pilihan, index) => {
+                    radioHTML += `
+                        <input type="radio" 
+                               name="${soal.id}" 
+                               id="${soal.id}_${index}"
+                               value="${pilihan.value}">
+                        <label for="${soal.id}_${index}">
+                            ${pilihan.text} (${pilihan.value} poin)
+                        </label><br>
+                    `;
+                });
+                return radioHTML;
+            }
+        }
+
+        // Calculation functions
+        function calculateScore(formData) {
+            let totalScore = 0;
+            const detailScore = {};
+            const categoryGroups = {};
+
+            SOAL_EVALUASI.forEach(soal => {
+                let score = 0;
+                const value = formData.get(soal.id);
+
+                if (value !== null && value !== '') {
+                    if (soal.tipe === 'number') {
+                        const numValue = Math.min(parseInt(value) || 0, soal.max || Infinity);
+                        score = Math.min(numValue * (soal.multiplier || 1), soal.bobot);
+                    } else {
+                        score = parseInt(value) || 0;
+                    }
+                }
+
+                detailScore[soal.id] = score;
+                totalScore += score;
+
+                // Group by category
+                if (!categoryGroups[soal.kategori]) {
+                    categoryGroups[soal.kategori] = { total: 0, score: 0 };
+                }
+                categoryGroups[soal.kategori].total += soal.bobot;
+                categoryGroups[soal.kategori].score += score;
+            });
+
+            const percentage = Math.round((totalScore / TOTAL_POIN_MAKSIMAL) * 100 * 10) / 10;
+            const category = getCategory(percentage);
+
+            return {
+                totalScore,
+                totalPoinMaksimal: TOTAL_POIN_MAKSIMAL,
+                detailScore,
+                categoryGroups,
+                percentage,
+                category
+            };
+        }
+
+        function getCategory(percentage) {
+            for (const cat of KATEGORI_RATING) {
+                if (percentage >= cat.min) {
+                    return cat;
+                }
+            }
+            return KATEGORI_RATING[KATEGORI_RATING.length - 1];
+        }
+
+        // Display functions
+        function displayResults(results) {
+            // Update main results
+            document.getElementById('totalScore').textContent = results.totalScore;
+            document.getElementById('totalLabel').textContent = `dari ${results.totalPoinMaksimal} poin`;
+            document.getElementById('percentage').textContent = `${results.percentage}%`;
+            document.getElementById('categoryBadge').textContent = results.category.text;
+            document.getElementById('progressText').textContent = `${results.percentage}%`;
+
+            // Update category details
+            const categoryDetails = document.getElementById('categoryDetails');
+            let categoryHTML = '<table border="1" cellpadding="5"><tr><th>Kategori</th><th>Skor</th><th>Persentase</th></tr>';
+            
+            Object.entries(results.categoryGroups).forEach(([name, data]) => {
+                const categoryPercentage = data.total > 0 ? Math.round((data.score / data.total) * 100) : 0;
+                categoryHTML += `
+                    <tr>
+                        <td>${name}</td>
+                        <td>${data.score}/${data.total}</td>
+                        <td>${categoryPercentage}%</td>
+                    </tr>
+                `;
+            });
+            categoryHTML += '</table>';
+            categoryDetails.innerHTML = categoryHTML;
+
+            // Show results, hide form
+            document.getElementById('resultsSection').style.display = 'block';
+            document.getElementById('formSection').style.display = 'none';
+        }
+
+        // Form handling
+        async function handleSubmit(event) {
+            event.preventDefault();
+            
+            const formData = new FormData(event.target);
+            const results = calculateScore(formData);
+            
+            // Prepare data for API - will update record with ID = 1
+            const apiData = {
+                id_x: CONFIG.RECORD_ID,
+                x_01: results.totalScore.toString(),
+                x_02: results.percentage.toString(),
+                x_03: results.category.text,
+                x_04: JSON.stringify(results.categoryGroups),
+                x_05: JSON.stringify(results.detailScore),
+                x_06: new Date().toISOString(),
+                x_07: navigator.userAgent,
+                x_08: window.location.href
+            };
+
+            try {
+                // Update record with ID = 1
+                const response = await updateEvaluation(apiData);
+                
+                // Display results
+                displayResults(results);
+                
+                // Show save status
+                document.getElementById('saveStatus').style.display = 'block';
+                showAlert(`Hasil evaluasi berhasil diupdate ke database (ID: ${CONFIG.RECORD_ID})!`);
+                
+                console.log('Evaluation updated:', response);
+            } catch (error) {
+                console.error('Error updating evaluation:', error);
+                
+                // Still show results even if update fails
+                displayResults(results);
+                showAlert('Hasil evaluasi dihitung tetapi gagal diupdate: ' + error.message);
+            }
+        }
+
+        function resetEvaluation() {
+            document.getElementById('resultsSection').style.display = 'none';
+            document.getElementById('formSection').style.display = 'block';
+            document.getElementById('saveStatus').style.display = 'none';
+            document.getElementById('evaluationForm').reset();
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Hide results initially
+            document.getElementById('resultsSection').style.display = 'none';
+            document.getElementById('apiStatus').style.display = 'none';
+            
+            generateQuestions();
+            
+            // Add form submit handler
+            document.getElementById('evaluationForm').addEventListener('submit', handleSubmit);
+            
+            console.log('Emotional Intelligence Evaluation System initialized');
+            console.log('Total maximum points:', TOTAL_POIN_MAKSIMAL);
+            console.log('Will update record ID:', CONFIG.RECORD_ID);
+        });
+    </script>
+</body>
+</html>
