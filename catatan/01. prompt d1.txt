@@ -1,0 +1,51 @@
+buatkan form html yg akan ditempatkan diatas footer di website yg berisi tentan g informasi seminar psikologi. form tersebut adalah fasilitas bagi pengunjung untuk bertanya tanya seputar konten. kolom yg ada adalah x_01 sd x_06 . labelnya disesuaikan dengan konten. tambahkan juga hidden x_07 untuk tanggal submit. gunakan kode sesingkat mungkin dan gunakan bootsrap dan jquery 
+
+Buatkan HTML interface untuk sistem API dengan spesifikasi: deskripsi dibawah. Buat html sesuai permintaan" 
+
+
+Deskripsi Sistem API untuk AI Struktur Project:
+
+Cloudflare Workers dengan D1 Database
+
+Database binding: DB_LATIHAN1
+
+Database name: latihan1
+
+Struktur folder: functions/api/contacts/ API Endpoints: 
+1. /api/contacts (contacts.js) - untuk operasi kolektif 
+2. /api/contacts/[id] ([id].js) - untuk operasi individual 
+
+Fitur Utama API:
+
+Dynamic Table Support: API bisa bekerja dengan table apapun via parameter ?table=nama_table atau header X-Table-Name
+
+Default table: contacts jika tidak dispesifikasi
+
+CORS enabled untuk semua origins
+
+Security validation untuk nama table (alphanumeric + underscore, max 50 karakter) Struktur Database:
+
+Primary key: id_x (auto increment)
+
+Data columns: x_01 sampai x_20 (20 kolom fleksibel)
+
+Sort default: ORDER BY id_x DESC HTTP Methods:
+
+GET /api/contacts - ambil semua data dari table
+
+POST /api/contacts - buat record baru
+
+GET /api/contacts/[id] - ambil 1 record berdasarkan id_x
+
+PUT /api/contacts/[id] - update record berdasarkan id_x
+
+DELETE /api/contacts/[id] - hapus record berdasarkan id_x Response Format: {   "success": true,   "table": "nama_table",   "count": number,   "data": [...],   "message": "status message" } Request Body (POST/PUT): {   "x_01": "value1",   "x_02": "value2",   // ... hingga x_20 } Error Handling:
+
+Table validation
+
+Record existence check
+
+JSON parsing validation
+
+Database error handling dengan stack trace
+

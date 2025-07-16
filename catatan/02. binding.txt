@@ -1,0 +1,1 @@
+Home -> developer platform -> pilih page -> setting -> bindings -> binding +adds
