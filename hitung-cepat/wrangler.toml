@@ -1,0 +1,13 @@
+name = "hitung-cepat-worker"
+main = "worker.js"
+compatibility_date = "2024-07-18" # Updated to current date
+
+# Binding to D1 Database
+[[d1_databases]]
+binding = "DB_LATIHAN1" # This is the variable name accessible in worker.js (env.DB_LATIHAN1)
+database_name = "latihan1" # This is the name of your D1 database
+database_id = "<YOUR_D1_DATABASE_ID>" # REPLACE WITH YOUR ACTUAL D1 DATABASE ID!
+
+# Route so this Worker only responds to requests for the Hitung Cepat application
+# Ensure your domain is already connected to Cloudflare
+route = "yourdomain.com/hitung-cepat/*" # REPLACE WITH YOUR DOMAIN!

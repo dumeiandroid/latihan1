@@ -1,0 +1,25 @@
+{
+  "name": "hitung-cepat",
+  "version": "1.0.0",
+  "description": "Aplikasi game matematika Hitung Cepat",
+  "main": "worker.js",
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "dev": "wrangler dev"
+  },
+  "keywords": [
+    "cloudflare",
+    "workers",
+    "d1",
+    "matematika",
+    "game"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "itty-router": "^4.0.11"
+  },
+  "devDependencies": {
+    "wrangler": "^3.0.0"
+  }
+}
