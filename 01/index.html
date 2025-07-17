@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD Data Latihan</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+    <div class="container mt-4">
+        <h2>CRUD Data Latihan</h2>
+        
+        <!-- Form -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <form id="dataForm">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <input type="text" class="form-control" id="x_01" placeholder="Field 1">
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control" id="x_02" placeholder="Field 2">
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control" id="x_03" placeholder="Field 3">
+                        </div>
+                        <div class="col-md-3">
+                            <button type="submit" class="btn btn-primary" id="submitBtn">Save</button>
+                            <button type="button" class="btn btn-secondary" id="cancelBtn" style="display:none;">Cancel</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Table -->
+        <div class="card">
+            <div class="card-body">
+                <button class="btn btn-success mb-3" onclick="loadData()">Load Data</button>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Field 1</th>
+                            <th>Field 2</th>
+                            <th>Field 3</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dataTable">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let editId = null;
+        const tableName = 'data_latihan';
+
+        // Load data
+        function loadData() {
+            $.get(`/api/contacts?table=${tableName}`)
+                .done(function(response) {
+                    let html = '';
+                    if (response.success && response.data) {
+                        response.data.forEach(function(item) {
+                            html += `
+                                <tr>
+                                    <td>${item.id_x}</td>
+                                    <td>${item.x_01 || ''}</td>
+                                    <td>${item.x_02 || ''}</td>
+                                    <td>${item.x_03 || ''}</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-warning" onclick="editData(${item.id_x})">Edit</button>
+                                        <button class="btn btn-sm btn-danger" onclick="deleteData(${item.id_x})">Delete</button>
+                                    </td>
+                                </tr>
+                            `;
+                        });
+                    }
+                    $('#dataTable').html(html);
+                })
+                .fail(function() {
+                    alert('Error loading data');
+                });
+        }
+
+        // Save data
+        $('#dataForm').submit(function(e) {
+            e.preventDefault();
+            
+            const data = {
+                x_01: $('#x_01').val(),
+                x_02: $('#x_02').val(),
+                x_03: $('#x_03').val()
+            };
+
+            if (editId) {
+                // Update
+                $.ajax({
+                    url: `/api/contacts/${editId}?table=${tableName}`,
+                    method: 'PUT',
+                    contentType: 'application/json',
+                    data: JSON.stringify(data),
+                    success: function() {
+                        alert('Data updated');
+                        resetForm();
+                        loadData();
+                    },
+                    error: function() {
+                        alert('Error updating data');
+                    }
+                });
+            } else {
+                // Create
+                $.ajax({
+                    url: `/api/contacts?table=${tableName}`,
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(data),
+                    success: function() {
+                        alert('Data saved');
+                        resetForm();
+                        loadData();
+                    },
+                    error: function() {
+                        alert('Error saving data');
+                    }
+                });
+            }
+        });
+
+        // Edit data
+        function editData(id) {
+            $.get(`/api/contacts/${id}?table=${tableName}`)
+                .done(function(response) {
+                    if (response.success) {
+                        const data = response.data;
+                        $('#x_01').val(data.x_01 || '');
+                        $('#x_02').val(data.x_02 || '');
+                        $('#x_03').val(data.x_03 || '');
+                        editId = id;
+                        $('#submitBtn').text('Update');
+                        $('#cancelBtn').show();
+                    }
+                })
+                .fail(function() {
+                    alert('Error loading data for edit');
+                });
+        }
+
+        // Delete data
+        function deleteData(id) {
+            if (confirm('Delete this data?')) {
+                $.ajax({
+                    url: `/api/contacts/${id}?table=${tableName}`,
+                    method: 'DELETE',
+                    success: function() {
+                        alert('Data deleted');
+                        loadData();
+                    },
+                    error: function() {
+                        alert('Error deleting data');
+                    }
+                });
+            }
+        }
+
+        // Reset form
+        function resetForm() {
+            $('#dataForm')[0].reset();
+            editId = null;
+            $('#submitBtn').text('Save');
+            $('#cancelBtn').hide();
+        }
+
+        // Cancel edit
+        $('#cancelBtn').click(function() {
+            resetForm();
+        });
+
+        // Auto load on page ready
+        $(document).ready(function() {
+            loadData();
+        });
+    </script>
+</body>
+</html>
