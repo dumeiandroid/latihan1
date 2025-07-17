@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Aplikasi Hitung Cepat (Latihan)</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css"> </head>
+<body class="d-flex align-items-center justify-content-center" style="min-height: 100vh; background-color: #f8f9fa;">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-5">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white text-center">
+                        <h4 class="mb-0">Login Aplikasi Hitung Cepat</h4>
+                    </div>
+                    <div class="card-body">
+                        <form id="loginForm">
+                            <div class="mb-3">
+                                <label for="username" class="form-label">Username</label>
+                                <input type="text" class="form-control" id="username" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="password" required>
+                            </div>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary">Login</button>
+                            </div>
+                            <div id="loginMessage" class="mt-3 text-center"></div>
+                        </form>
+                    </div>
+                    <div class="card-footer text-center text-muted">
+                        <small>Ini adalah sistem login untuk latihan, tidak direkomendasikan untuk produksi.</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sha256/0.9.0/sha256.min.js"></script> 
+    <script>
+        // Sesuaikan API_BASE_URL jika Cloudflare Pages Project Anda di-deploy di sub-path
+        // Jika diakses langsung di root domain (misal: latihan1.pages.dev/), maka cukup '/api'
+        const API_BASE_URL = '/api';
+        const CONTACTS_API_URL = `${API_BASE_URL}/contacts`;
+        const USERS_TABLE_NAME = 'users'; // Nama tabel untuk data pengguna
+
+        $(document).ready(function() {
+            // Cek apakah user sudah login (simulasi sesi dari localStorage)
+            const loggedInUser = localStorage.getItem('loggedInUser');
+            if (loggedInUser) {
+                // Jika ya, langsung arahkan ke halaman utama aplikasi
+                window.location.href = 'app.html';
+            }
+
+            $('#loginForm').on('submit', function(e) {
+                e.preventDefault();
+                const username = $('#username').val();
+                const password = $('#password').val(); // Password mentah dari input
+                const messageDiv = $('#loginMessage');
+
+                messageDiv.empty().removeClass('alert alert-danger alert-success');
+
+                // ---- AWAS! Bagian ini TIDAK AMAN untuk produksi ----
+                // Mengambil SEMUA data user ke frontend untuk verifikasi
+                $.get(`${CONTACTS_API_URL}?table=${USERS_TABLE_NAME}`)
+                    .done(function(response) {
+                        if (response.success && response.data) {
+                            const users = response.data;
+                            let authenticatedUser = null;
+
+                            for (const user of users) {
+                                // Contoh: x_01 = username, x_02 = password_hash
+                                // Penting: Anda harus memastikan password_hash di D1 sudah SHA256 dari password aslinya
+                                const hashedPasswordInput = sha256(password); // Hash input password di frontend (client-side)
+
+                                // Membandingkan username dan password_hash yang di-hash di frontend
+                                if (user.x_01 === username && user.x_02 === hashedPasswordInput) {
+                                    authenticatedUser = {
+                                        id: user.id_x,
+                                        username: user.x_01,
+                                        role: user.x_03 || 'user' // Jika ada kolom x_03 untuk role
+                                    };
+                                    break; // User ditemukan dan terautentikasi
+                                }
+                            }
+
+                            if (authenticatedUser) {
+                                messageDiv.text('Login berhasil! Mengarahkan...').addClass('alert alert-success');
+                                // Simpan info user ke localStorage (simulasi sesi)
+                                localStorage.setItem('loggedInUser', JSON.stringify(authenticatedUser));
+                                window.location.href = 'app.html'; // Redirect ke halaman utama aplikasi
+                            } else {
+                                messageDiv.text('Username atau password salah.').addClass('alert alert-danger');
+                            }
+                        } else {
+                            messageDiv.text('Gagal memuat data pengguna untuk verifikasi.').addClass('alert alert-danger');
+                        }
+                    })
+                    .fail(function(jqXHR) {
+                        let errorMessage = 'Terjadi kesalahan saat menghubungi server.';
+                        try {
+                            const errorResponse = JSON.parse(jqXHR.responseText);
+                            errorMessage = errorResponse.message || errorMessage;
+                        } catch (e) { /* ignore */ }
+                        messageDiv.text(errorMessage).addClass('alert alert-danger');
+                        console.error('Login error (frontend GET):', jqXHR.responseText);
+                    });
+                // ----------------------------------------------------
+            });
+        });
+    </script>
+</body>
+</html>

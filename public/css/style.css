@@ -1,0 +1,165 @@
+/* public/css/style.css */
+
+/* General Body Styling */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f4f7f6; /* Light gray background */
+}
+
+/* Header Styling */
+header {
+    background-color: #007bff !important; /* Bootstrap primary color */
+    color: #fff;
+    padding: 1.5rem 0; /* More padding for a softer look */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle shadow */
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+header nav .btn {
+    border-radius: 0.3rem; /* Slightly rounded buttons */
+    transition: background-color 0.3s ease; /* Smooth hover effect */
+}
+
+/* Main Content Area */
+main.container {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+}
+
+/* Section Styling */
+section {
+    background-color: #fff;
+    border-radius: 0.75rem; /* Rounded corners for sections */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08); /* More prominent shadow for sections */
+    padding: 2.5rem;
+    margin-bottom: 2rem;
+}
+
+section h3 {
+    color: #0056b3; /* Darker blue for headings */
+    margin-bottom: 1.5rem;
+    font-weight: 500;
+    border-bottom: 2px solid #e9ecef; /* Underline effect */
+    padding-bottom: 0.75rem;
+}
+
+/* Card Styling (for login form) */
+.card {
+    border: none; /* Remove default bootstrap border */
+    border-radius: 0.75rem; /* Match section border-radius */
+    overflow: hidden; /* Ensures content stays within rounded corners */
+}
+
+.card-header {
+    border-bottom: none; /* Remove header border */
+    font-size: 1.25rem;
+    font-weight: 500;
+    background-color: #007bff !important; /* Consistent primary color */
+    color: #fff;
+    padding: 1.5rem;
+}
+
+/* Form Elements */
+.form-label {
+    font-weight: 500;
+    color: #555;
+    margin-bottom: 0.5rem;
+}
+
+.form-control {
+    border-radius: 0.5rem; /* Rounded input fields */
+    border: 1px solid #ced4da;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+}
+
+.form-control:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25);
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+    border-radius: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #004085;
+    transform: translateY(-1px); /* Slight lift effect */
+}
+
+.btn-danger, .btn-secondary, .btn-info {
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+}
+.btn-danger:hover, .btn-secondary:hover, .btn-info:hover {
+    transform: translateY(-1px);
+}
+
+/* Messages */
+#loginMessage, #formMessage {
+    padding: 0.75rem 1.25rem;
+    margin-top: 1rem;
+    border-radius: 0.5rem;
+}
+.alert-success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+.alert-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+
+/* Table Styling */
+.table {
+    border-collapse: separate; /* Allows border-radius on cells */
+    border-spacing: 0;
+    width: 100%;
+}
+
+.table thead th {
+    background-color: #e9ecef; /* Light header background */
+    border-bottom: 2px solid #dee2e6;
+    font-weight: 600;
+    padding: 1rem;
+    vertical-align: middle;
+}
+
+.table tbody td {
+    padding: 1rem;
+    vertical-align: middle;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #f8f9fa; /* Lighter stripe */
+}
+
+/* Specific to Login Page Background */
+body.d-flex.align-items-center.justify-content-center {
+    background-image: linear-gradient(to right, #6a11cb 0%, #2575fc 100%); /* Blue-purple gradient */
+}
+
+/* Footer Styling */
+footer {
+    background-color: #212529 !important; /* Darker grey */
+    color: #adb5bd; /* Lighter text */
+    padding: 1.5rem 0;
+    margin-top: 3rem;
+    font-size: 0.9rem;
+}
