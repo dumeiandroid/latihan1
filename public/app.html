@@ -5,7 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aplikasi Hitung Cepat (Latihan)</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" href="css/style.css"> </head>
+    <link rel="stylesheet" href="css/style.css"> 
+    <style>
+        /* CSS tambahan untuk elemen game */
+        #game-area {
+            display: none; /* Sembunyikan area game sampai permainan dimulai */
+        }
+        .answer-button {
+            width: 100%;
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+            padding: 15px;
+            border-radius: 0.5rem;
+        }
+        #result-message {
+            min-height: 30px;
+            font-weight: bold;
+            text-align: center;
+        }
+        #timer, #current-score {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #007bff;
+        }
+        #game-controls .btn {
+            font-size: 1.2rem;
+            padding: 10px 20px;
+        }
+    </style>
+</head>
 <body>
 
     <header class="bg-primary text-white py-3">
@@ -20,29 +48,59 @@
     </header>
 
     <main class="container my-5">
-        <section id="calculation-app" class="bg-light p-4 rounded mb-5">
-            <h3 class="mb-4">Latihan Penjumlahan</h3>
-            <form id="calculationForm">
-                <div class="mb-3">
-                    <label for="number1" class="form-label">Angka Pertama:</label>
-                    <input type="number" class="form-control" id="number1" required>
-                </div>
-                <div class="mb-3">
-                    <label for="number2" class="form-label">Angka Kedua:</label>
-                    <input type="number" class="form-control" id="number2" required>
-                </div>
-                
-                <button type="submit" class="btn btn-primary">Hitung & Simpan Skor</button>
-                <div id="calculationResult" class="mt-3 fs-4 fw-bold"></div>
-                <div id="formMessage" class="mt-3"></div>
-            </form>
+        <section id="game-setup" class="bg-light p-4 rounded mb-5">
+            <h3 class="mb-4">Pengaturan Permainan Baru</h3>
+            <div class="mb-3">
+                <label for="operation-select" class="form-label">Pilih Operasi:</label>
+                <select class="form-select" id="operation-select">
+                    <option value="addition">Penjumlahan (+)</option>
+                    <option value="subtraction">Pengurangan (-)</option>
+                    <option value="multiplication">Perkalian (x)</option>
+                    <option value="division">Pembagian (:)</option>
+                    <option value="exponentiation">Pangkat (^)</option>
+                </select>
+            </div>
+            <div class="mb-4">
+                <label for="difficulty-select" class="form-label">Tingkat Kesulitan Digit:</label>
+                <select class="form-select" id="difficulty-select">
+                    <option value="1">1 Digit</option>
+                    <option value="2">2 Digit</option>
+                </select>
+            </div>
+            <button id="startGameBtn" class="btn btn-success w-100">Mulai Permainan</button>
+        </section>
+
+        <section id="game-area" class="bg-white p-4 rounded mb-5 text-center">
+            <h3 class="mb-4">Waktu Tersisa: <span id="timer">00:60</span> | Skor: <span id="current-score">0</span></h3>
+            <div class="card p-4 mb-4 shadow-sm">
+                <p class="fs-1 fw-bold mb-4" id="question">Loading soal...</p>
+                <div id="answer-buttons" class="row gx-3">
+                    </div>
+            </div>
+            <div id="result-message" class="mb-3"></div>
+            <button id="stopGameBtn" class="btn btn-danger mt-3" style="display:none;">Hentikan Permainan</button>
+        </section>
+
+        <section id="game-over-summary" class="bg-light p-4 rounded mb-5" style="display:none;">
+            <h3 class="mb-4">Permainan Selesai!</h3>
+            <p class="fs-4">Skor Akhir Anda: <span id="final-score" class="fw-bold text-primary">0</span></p>
+            <div id="summary-messages"></div>
+            <div class="d-grid gap-2 mt-4">
+                <button id="playAgainBtn" class="btn btn-success">Mulai Permainan Baru</button>
+                <a href="ranking.html" class="btn btn-info">Lihat Ranking Global</a>
+            </div>
         </section>
 
         <section id="user-stats" class="mt-5 bg-info bg-opacity-10 p-4 rounded">
             <h3>Statistik Anda</h3>
-            <p><strong>Highest Score Penjumlahan:</strong> <span id="highestSumScore">0</span></p>
-            <p><strong>Jumlah Latihan Penjumlahan:</strong> <span id="totalSumCalcs">0</span></p>
-            <p><strong>Terakhir Latihan Penjumlahan:</strong> <span id="lastSumCalcTime">N/A</span></p>
+            <p><strong>Username:</strong> <span id="statsUsername"></span></p>
+            <p><strong>Highest Score (Total):</strong> <span id="highestOverallScore">0</span></p>
+            <p><strong>Total Permainan:</strong> <span id="totalGamesPlayed">0</span></p>
+            <p><strong>Terakhir Bermain:</strong> <span id="lastGameTime">N/A</span></p>
+            <hr>
+            <h4 class="mb-3">Statistik Per Operasi:</h4>
+            <ul class="list-group" id="operationStatsList">
+                </ul>
             <button class="btn btn-secondary btn-sm mt-3" onclick="loadUserStats()">Refresh Statistik</button>
         </section>
     </main>
@@ -57,176 +115,378 @@
         const API_BASE_URL = '/api'; 
         const CONTACTS_API_URL = `${API_BASE_URL}/contacts`; 
         const USERS_TABLE_NAME = 'users';
+        const GAME_DURATION = 60; // Durasi permainan dalam detik
 
-        let currentUser = null; // Variabel untuk menyimpan data user yang sedang login
+        let currentUser = null;
+        let gameTimer;
+        let timeLeft = GAME_DURATION;
+        let currentScore = 0;
+        let currentOperation = '';
+        let currentDifficulty = '';
+        let correctAnswer = 0; // Jawaban benar untuk soal saat ini
 
-        // Fungsi untuk memeriksa status login dan mengarahkan jika belum login
-        function checkLogin() {
-            const loggedInUserStr = localStorage.getItem('loggedInUser');
-            if (loggedInUserStr) {
-                currentUser = JSON.parse(loggedInUserStr);
-                $('#welcomeMessage').text(`Halo, ${currentUser.username}!`);
-                loadUserStats(); // Muat statistik user setelah login
-            } else {
-                window.location.href = 'index.html'; // Arahkan ke halaman login jika belum login
-            }
+        // --- Fungsi Helper Game ---
+        function getRandomNumber(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
         }
 
-        // Fungsi untuk memuat statistik spesifik user dari kolom x_04
-        function loadUserStats() {
-            if (!currentUser) return; // Pastikan ada user yang login
+        function generateQuestion(operation, difficulty) {
+            let num1, num2, result, questionText;
+            const numOptions = 4; // Jumlah pilihan jawaban
+            let answers = [];
 
-            // ---- AWAS! Bagian ini juga kurang efisien untuk produksi ----
-            // Mengambil SEMUA data user, lalu mencari dan mengolah di frontend
+            const maxDigit1 = (difficulty === '1') ? 9 : 99;
+            const minDigit1 = (difficulty === '1') ? 1 : 10;
+            const maxDigit2 = (difficulty === '1') ? 9 : 99;
+            const minDigit2 = (difficulty === '1') ? 1 : 10;
+
+            do { // Loop untuk memastikan soal valid (misal: pembagian tidak menghasilkan desimal panjang)
+                num1 = getRandomNumber(minDigit1, maxDigit1);
+                num2 = getRandomNumber(minDigit2, maxDigit2);
+
+                if (operation === 'addition') {
+                    result = num1 + num2;
+                    questionText = `${num1} + ${num2} = ?`;
+                } else if (operation === 'subtraction') {
+                    // Pastikan hasil tidak negatif untuk latihan dasar
+                    if (num1 < num2) [num1, num2] = [num2, num1]; // Swap jika num1 lebih kecil
+                    result = num1 - num2;
+                    questionText = `${num1} - ${num2} = ?`;
+                } else if (operation === 'multiplication') {
+                    result = num1 * num2;
+                    questionText = `${num1} x ${num2} = ?`;
+                } else if (operation === 'division') {
+                    // Pastikan num1 habis dibagi num2 dan hasilnya bukan desimal atau 0
+                    if (num2 === 0) num2 = getRandomNumber(minDigit2, maxDigit2); // Hindari pembagian nol
+                    if (num1 % num2 !== 0 || num1 / num2 === 0) {
+                        // Cari num1 baru yang habis dibagi num2
+                        num1 = num2 * getRandomNumber(1, (difficulty === '1' ? 9 : 10)); // Batasi hasil pembagian
+                        if (num1 === 0) num1 = num2; // Hindari soal 0 / X
+                    }
+                    result = num1 / num2;
+                    questionText = `${num1} : ${num2} = ?`;
+                } else if (operation === 'exponentiation') {
+                    num2 = getRandomNumber(2, (difficulty === '1' ? 3 : 4)); // Pangkat kecil untuk menghindari angka terlalu besar
+                    if (difficulty === '2' && num1 > 10) num1 = getRandomNumber(2,10); // Batasi base untuk 2 digit
+                    
+                    result = Math.pow(num1, num2);
+                    questionText = `${num1}^${num2} = ?`;
+                }
+            } while (isNaN(result) || !isFinite(result) || result < 0 || (operation === 'division' && (result === 0 || !Number.isInteger(result)))); // Ulangi jika hasil tidak valid
+
+            correctAnswer = result;
+            answers.push(result); // Tambahkan jawaban benar
+
+            // Generate jawaban salah
+            while (answers.length < numOptions) {
+                let wrongAnswer;
+                let deviation = getRandomNumber(-10, 10); // Penyimpangan kecil
+                if (operation === 'multiplication' || operation === 'exponentiation') {
+                    // Untuk perkalian/pangkat, penyimpangan bisa lebih besar
+                    deviation = getRandomNumber(-Math.max(5, Math.floor(result * 0.1)), Math.max(5, Math.floor(result * 0.1)));
+                    if (deviation === 0) deviation = 1; // Pastikan bukan 0
+                }
+                
+                wrongAnswer = result + deviation;
+
+                // Pastikan jawaban salah tidak sama dengan jawaban benar atau jawaban salah lainnya
+                if (answers.includes(wrongAnswer) || wrongAnswer < 0) {
+                    continue;
+                }
+                answers.push(wrongAnswer);
+            }
+
+            // Acak urutan jawaban
+            answers = answers.sort(() => Math.random() - 0.5);
+
+            return { questionText, answers };
+        }
+
+        function displayQuestion() {
+            const { questionText, answers } = generateQuestion(currentOperation, currentDifficulty);
+            $('#question').text(questionText);
+            $('#answer-buttons').empty();
+
+            answers.forEach(ans => {
+                const colSize = 12 / answers.length; // Contoh: 4 jawaban -> col-3
+                const button = `<div class="col-6 col-md-${colSize} mb-2">
+                                    <button class="btn btn-outline-primary answer-button" data-value="${ans}">${ans}</button>
+                                </div>`;
+                $('#answer-buttons').append(button);
+            });
+        }
+
+        function checkAnswer(selectedAnswer) {
+            let messageDiv = $('#result-message');
+            if (parseFloat(selectedAnswer) === correctAnswer) {
+                currentScore += 10; // Tambah skor jika benar
+                messageDiv.text('Benar!').css('color', 'green');
+            } else {
+                messageDiv.text(`Salah! Jawaban benar adalah ${correctAnswer}`).css('color', 'red');
+            }
+            $('#current-score').text(currentScore);
+            // Soal berikutnya setelah jeda singkat
+            setTimeout(() => {
+                messageDiv.empty();
+                displayQuestion();
+            }, 500); 
+        }
+
+        function startGame() {
+            currentOperation = $('#operation-select').val();
+            currentDifficulty = $('#difficulty-select').val();
+            currentScore = 0;
+            timeLeft = GAME_DURATION;
+
+            $('#game-setup').hide();
+            $('#game-over-summary').hide();
+            $('#game-area').show();
+            $('#stopGameBtn').show();
+            $('#current-score').text(currentScore);
+            $('#timer').text(`00:${GAME_DURATION < 10 ? '0' : ''}${GAME_DURATION}`);
+            $('#result-message').empty();
+
+            displayQuestion();
+            startTimer();
+        }
+
+        function startTimer() {
+            clearInterval(gameTimer); // Pastikan timer sebelumnya berhenti
+            gameTimer = setInterval(() => {
+                timeLeft--;
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                $('#timer').text(`${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`);
+
+                if (timeLeft <= 0) {
+                    endGame();
+                }
+            }, 1000);
+        }
+
+        function endGame() {
+            clearInterval(gameTimer);
+            $('#game-area').hide();
+            $('#stopGameBtn').hide();
+            $('#game-over-summary').show();
+            $('#final-score').text(currentScore);
+            saveGameResults(); // Simpan skor ke database
+        }
+
+        // --- Simpan Hasil Permainan ke D1 ---
+        function saveGameResults() {
+            if (!currentUser) {
+                alert('Tidak bisa menyimpan skor: Anda tidak login.');
+                return;
+            }
+
+            // Ambil data user saat ini untuk update (inefisien tapi sesuai batasan)
             $.get(`${CONTACTS_API_URL}?table=${USERS_TABLE_NAME}`)
                 .done(function(response) {
                     if (response.success && response.data) {
                         const users = response.data;
-                        // Cari profil user yang sedang login
+                        let userToUpdate = users.find(user => user.id_x === currentUser.id);
+
+                        if (!userToUpdate) {
+                            alert('Pengguna tidak ditemukan untuk update skor.');
+                            return;
+                        }
+
+                        let currentScoreData = {};
+                        if (userToUpdate.x_04) {
+                            try {
+                                currentScoreData = JSON.parse(userToUpdate.x_04);
+                            } catch (e) {
+                                console.warn('JSON tidak valid di x_04 for user:', currentUser.id, e);
+                                currentScoreData = {}; 
+                            }
+                        }
+
+                        // Inisialisasi struktur jika belum ada
+                        if (!currentScoreData.games) {
+                            currentScoreData.games = {};
+                        }
+                        if (!currentScoreData.overall) {
+                            currentScoreData.overall = {
+                                highest_score: 0,
+                                total_games: 0,
+                                last_played: null
+                            };
+                        }
+
+                        // Update statistik per operasi
+                        const opKey = currentOperation; // 'addition', 'multiplication', etc.
+                        if (!currentScoreData.games[opKey]) {
+                            currentScoreData.games[opKey] = {
+                                highest_score: 0,
+                                total_plays: 0,
+                                last_play_time: null
+                            };
+                        }
+
+                        if (currentScore > currentScoreData.games[opKey].highest_score) {
+                            currentScoreData.games[opKey].highest_score = currentScore;
+                        }
+                        currentScoreData.games[opKey].total_plays++;
+                        currentScoreData.games[opKey].last_play_time = new Date().toISOString();
+
+                        // Update statistik keseluruhan (overall)
+                        if (currentScore > currentScoreData.overall.highest_score) {
+                            currentScoreData.overall.highest_score = currentScore;
+                        }
+                        currentScoreData.overall.total_games++;
+                        currentScoreData.overall.last_played = new Date().toISOString();
+
+                        // Kirim update ke backend
+                        $.ajax({
+                            url: `${CONTACTS_API_URL}/${currentUser.id}?table=${USERS_TABLE_NAME}`,
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            data: JSON.stringify({
+                                x_04: JSON.stringify(currentScoreData) // Kirim sebagai string JSON
+                            }),
+                            success: function(updateResponse) {
+                                if (updateResponse.success) {
+                                    $('#summary-messages').text('Skor berhasil disimpan!').addClass('alert alert-success');
+                                    loadUserStats(); // Muat ulang statistik user setelah menyimpan
+                                } else {
+                                    $('#summary-messages').text('Gagal menyimpan skor: ' + (updateResponse.message || 'Terjadi kesalahan.')).addClass('alert alert-danger');
+                                }
+                            },
+                            error: function(jqXHR) {
+                                let errorMessage = 'Terjadi kesalahan saat mengirim update skor.';
+                                try {
+                                    const errorResponse = JSON.parse(jqXHR.responseText);
+                                    errorMessage = errorResponse.message || errorMessage;
+                                } catch (e) { /* ignore */ }
+                                console.error('AJAX Error (update score):', jqXHR.responseText);
+                                $('#summary-messages').text(errorMessage).addClass('alert alert-danger');
+                            }
+                        });
+                    } else {
+                        $('#summary-messages').text('Gagal memuat data pengguna untuk update skor.').addClass('alert alert-danger');
+                    }
+                })
+                .fail(function(jqXHR) {
+                    let errorMessage = 'Terjadi kesalahan saat mengambil data pengguna untuk update skor.';
+                    try {
+                        const errorResponse = JSON.parse(jqXHR.responseText);
+                        errorMessage = errorResponse.message || errorMessage;
+                    } catch (e) { /* ignore */ }
+                    console.error('AJAX Error (initial GET for update score):', jqXHR.responseText);
+                    $('#summary-messages').text(errorMessage).addClass('alert alert-danger');
+                });
+        }
+
+        // --- Load Statistik User dari D1 (untuk tampilan awal dan setelah game) ---
+        function loadUserStats() {
+            if (!currentUser) return;
+
+            $('#statsUsername').text(currentUser.username); // Tampilkan username di statistik
+
+            $.get(`${CONTACTS_API_URL}?table=${USERS_TABLE_NAME}`)
+                .done(function(response) {
+                    if (response.success && response.data) {
+                        const users = response.data;
                         const userProfile = users.find(user => user.id_x === currentUser.id);
 
                         if (userProfile && userProfile.x_04) {
                             try {
-                                // Parsing data JSON dari kolom x_04
                                 const scoreData = JSON.parse(userProfile.x_04);
-                                $('#highestSumScore').text(scoreData.highest_score_sum || 0);
-                                $('#totalSumCalcs').text(scoreData.total_calculations_sum || 0);
-                                $('#lastSumCalcTime').text(scoreData.last_calc_sum_time ? new Date(scoreData.last_calc_sum_time).toLocaleString() : 'N/A');
+                                
+                                // Statistik Keseluruhan
+                                $('#highestOverallScore').text(scoreData.overall?.highest_score || 0);
+                                $('#totalGamesPlayed').text(scoreData.overall?.total_games || 0);
+                                $('#lastGameTime').text(scoreData.overall?.last_played ? new Date(scoreData.overall.last_played).toLocaleString() : 'N/A');
+
+                                // Statistik Per Operasi
+                                let opStatsHtml = '';
+                                const operationsMap = {
+                                    'addition': 'Penjumlahan',
+                                    'subtraction': 'Pengurangan',
+                                    'multiplication': 'Perkalian',
+                                    'division': 'Pembagian',
+                                    'exponentiation': 'Pangkat'
+                                };
+
+                                for (const op in operationsMap) {
+                                    const stats = scoreData.games?.[op];
+                                    const highestScore = stats?.highest_score || 0;
+                                    const totalPlays = stats?.total_plays || 0;
+                                    const lastPlayTime = stats?.last_play_time ? new Date(stats.last_play_time).toLocaleString() : 'N/A';
+                                    opStatsHtml += `
+                                        <li class="list-group-item">
+                                            <strong>${operationsMap[op]}:</strong>
+                                            Highest: ${highestScore} | Total Plays: ${totalPlays} | Last: ${lastPlayTime}
+                                        </li>
+                                    `;
+                                }
+                                $('#operationStatsList').html(opStatsHtml);
+
                             } catch (e) {
-                                console.warn('JSON tidak valid di x_04 untuk pengguna saat ini:', e);
+                                console.warn('Invalid JSON in x_04 for current user:', e);
                                 alert('Data statistik pengguna tidak valid atau rusak.');
                             }
                         } else {
                             // Reset tampilan jika tidak ada data skor
-                            $('#highestSumScore').text(0);
-                            $('#totalSumCalcs').text(0);
-                            $('#lastSumCalcTime').text('N/A');
+                            $('#highestOverallScore').text(0);
+                            $('#totalGamesPlayed').text(0);
+                            $('#lastGameTime').text('N/A');
+                            $('#operationStatsList').html('<li class="list-group-item text-muted">Belum ada statistik permainan.</li>');
                         }
                     }
                 })
                 .fail(function(jqXHR) {
-                    console.error('Error memuat statistik user:', jqXHR.responseText);
+                    console.error('Error loading user stats:', jqXHR.responseText);
                     alert('Gagal memuat statistik pengguna.');
                 });
-            // -----------------------------------------------------------
         }
 
+        // --- Inisialisasi dan Event Listener ---
         $(document).ready(function() {
-            checkLogin(); // Panggil fungsi cek login saat halaman app.html dimuat
+            // Check login status on page load
+            const loggedInUserStr = localStorage.getItem('loggedInUser');
+            if (loggedInUserStr) {
+                currentUser = JSON.parse(loggedInUserStr);
+                $('#welcomeMessage').text(`Halo, ${currentUser.username}!`);
+                loadUserStats(); // Load user's scores on login
+            } else {
+                window.location.href = 'index.html'; // Redirect to login if not logged in
+            }
 
-            // Tombol Logout
+            // Logout Button
             $('#logoutBtn').click(function() {
-                localStorage.removeItem('loggedInUser'); // Hapus info login dari localStorage
-                window.location.href = 'index.html'; // Arahkan kembali ke halaman login
+                localStorage.removeItem('loggedInUser');
+                window.location.href = 'index.html';
             });
 
-            // Form Perhitungan
-            $('#calculationForm').on('submit', function(e) {
-                e.preventDefault(); 
-                if (!currentUser) { // Pastikan user sudah login sebelum menyimpan skor
-                    alert('Anda harus login untuk menyimpan skor.');
-                    return;
+            // Start Game Button
+            $('#startGameBtn').click(startGame);
+
+            // Stop Game Button
+            $('#stopGameBtn').click(function() {
+                if (confirm('Apakah Anda yakin ingin menghentikan permainan? Skor saat ini tidak akan disimpan.')) {
+                    clearInterval(gameTimer);
+                    $('#game-area').hide();
+                    $('#stopGameBtn').hide();
+                    $('#game-over-summary').hide(); // Sembunyikan summary jika dihentikan manual
+                    $('#game-setup').show(); // Kembali ke setup
+                    $('#result-message').empty();
                 }
+            });
 
-                const form = $(this);
-                const messageDiv = $('#formMessage');
-                const resultDiv = $('#calculationResult');
-                
-                messageDiv.empty().removeClass('alert alert-success alert-danger');
-                resultDiv.empty();
+            // Play Again Button
+            $('#playAgainBtn').click(function() {
+                $('#game-over-summary').hide();
+                $('#game-setup').show();
+            });
 
-                const num1 = parseFloat($('#number1').val());
-                const num2 = parseFloat($('#number2').val());
-
-                if (isNaN(num1) || isNaN(num2)) {
-                    messageDiv.text('Harap masukkan kedua angka yang valid.').addClass('alert alert-danger');
-                    return;
-                }
-                
-                const result = num1 + num2; // Lakukan perhitungan penjumlahan
-                
-                // ---- Logika update skor di frontend ----
-                // Ambil data user saat ini (lagi-lagi, tidak efisien tapi sesuai permintaan tanpa backend baru)
-                $.get(`${CONTACTS_API_URL}?table=${USERS_TABLE_NAME}`)
-                    .done(function(response) {
-                        if (response.success && response.data) {
-                            const users = response.data;
-                            // Temukan user yang sedang login di data yang diambil
-                            let userToUpdate = users.find(user => user.id_x === currentUser.id);
-
-                            if (!userToUpdate) {
-                                alert('Pengguna tidak ditemukan untuk update skor.');
-                                return;
-                            }
-
-                            let currentScoreData = {};
-                            // Coba parsing JSON dari x_04, jika ada dan valid
-                            if (userToUpdate.x_04) {
-                                try {
-                                    currentScoreData = JSON.parse(userToUpdate.x_04);
-                                } catch (e) {
-                                    console.warn('JSON tidak valid di x_04 untuk user:', currentUser.id, e);
-                                    currentScoreData = {}; // Reset jika JSON rusak
-                                }
-                            }
-
-                            const operationType = 'sum'; // Untuk saat ini hanya penjumlahan
-                            const scoreKey = `highest_score_${operationType}`; // Kunci untuk skor tertinggi
-                            const timeKey = `last_calc_${operationType}_time`; // Kunci untuk waktu kalkulasi terakhir
-                            const countKey = `total_calculations_${operationType}`; // Kunci untuk total kalkulasi
-
-                            // Update skor tertinggi jika hasil saat ini lebih tinggi
-                            if (!currentScoreData[scoreKey] || result > currentScoreData[scoreKey]) {
-                                currentScoreData[scoreKey] = result;
-                            }
-                            currentScoreData[timeKey] = new Date().toISOString(); // Update waktu terakhir
-                            currentScoreData[countKey] = (currentScoreData[countKey] || 0) + 1; // Tambah jumlah kalkulasi
-
-                            // Kirim update ke backend menggunakan metode PUT pada ID user
-                            $.ajax({
-                                url: `${CONTACTS_API_URL}/${currentUser.id}?table=${USERS_TABLE_NAME}`,
-                                method: 'PUT',
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                },
-                                data: JSON.stringify({
-                                    x_04: JSON.stringify(currentScoreData) // Kirim kembali objek skor sebagai string JSON
-                                    // Kolom lain (x_01, x_02, x_03) tidak perlu dikirim kecuali jika ingin diupdate
-                                }),
-                                success: function(updateResponse) {
-                                    if (updateResponse.success) {
-                                        messageDiv.text('Perhitungan berhasil disimpan!').addClass('alert alert-success');
-                                        resultDiv.text('Hasil: ' + result); 
-                                        form[0].reset(); // Reset form
-                                        loadUserStats(); // Muat ulang statistik user setelah menyimpan
-                                    } else {
-                                        messageDiv.text('Gagal menyimpan perhitungan: ' + (updateResponse.message || 'Terjadi kesalahan.')).addClass('alert alert-danger');
-                                    }
-                                },
-                                error: function(jqXHR) {
-                                    let errorMessage = 'Terjadi kesalahan saat mengirim update perhitungan.';
-                                    try {
-                                        const errorResponse = JSON.parse(jqXHR.responseText);
-                                        errorMessage = errorResponse.message || errorMessage;
-                                    } catch (e) { /* ignore */ }
-                                    console.error('AJAX Error (update user data):', jqXHR.responseText);
-                                    messageDiv.text(errorMessage).addClass('alert alert-danger');
-                                }
-                            });
-                        } else {
-                            messageDiv.text('Gagal memuat data pengguna untuk update skor.').addClass('alert alert-danger');
-                        }
-                    })
-                    .fail(function(jqXHR) {
-                        let errorMessage = 'Terjadi kesalahan saat mengambil data pengguna untuk update skor.';
-                        try {
-                            const errorResponse = JSON.parse(jqXHR.responseText);
-                            errorMessage = errorResponse.message || errorMessage;
-                        } catch (e) { /* ignore */ }
-                        console.error('AJAX Error (initial GET for update):', jqXHR.responseText);
-                        messageDiv.text(errorMessage).addClass('alert alert-danger');
-                    });
-                // ------------------------------------------
+            // Event handler untuk klik tombol jawaban
+            $('#answer-buttons').on('click', '.answer-button', function() {
+                const selectedAnswer = $(this).data('value');
+                checkAnswer(selectedAnswer);
             });
         });
     </script>

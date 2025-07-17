@@ -5,7 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ranking Global (Latihan)</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" href="css/style.css"> </head>
+    <link rel="stylesheet" href="css/style.css"> 
+    <style>
+        .gold-medal, .silver-medal, .bronze-medal {
+            font-size: 1.5rem;
+            margin-right: 5px;
+        }
+        .gold-medal { color: gold; }
+        .silver-medal { color: silver; }
+        .bronze-medal { color: #cd7f32; /* bronze color */ }
+
+        .user-highlight {
+            background-color: #e0f7fa; /* Light blue background for current user */
+            font-weight: bold;
+        }
+        .table-ranking th, .table-ranking td {
+            vertical-align: middle;
+        }
+    </style>
+</head>
 <body>
 
     <header class="bg-primary text-white py-3">
@@ -19,21 +37,30 @@
 
     <main class="container my-5">
         <section id="global-ranking">
-            <h3 class="mb-4">Top Scores (Penjumlahan)</h3>
+            <h3 class="mb-4">Top Scores (Semua Operasi)</h3>
             <button class="btn btn-info mb-3" onclick="loadRankingData()">Refresh Ranking</button>
-            <table class="table table-striped table-bordered">
+            
+            <div id="top-3-ranking" class="row mb-4 justify-content-center">
+                </div>
+
+            <table class="table table-striped table-bordered table-ranking">
                 <thead>
                     <tr>
                         <th>Rank</th>
                         <th>Username</th>
-                        <th>Highest Score</th>
-                        <th>Terakhir Latihan</th>
+                        <th>Highest Overall Score</th>
+                        <th>Terakhir Bermain</th>
                     </tr>
                 </thead>
                 <tbody id="rankingTable">
-                    <tr><td colspan="4" class="text-center">Tekan 'Refresh Ranking' untuk memuat.</td></tr>
+                    <tr><td colspan="4" class="text-center">Memuat data ranking...</td></tr>
                 </tbody>
             </table>
+
+            <div id="currentUserRank" class="mt-4 p-3 border rounded text-center" style="display:none;">
+                <h4 class="mb-3">Peringkat Anda:</h4>
+                <p class="fs-5" id="userRankMessage"></p>
+            </div>
         </section>
     </main>
 
@@ -49,20 +76,43 @@
         const CONTACTS_API_URL = `${API_BASE_URL}/contacts`; 
         const USERS_TABLE_NAME = 'users';
 
+        let currentUser = null; // Untuk mengetahui user yang sedang login
+
+        // Fungsi untuk mengambil skor tertinggi keseluruhan dari data x_04
+        function getOverallHighestScore(scoreData) {
+            if (scoreData && scoreData.overall && typeof scoreData.overall.highest_score === 'number') {
+                return scoreData.overall.highest_score;
+            }
+            return 0; // Default jika tidak ada atau invalid
+        }
+
         // Fungsi untuk memuat dan menampilkan data ranking
         function loadRankingData() {
-            // ---- AWAS! Bagian ini juga kurang efisien untuk produksi ----
-            // Mengambil SEMUA data user, lalu mencari dan mengolah di frontend
+            // Cek user yang login untuk highlight rank mereka
+            const loggedInUserStr = localStorage.getItem('loggedInUser');
+            if (loggedInUserStr) {
+                currentUser = JSON.parse(loggedInUserStr);
+            } else {
+                currentUser = null;
+            }
+
+            // Bersihkan tampilan sebelum memuat
+            $('#top-3-ranking').empty();
+            $('#rankingTable').html('<tr><td colspan="4" class="text-center">Memuat data ranking...</td></tr>');
+            $('#currentUserRank').hide();
+
+            // Ambil semua data user
             $.get(`${CONTACTS_API_URL}?table=${USERS_TABLE_NAME}`)
                 .done(function(response) {
-                    let html = '';
+                    let rankingHtml = '';
+                    let top3Html = '';
                     if (response.success && response.data) {
                         const allUsers = response.data;
-                        // Proses data untuk mendapatkan skor tertinggi setiap user dan mengurutkannya
-                        const rankingData = allUsers
+                        
+                        // Proses data untuk mendapatkan skor tertinggi keseluruhan dan mengurutkannya
+                        const processedRankingData = allUsers
                             .map(user => {
                                 let scoreData = {};
-                                // Coba parsing JSON dari kolom x_04
                                 if (user.x_04) {
                                     try {
                                         scoreData = JSON.parse(user.x_04);
@@ -71,39 +121,72 @@
                                     }
                                 }
                                 return {
-                                    username: user.x_01, // Ambil username
-                                    score: scoreData.highest_score_sum || 0, // Ambil skor tertinggi, default 0
-                                    last_calc_time: scoreData.last_calc_sum_time || null // Ambil waktu kalkulasi terakhir
+                                    id: user.id_x,
+                                    username: user.x_01,
+                                    highestOverallScore: getOverallHighestScore(scoreData),
+                                    lastPlayedTime: scoreData.overall?.last_played || null
                                 };
                             })
-                            .filter(item => item.score > 0) // Hanya tampilkan user dengan skor lebih dari 0
-                            .sort((a, b) => b.score - a.score); // Urutkan dari skor tertinggi ke terendah
+                            .filter(item => item.highestOverallScore > 0) // Hanya tampilkan user dengan skor > 0
+                            .sort((a, b) => b.highestOverallScore - a.highestOverallScore); // Urutkan dari skor tertinggi ke terendah
 
-                        if (rankingData.length > 0) {
-                            // Buat baris tabel untuk setiap entri ranking
-                            rankingData.forEach(function(item, index) {
-                                html += `
-                                    <tr>
-                                        <td>${index + 1}</td>
-                                        <td>${item.username || 'Anonim'}</td>
-                                        <td>${item.score}</td>
-                                        <td>${item.last_calc_time ? new Date(item.last_calc_time).toLocaleString() : 'N/A'}</td>
-                                    </tr>
+                        if (processedRankingData.length > 0) {
+                            // Tampilkan Top 3
+                            processedRankingData.slice(0, 3).forEach((item, index) => {
+                                let medalIcon = '';
+                                if (index === 0) medalIcon = '<span class="gold-medal">🥇</span>';
+                                else if (index === 1) medalIcon = '<span class="silver-medal">🥈</span>';
+                                else if (index === 2) medalIcon = '<span class="bronze-medal">🥉</span>';
+
+                                top3Html += `
+                                    <div class="col-md-4 text-center">
+                                        <div class="card shadow-sm p-3 mb-3 ${index === 0 ? 'bg-warning bg-opacity-25' : ''}">
+                                            <div class="card-body">
+                                                <h5 class="card-title">${medalIcon} ${item.username || 'Anonim'}</h5>
+                                                <p class="card-text fs-4 fw-bold text-primary">${item.highestOverallScore}</p>
+                                                <small class="text-muted">Skor Tertinggi</small>
+                                            </div>
+                                        </div>
+                                    </div>
                                 `;
                             });
+                            $('#top-3-ranking').html(top3Html);
+
+                            // Tampilkan Tabel Ranking Lengkap dan Sorot User Saat Ini
+                            processedRankingData.forEach(function(item, index) {
+                                const rank = index + 1;
+                                const isCurrentUser = currentUser && currentUser.id === item.id;
+                                const rowClass = isCurrentUser ? 'table-primary user-highlight' : '';
+
+                                rankingHtml += `
+                                    <tr class="${rowClass}">
+                                        <td>${rank}</td>
+                                        <td>${item.username || 'Anonim'} ${isCurrentUser ? '(Anda)' : ''}</td>
+                                        <td>${item.highestOverallScore}</td>
+                                        <td>${item.lastPlayedTime ? new Date(item.lastPlayedTime).toLocaleString() : 'N/A'}</td>
+                                    </tr>
+                                `;
+
+                                // Tampilkan peringkat user saat ini secara terpisah
+                                if (isCurrentUser) {
+                                    $('#currentUserRank').show();
+                                    $('#userRankMessage').html(`Anda berada di **peringkat #${rank}** dengan skor tertinggi ${item.highestOverallScore}.`);
+                                }
+                            });
                         } else {
-                            html = '<tr><td colspan="4" class="text-center">Belum ada data ranking.</td></tr>';
+                            rankingHtml = '<tr><td colspan="4" class="text-center">Belum ada data ranking yang valid.</td></tr>';
+                            $('#top-3-ranking').html('<div class="col-12 text-center text-muted">Belum ada pemain dengan skor.</div>');
                         }
                     } else {
-                        html = '<tr><td colspan="4" class="text-center">Gagal memuat data pengguna.</td></tr>';
+                        rankingHtml = '<tr><td colspan="4" class="text-center">Gagal memuat data pengguna.</td></tr>';
                     }
-                    $('#rankingTable').html(html); // Masukkan HTML ke dalam tabel
+                    $('#rankingTable').html(rankingHtml);
                 })
                 .fail(function(jqXHR) {
-                    console.error('Error memuat data ranking:', jqXHR.responseText);
-                    $('#rankingTable').html('<tr><td colspan="4" class="text-center text-danger">Gagal memuat ranking.</td></tr>');
+                    console.error('Error loading ranking data:', jqXHR.responseText);
+                    $('#rankingTable').html('<tr><td colspan="4" class="text-center text-danger">Gagal memuat ranking. Terjadi kesalahan server.</td></tr>');
+                    $('#top-3-ranking').html('<div class="col-12 text-center text-danger">Gagal memuat Top 3.</div>');
                 });
-            // -----------------------------------------------------------
         }
 
         $(document).ready(function() {
