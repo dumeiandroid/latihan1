@@ -24,13 +24,14 @@ const mapUserToReadable = (userRow) => {
     };
 };
 
-export async function onRequestPOST(context) { // PAGES FUNCTIONS HANDLER UNTUK POST REQUEST
+// PAGES FUNCTIONS HANDLER UNTUK POST REQUEST
+export async function onRequestPOST(context) {
     try {
         const { request, env } = context; // Ambil request dan env dari context
         const { username, password } = await request.json();
 
-        // Akses D1 dari env (sesuai binding di wrangler.toml)
-        const { results } = await env.DB.prepare('SELECT * FROM users WHERE x_01 = ?').bind(username).all();
+        // AKSES D1 MENGGUNAKAN NAMA BINDING DARI WRANGLER.TOML: env.DB_LATIHAN1
+        const { results } = await env.DB_LATIHAN1.prepare('SELECT * FROM users WHERE x_01 = ?').bind(username).all();
 
         if (!results || results.length === 0) {
             return new Response(JSON.stringify({ success: false, message: 'Invalid username or password' }), { status: 401, headers: { 'Content-Type': 'application/json' } });
@@ -46,9 +47,9 @@ export async function onRequestPOST(context) { // PAGES FUNCTIONS HANDLER UNTUK 
 
         // Update last_played timestamp
         const now = new Date().toISOString();
-        await env.DB.prepare('UPDATE users SET x_05 = ?, x_07 = ? WHERE id_x = ?')
-                    .bind(now, now, user.id_user)
-                    .run();
+        await env.DB_LATIHAN1.prepare('UPDATE users SET x_05 = ?, x_07 = ? WHERE id_x = ?')
+                            .bind(now, now, user.id_user)
+                            .run();
 
         const token = user.username; // Untuk demo, token adalah username
 
