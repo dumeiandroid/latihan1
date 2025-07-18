@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Aplikasi - Data Pengguna</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css"> </head>
+    <link rel="stylesheet" href="css/style.css"> 
+</head>
 <body class="bg-light">
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container-fluid">
@@ -40,7 +41,7 @@
                             <p><strong>Field 3 (x_03):</strong> <span id="displayX03"></span></p>
                             <p><strong>Field 4 (x_04):</strong> <span id="displayX04"></span></p>
                             <p><strong>Field 5 (x_05):</strong> <span id="displayX05"></span></p>
-                            </div>
+                        </div>
                         <div id="loadingMessage" class="text-center text-primary mt-3" style="display:none;">
                             Memuat data...
                         </div>
@@ -55,98 +56,9 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="js/session.js"></script> 
+
     <script>
-        // --- Bagian SessionManager ini idealnya ada di file JS terpisah, misal `session.js` ---
-        // Jika Anda ingin tetap di sini, pastikan kode ini sama persis dengan yang ada di login.html
-        // Atau, jika login.html dan index.html ada di direktori yang sama, Anda bisa memuatnya dari sana
-        // Contoh: <script src="login.html"></script> (Tidak direkomendasikan secara langsung, lebih baik pisahkan JS)
-        // Untuk tujuan demonstrasi di sini, saya ulangi isinya.
-        
-        const API_BASE_URL = '/api/contacts';
-        const USERS_TABLE_NAME = 'users'; // Nama tabel user
-        const SESSION_KEY = 'user_session';
-        const COOKIE_NAME = 'user_token'; // Nama cookie untuk remember me
-
-        // Get cookie value
-        function getCookie(name) {
-            const value = `; ${document.cookie}`;
-            const parts = value.split(`; ${name}=`);
-            if (parts.length === 2) return parts.pop().split(';').shift();
-            return null;
-        }
-
-        // Remove cookie
-        function removeCookie(name) {
-            document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/`;
-        }
-
-        window.SessionManager = {
-            // Check if user is logged in and session is valid
-            isLoggedIn: function() {
-                const session = localStorage.getItem(SESSION_KEY);
-                const cookie = getCookie(COOKIE_NAME);
-                
-                if (session) {
-                    try {
-                        const userData = JSON.parse(session);
-                        // Untuk login token, kita cek expiry dari x_03
-                        if (userData.expiry) {
-                             const today = new Date().toISOString().split('T')[0];
-                             if (userData.expiry >= today) {
-                                 return userData; // Session valid
-                             } else {
-                                 console.warn('Session expired (x_03). Logging out.');
-                                 this.logout(); // Session expired, remove it
-                                 return null;
-                             }
-                        } else if (userData.role) { // Untuk login username/password sebelumnya
-                             return userData; // Jika tidak ada expiry date, anggap valid (misal dari login admin/user biasa)
-                        }
-                    } catch (error) {
-                        console.error('Error parsing session from localStorage:', error);
-                        this.logout(); // Corrupted session, log out
-                        return null;
-                    }
-                }
-                
-                // Fallback to cookie if localStorage session is not found or invalid
-                // Note: Token in cookie itself doesn't have expiry info, so we rely on backend re-validation if used.
-                // For simplicity here, if cookie exists, we assume logged in, but ideally re-validate on backend.
-                if (cookie) {
-                    // In a real app, you might make an API call here to validate the cookie token on the server
-                    // For this setup, we'll let `getCurrentUser` try to fetch full user data based on cookie.
-                    console.log("Cookie found, but no localStorage session. Attempting to re-validate...");
-                    return { token: cookie }; // Return minimal info from cookie
-                }
-
-                return null;
-            },
-
-            // Get current user data from session or cookie
-            getCurrentUser: function() {
-                return this.isLoggedIn();
-            },
-
-            // Logout function
-            logout: function() {
-                localStorage.removeItem(SESSION_KEY);
-                removeCookie(COOKIE_NAME);
-                alert('Anda telah logout.');
-                window.location.href = 'login.html';
-            },
-
-            // Require login (use this on protected pages)
-            requireLogin: function() {
-                if (!this.isLoggedIn()) {
-                    window.location.href = 'login.html';
-                    return false;
-                }
-                return true;
-            }
-        };
-        // --- Akhir Bagian SessionManager ---
-
-
         $(document).ready(function() {
             // 1. Cek sesi saat halaman dimuat
             if (!SessionManager.requireLogin()) {
@@ -154,11 +66,14 @@
             }
 
             const currentUser = SessionManager.getCurrentUser();
-            const username = currentUser.username || currentUser.token; // Use username or token as identifier
+            const username = currentUser.username || currentUser.token;
 
             $('#welcomeMessage').text(`Halo, ${username}!`);
+            
+            // **PERBAIKAN DI SINI:**
+            // Tombol logout sekarang hanya mengarahkan ke logout.html
             $('#logoutBtn').on('click', function() {
-                SessionManager.logout();
+                window.location.href = 'logout.html'; 
             });
 
             // 2. Memuat data pengguna dari API
@@ -166,15 +81,10 @@
             $('#userDataDisplay').hide();
             $('#errorMessage').hide();
 
-            // Mengambil data user berdasarkan ID atau username/token
-            // Jika login menggunakan token (dari login.html yang baru), currentUser.id akan ada
-            // Jika login menggunakan username/password (dari login.html lama), currentUser.id juga akan ada
-            // Jadi kita bisa pakai currentUser.id
             const userId = currentUser.id; 
-            const userRole = currentUser.role; // Ambil role user (admin/user)
+            const userRole = currentUser.role;
 
             if (userId) {
-                // Fetch data for the specific user by ID
                 $.get(`${API_BASE_URL}/${userId}?table=${USERS_TABLE_NAME}`)
                     .done(function(response) {
                         if (response.success && response.data) {
@@ -184,7 +94,6 @@
                             $('#displayX03').text(userData.x_03 || 'Tidak Tersedia');
                             $('#displayX04').text(userData.x_04 || 'Tidak Tersedia');
                             $('#displayX05').text(userData.x_05 || 'Tidak Tersedia');
-                            // Tampilkan data setelah berhasil
                             $('#userDataDisplay').show();
                         } else {
                             $('#errorMessage').text('Data pengguna tidak ditemukan atau terjadi kesalahan.');
@@ -203,7 +112,7 @@
                         console.error('Error fetching user data:', jqXHR.responseText);
                     })
                     .always(function() {
-                        $('#loadingMessage').hide(); // Sembunyikan loading message
+                        $('#loadingMessage').hide();
                     });
             } else {
                 $('#errorMessage').text('ID pengguna tidak ditemukan di sesi.');
