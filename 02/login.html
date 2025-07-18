@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #343a40;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            color: #495057;
+        }
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            margin-top: 5px;
+            box-sizing: border-box;
+        }
+        input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        .error-message {
+            color: red;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .success-message {
+            color: green;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .loading {
+            text-align: center;
+            color: #007bff;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+                margin: 20px auto;
+            }
+            h1 {
+                font-size: 1.5em;
+            }
+            input[type="text"],
+            input[type="password"],
+            input[type="submit"] {
+                font-size: 1em;
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Token</h1>
+        <div id="message"></div>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username">Kode Token:</label>
+                <input type="text" autofocus="" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <input type="checkbox" id="remember" name="remember">
+                <label for="remember">Remember Me</label>
+            </div>
+            <input type="submit" value="Login" id="submitBtn">
+        </form>
+    </div>
+
+    <script>
+        // Configuration
+        const API_BASE_URL = '/api/contacts';
+        const TABLE_NAME = 'nilai1'; // Nama tabel yang sebenarnya
+        const SESSION_KEY = 'user_session';
+        const COOKIE_NAME = 'user_token';
+
+        // Check if user is already logged in
+        function checkExistingSession() {
+            const session = localStorage.getItem(SESSION_KEY);
+            const cookie = getCookie(COOKIE_NAME);
+            
+            if (session || cookie) {
+                showMessage('Anda telah login', 'success');
+                setTimeout(() => {
+                    window.location.href = 'index.html'; // Redirect ke halaman utama
+                }, 1500);
+                return true;
+            }
+            return false;
+        }
+
+        // Get cookie value
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+            return null;
+        }
+
+        // Set cookie
+        function setCookie(name, value, days) {
+            const expires = new Date();
+            expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+            document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
+        }
+
+        // Remove cookie
+        function removeCookie(name) {
+            document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/`;
+        }
+
+        // Show message to user
+        function showMessage(message, type = 'error') {
+            const messageDiv = document.getElementById('message');
+            messageDiv.innerHTML = `<p class="${type}-message">${message}</p>`;
+        }
+
+        // Validate token via API
+        async function validateToken(token) {
+            try {
+                // Mencari token di database menggunakan API
+                const response = await fetch(`${API_BASE_URL}?table=nilai1`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Table-Name': 'nilai1'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const result = await response.json();
+                
+                if (result.success && result.data) {
+                    // Cari token yang cocok dan belum expired
+                    const currentDate = new Date().toISOString().split('T')[0];
+                    const validToken = result.data.find(item => 
+                        item.x_01 === token && 
+                        item.x_03 && 
+                        item.x_03 >= currentDate
+                    );
+
+                    return validToken || null;
+                }
+                
+                return null;
+            } catch (error) {
+                console.error('Error validating token:', error);
+                return null;
+            }
+        }
+
+        // Handle form submission
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const username = document.getElementById('username').value;
+            const rememberMe = document.getElementById('remember').checked;
+            
+            // Show loading
+            submitBtn.disabled = true;
+            submitBtn.value = 'Loading...';
+            showMessage('Memvalidasi token...', 'loading');
+
+            try {
+                // Validate token
+                const validUser = await validateToken(username);
+                
+                if (validUser) {
+                    // Login successful
+                    const userSession = {
+                        id: validUser.id_x,
+                        token: validUser.x_01,
+                        expiry: validUser.x_03,
+                        loginTime: new Date().toISOString()
+                    };
+
+                    // Save session
+                    localStorage.setItem(SESSION_KEY, JSON.stringify(userSession));
+
+                    // Handle remember me
+                    if (rememberMe) {
+                        setCookie(COOKIE_NAME, validUser.x_01, 30);
+                    } else {
+                        removeCookie(COOKIE_NAME);
+                    }
+
+                    showMessage('Login berhasil! Mengalihkan...', 'success');
+                    
+                    // Redirect after 1.5 seconds
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 1500);
+                    
+                } else {
+                    showMessage('Token salah atau masa berlaku token sudah berakhir. Silakan coba lagi.');
+                }
+                
+            } catch (error) {
+                console.error('Login error:', error);
+                showMessage('Terjadi kesalahan saat login. Silakan coba lagi.');
+            } finally {
+                // Reset button
+                submitBtn.disabled = false;
+                submitBtn.value = 'Login';
+            }
+        });
+
+        // Check session on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            checkExistingSession();
+        });
+
+        // Session management functions for other pages
+        window.SessionManager = {
+            // Check if user is logged in
+            isLoggedIn: function() {
+                const session = localStorage.getItem(SESSION_KEY);
+                const cookie = getCookie(COOKIE_NAME);
+                
+                if (session) {
+                    try {
+                        const userData = JSON.parse(session);
+                        const currentDate = new Date().toISOString().split('T')[0];
+                        
+                        // Check if session is still valid
+                        if (userData.expiry && userData.expiry >= currentDate) {
+                            return userData;
+                        } else {
+                            // Session expired, remove it
+                            this.logout();
+                            return null;
+                        }
+                    } catch (error) {
+                        console.error('Error parsing session:', error);
+                        this.logout();
+                        return null;
+                    }
+                }
+                
+                return cookie ? { token: cookie } : null;
+            },
+
+            // Get current user data
+            getCurrentUser: function() {
+                return this.isLoggedIn();
+            },
+
+            // Logout function
+            logout: function() {
+                localStorage.removeItem(SESSION_KEY);
+                removeCookie(COOKIE_NAME);
+                window.location.href = 'login.html';
+            },
+
+            // Require login (use this on protected pages)
+            requireLogin: function() {
+                if (!this.isLoggedIn()) {
+                    window.location.href = 'login.html';
+                    return false;
+                }
+                return true;
+            }
+        };
+    </script>
+</body>
+</html>
