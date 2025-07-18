@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Aplikasi</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css"> 
+</head>
+<body class="bg-primary d-flex justify-content-center align-items-center min-vh-100">
+    <div class="card shadow p-4" style="max-width: 400px; width: 100%;">
+        <h2 class="card-title text-center mb-4">Login</h2>
+        <form id="loginForm">
+            <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" id="username" required>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" required>
+            </div>
+            <div id="errorMessage" class="alert alert-danger" style="display:none;"></div>
+            <button type="submit" class="btn btn-primary w-100">Login</button>
+        </form>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    
+    <script src="js/session.js"></script> 
+
+    <script>
+        $(document).ready(function() {
+            // Opsional: Jika pengguna sudah login, langsung arahkan ke index.html
+            // Pastikan ini ada di login.html agar user yang sudah login tidak perlu login lagi
+            if (SessionManager.isLoggedIn()) {
+                window.location.href = 'index.html';
+                return; // Hentikan eksekusi script ini
+            }
+
+            $('#loginForm').submit(function(e) {
+                e.preventDefault(); // Mencegah form dari submit secara default
+
+                const username = $('#username').val();
+                const password = $('#password').val();
+                
+                // Sembunyikan pesan error sebelumnya
+                $('#errorMessage').hide();
+
+                // Lakukan permintaan AJAX ke API login Anda
+                $.ajax({
+                    // Gunakan API_BASE_URL dan USERS_TABLE_NAME dari session.js
+                    url: `${API_BASE_URL}?table=${USERS_TABLE_NAME}`, 
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ x_01: username, x_02: password, action: 'login' }),
+                    success: function(response) {
+                        if (response.success && response.data) {
+                            const validUser = response.data;
+
+                            // Simpan data sesi pengguna ke localStorage
+                            const userSession = {
+                                id: validUser.id_x, // Pastikan ini adalah ID unik pengguna
+                                username: validUser.x_01, // Menyimpan username untuk ditampilkan
+                                token: validUser.token, // Menyimpan token dari backend
+                                expiry: validUser.x_03, // Menyimpan tanggal kadaluarsa dari backend (jika ada)
+                                role: validUser.x_04, // Menyimpan role jika ada
+                                loginTime: new Date().toISOString() // Waktu login
+                            };
+                            // Gunakan SESSION_KEY dari session.js
+                            localStorage.setItem(SESSION_KEY, JSON.stringify(userSession)); 
+
+                            // Set token ke cookie (dengan expiry 1 hari)
+                            const d = new Date();
+                            d.setTime(d.getTime() + (24 * 60 * 60 * 1000)); 
+                            const expires = "expires=" + d.toUTCString();
+                            // Gunakan COOKIE_NAME dari session.js
+                            document.cookie = `${COOKIE_NAME}=${validUser.token || 'dummy_token'};${expires};path=/`;
+
+                            alert('Login Berhasil!');
+                            window.location.href = 'index.html'; // Arahkan ke halaman dashboard
+                        } else {
+                            $('#errorMessage').text(response.message || 'Username atau password salah.');
+                            $('#errorMessage').show();
+                        }
+                    },
+                    error: function(jqXHR) {
+                        let errorMsg = 'Terjadi kesalahan saat login.';
+                        try {
+                            const responseJson = JSON.parse(jqXHR.responseText);
+                            errorMsg = responseJson.message || errorMsg;
+                        } catch (e) { /* ignore */ }
+                        $('#errorMessage').text(errorMsg);
+                        $('#errorMessage').show();
+                        console.error('Login error:', jqXHR.responseText);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
