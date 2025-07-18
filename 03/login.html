@@ -12,12 +12,8 @@
         <h2 class="card-title text-center mb-4">Login</h2>
         <form id="loginForm">
             <div class="mb-3">
-                <label for="username" class="form-label">Username</label>
-                <input type="text" class="form-control" id="username" required>
-            </div>
-            <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input type="password" class="form-control" id="password" required>
+                <label for="tokenInput" class="form-label">Kode Token:</label>
+                <input type="text" class="form-control" id="tokenInput" required autofocus>
             </div>
             <div id="errorMessage" class="alert alert-danger" style="display:none;"></div>
             <button type="submit" class="btn btn-primary w-100">Login</button>
@@ -32,68 +28,90 @@
     <script>
         $(document).ready(function() {
             // Opsional: Jika pengguna sudah login, langsung arahkan ke index.html
-            // Pastikan ini ada di login.html agar user yang sudah login tidak perlu login lagi
             if (SessionManager.isLoggedIn()) {
                 window.location.href = 'index.html';
-                return; // Hentikan eksekusi script ini
+                return; 
             }
 
             $('#loginForm').submit(function(e) {
-                e.preventDefault(); // Mencegah form dari submit secara default
+                e.preventDefault(); 
 
-                const username = $('#username').val();
-                const password = $('#password').val();
-                
+                // Ambil nilai dari input token
+                const token = $('#tokenInput').val().trim(); // Menggunakan ID yang baru
+
                 // Sembunyikan pesan error sebelumnya
                 $('#errorMessage').hide();
 
-                // Lakukan permintaan AJAX ke API login Anda
+                if (!token) {
+                    $('#errorMessage').text('Kode Token tidak boleh kosong.');
+                    $('#errorMessage').show();
+                    return;
+                }
+
+                // Tampilkan pesan loading/disable tombol
+                const $submitBtn = $('#loginForm button[type="submit"]');
+                $submitBtn.prop('disabled', true).text('Memvalidasi...');
+
+                // Lakukan permintaan AJAX (GET) ke API untuk memvalidasi token
                 $.ajax({
                     // Gunakan API_BASE_URL dan USERS_TABLE_NAME dari session.js
                     url: `${API_BASE_URL}?table=${USERS_TABLE_NAME}`, 
-                    method: 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify({ x_01: username, x_02: password, action: 'login' }),
+                    method: 'GET', // Ubah ke GET
+                    contentType: 'application/json', // Ini mungkin tidak terlalu relevan untuk GET tanpa body
+                    // Tidak ada 'data' untuk permintaan GET yang mencari semua
                     success: function(response) {
                         if (response.success && response.data) {
-                            const validUser = response.data;
+                            const currentDate = new Date().toISOString().split('T')[0];
+                            // Cari token yang cocok (field x_01) dan belum kadaluarsa (field x_03)
+                            const validUser = response.data.find(item => 
+                                item.x_01 === token && 
+                                item.x_03 && 
+                                item.x_03 >= currentDate
+                            );
 
-                            // Simpan data sesi pengguna ke localStorage
-                            const userSession = {
-                                id: validUser.id_x, // Pastikan ini adalah ID unik pengguna
-                                username: validUser.x_01, // Menyimpan username untuk ditampilkan
-                                token: validUser.token, // Menyimpan token dari backend
-                                expiry: validUser.x_03, // Menyimpan tanggal kadaluarsa dari backend (jika ada)
-                                role: validUser.x_04, // Menyimpan role jika ada
-                                loginTime: new Date().toISOString() // Waktu login
-                            };
-                            // Gunakan SESSION_KEY dari session.js
-                            localStorage.setItem(SESSION_KEY, JSON.stringify(userSession)); 
+                            if (validUser) {
+                                // Token valid, simpan data sesi pengguna ke localStorage
+                                const userSession = {
+                                    id: validUser.id_x, 
+                                    username: validUser.x_01, // Token itu sendiri bisa jadi username di sini
+                                    token: validUser.x_01, 
+                                    expiry: validUser.x_03, 
+                                    role: validUser.x_04, 
+                                    loginTime: new Date().toISOString() 
+                                };
+                                // Gunakan SESSION_KEY dari session.js
+                                localStorage.setItem(SESSION_KEY, JSON.stringify(userSession)); 
 
-                            // Set token ke cookie (dengan expiry 1 hari)
-                            const d = new Date();
-                            d.setTime(d.getTime() + (24 * 60 * 60 * 1000)); 
-                            const expires = "expires=" + d.toUTCString();
-                            // Gunakan COOKIE_NAME dari session.js
-                            document.cookie = `${COOKIE_NAME}=${validUser.token || 'dummy_token'};${expires};path=/`;
-
-                            alert('Login Berhasil!');
-                            window.location.href = 'index.html'; // Arahkan ke halaman dashboard
+                                // Catatan: Logika "Remember Me" dengan cookie bisa ditambahkan kembali di sini 
+                                // jika Anda menginginkannya. Untuk saat ini, kita ikuti input terakhir tanpa checkbox remember me.
+                                // Jika tidak ada checkbox remember me, tidak perlu set/remove cookie di sini.
+                                // Jika Anda ingin menambahkan checkbox "Remember Me" seperti di contoh sebelumnya,
+                                // Anda perlu menambahkan kembali checkbox di HTML dan logic setCookie/removeCookie di sini.
+                                
+                                alert('Login Berhasil!');
+                                window.location.href = 'index.html'; // Arahkan ke halaman dashboard
+                            } else {
+                                $('#errorMessage').text('Kode Token salah atau masa berlaku token sudah berakhir.');
+                                $('#errorMessage').show();
+                            }
                         } else {
-                            $('#errorMessage').text(response.message || 'Username atau password salah.');
+                            $('#errorMessage').text(response.message || 'Gagal memvalidasi token dari API.');
                             $('#errorMessage').show();
                         }
                     },
                     error: function(jqXHR) {
-                        let errorMsg = 'Terjadi kesalahan saat login.';
+                        let errorMsg = 'Terjadi kesalahan saat memvalidasi token.';
                         try {
                             const responseJson = JSON.parse(jqXHR.responseText);
                             errorMsg = responseJson.message || errorMsg;
                         } catch (e) { /* ignore */ }
                         $('#errorMessage').text(errorMsg);
                         $('#errorMessage').show();
-                        console.error('Login error:', jqXHR.responseText);
+                        console.error('Validation error:', jqXHR.responseText);
                     }
+                }).always(function() {
+                    // Selalu reset tombol setelah AJAX selesai (sukses atau error)
+                    $submitBtn.prop('disabled', false).text('Login');
                 });
             });
         });
