@@ -56,21 +56,96 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-    <script src="js/session.js"></script> 
+    
+    <script>
+        const API_BASE_URL = '/api/contacts';
+        const USERS_TABLE_NAME = 'users'; // Nama tabel user, sesuaikan jika berbeda
+        const SESSION_KEY = 'user_session';
+        const COOKIE_NAME = 'user_token';
 
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+            return null;
+        }
+
+        function removeCookie(name) {
+            document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/`;
+        }
+
+        window.SessionManager = {
+            isLoggedIn: function() {
+                const session = localStorage.getItem(SESSION_KEY);
+                const cookie = getCookie(COOKIE_NAME);
+                
+                if (session) {
+                    try {
+                        const userData = JSON.parse(session);
+                        if (userData.expiry) {
+                             const today = new Date().toISOString().split('T')[0];
+                             if (userData.expiry >= today) {
+                                 return userData;
+                             } else {
+                                 console.warn('Session expired (x_03). Logging out.');
+                                 // Hapus sesi lokal saja, jangan redirect di sini
+                                 localStorage.removeItem(SESSION_KEY);
+                                 removeCookie(COOKIE_NAME);
+                                 return null;
+                             }
+                        } else if (userData.role) {
+                             return userData;
+                        }
+                    } catch (error) {
+                        console.error('Error parsing session from localStorage:', error);
+                        localStorage.removeItem(SESSION_KEY); // Hapus sesi yang rusak
+                        removeCookie(COOKIE_NAME);
+                        return null;
+                    }
+                }
+                
+                if (cookie) {
+                    console.log("Cookie found, but no localStorage session. Attempting to re-validate...");
+                    return { token: cookie };
+                }
+                return null;
+            },
+
+            getCurrentUser: function() {
+                return this.isLoggedIn();
+            },
+
+            // Fungsi logout ini akan jarang dipanggil langsung di index.html lagi
+            logout: function() {
+                localStorage.removeItem(SESSION_KEY);
+                removeCookie(COOKIE_NAME);
+                alert('Anda telah logout.');
+                window.location.href = 'login.html'; // Tetap redirect ke login.html
+            },
+
+            requireLogin: function() {
+                if (!this.isLoggedIn()) {
+                    window.location.href = 'login.html'; // **INI YANG MENGARAHKAN KE LOGIN.HTML**
+                    return false;
+                }
+                return true;
+            }
+        };
+    </script>
     <script>
         $(document).ready(function() {
             // 1. Cek sesi saat halaman dimuat
+            // Ini akan memanggil SessionManager.requireLogin()
+            // Jika tidak ada sesi valid, SessionManager.requireLogin() akan redirect ke login.html
             if (!SessionManager.requireLogin()) {
-                return; // Berhenti jika tidak login
+                return; // Berhenti eksekusi skrip ini jika sudah diarahkan
             }
 
             const currentUser = SessionManager.getCurrentUser();
-            const username = currentUser.username || currentUser.token;
+            const username = currentUser.username || currentUser.token; // Sesuaikan jika ada field username lain di data sesi
 
             $('#welcomeMessage').text(`Halo, ${username}!`);
             
-            // **PERBAIKAN DI SINI:**
             // Tombol logout sekarang hanya mengarahkan ke logout.html
             $('#logoutBtn').on('click', function() {
                 window.location.href = 'logout.html'; 
@@ -82,7 +157,7 @@
             $('#errorMessage').hide();
 
             const userId = currentUser.id; 
-            const userRole = currentUser.role;
+            const userRole = currentUser.role; // Jika ada role di data sesi Anda
 
             if (userId) {
                 $.get(`${API_BASE_URL}/${userId}?table=${USERS_TABLE_NAME}`)
