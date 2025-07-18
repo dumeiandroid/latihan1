@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Get Data nilai1</title>
+</head>
+<body>
+    <h3>Data dari tabel nilai1 (id_x=2)</h3>
+    <div id="result">Loading...</div>
+    <button onclick="fetchData()">Refresh</button>
+
+    <script>
+        async function fetchData() {
+            try {
+                const response = await fetch('/api/contacts/2?table=nilai1');
+                const data = await response.json();
+                
+                if (data.success) {
+                    document.getElementById('result').innerHTML = 
+                        '<h4>Success!</h4>' +
+                        '<p>Table: ' + data.table + '</p>' +
+                        '<p>Data: ' + JSON.stringify(data.data, null, 2) + '</p>';
+                } else {
+                    document.getElementById('result').innerHTML = 
+                        '<h4>Error:</h4><p>' + data.message + '</p>';
+                }
+            } catch (error) {
+                document.getElementById('result').innerHTML = 
+                    '<h4>Error:</h4><p>' + error.message + '</p>';
+            }
+        }
+
+        // Auto fetch on load
+        fetchData();
+    </script>
+</body>
+</html>
