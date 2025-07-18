@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Aplikasi - Data Pengguna</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css"> 
+</head>
+<body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Aplikasi Cepat</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <span class="navbar-text text-white me-3" id="welcomeMessage"></span>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-outline-light" id="logoutBtn">Logout</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-info text-white">
+                        <h4 class="mb-0">Data Profil Anda</h4>
+                    </div>
+                    <div class="card-body">
+                        <div id="userDataDisplay">
+                            <p><strong>Username:</strong> <span id="displayUsername"></span></p>
+                            <p><strong>Field 2 (x_02):</strong> <span id="displayX02"></span></p>
+                            <p><strong>Field 3 (x_03):</strong> <span id="displayX03"></span></p>
+                            <p><strong>Field 4 (x_04):</strong> <span id="displayX04"></span></p>
+                            <p><strong>Field 5 (x_05):</strong> <span id="displayX05"></span></p>
+                        </div>
+                        <div id="loadingMessage" class="text-center text-primary mt-3" style="display:none;">
+                            Memuat data...
+                        </div>
+                        <div id="errorMessage" class="text-center text-danger mt-3" style="display:none;">
+                            Gagal memuat data. Silakan coba lagi.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="js/session.js"></script> 
+
+    <script>
+        $(document).ready(function() {
+            // 1. Cek sesi saat halaman dimuat
+            if (!SessionManager.requireLogin()) {
+                return; // Berhenti jika tidak login
+            }
+
+            const currentUser = SessionManager.getCurrentUser();
+            const username = currentUser.username || currentUser.token;
+
+            $('#welcomeMessage').text(`Halo, ${username}!`);
+            
+            // **PERBAIKAN DI SINI:**
+            // Tombol logout sekarang hanya mengarahkan ke logout.html
+            $('#logoutBtn').on('click', function() {
+                window.location.href = 'logout.html'; 
+            });
+
+            // 2. Memuat data pengguna dari API
+            $('#loadingMessage').show();
+            $('#userDataDisplay').hide();
+            $('#errorMessage').hide();
+
+            const userId = currentUser.id; 
+            const userRole = currentUser.role;
+
+            if (userId) {
+                $.get(`${API_BASE_URL}/${userId}?table=${USERS_TABLE_NAME}`)
+                    .done(function(response) {
+                        if (response.success && response.data) {
+                            const userData = response.data;
+                            $('#displayUsername').text(userData.x_01 || 'Tidak Tersedia');
+                            $('#displayX02').text(userData.x_02 || 'Tidak Tersedia');
+                            $('#displayX03').text(userData.x_03 || 'Tidak Tersedia');
+                            $('#displayX04').text(userData.x_04 || 'Tidak Tersedia');
+                            $('#displayX05').text(userData.x_05 || 'Tidak Tersedia');
+                            $('#userDataDisplay').show();
+                        } else {
+                            $('#errorMessage').text('Data pengguna tidak ditemukan atau terjadi kesalahan.');
+                            $('#errorMessage').show();
+                            console.error('API response error:', response.message);
+                        }
+                    })
+                    .fail(function(jqXHR) {
+                        let errorMessage = 'Gagal memuat data profil. Silakan coba lagi.';
+                        try {
+                            const errorResponse = JSON.parse(jqXHR.responseText);
+                            errorMessage = errorResponse.message || errorMessage;
+                        } catch (e) { /* ignore */ }
+                        $('#errorMessage').text(errorMessage);
+                        $('#errorMessage').show();
+                        console.error('Error fetching user data:', jqXHR.responseText);
+                    })
+                    .always(function() {
+                        $('#loadingMessage').hide();
+                    });
+            } else {
+                $('#errorMessage').text('ID pengguna tidak ditemukan di sesi.');
+                $('#errorMessage').show();
+                $('#loadingMessage').hide();
+            }
+        });
+    </script>
+</body>
+</html>
