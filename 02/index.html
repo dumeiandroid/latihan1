@@ -58,8 +58,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     
     <script>
-        const API_BASE_URL = '/api/contacts';
-        const USERS_TABLE_NAME = 'users'; // Nama tabel user, sesuaikan jika berbeda
+        // Pastikan API_BASE_URL ini sama dengan yang digunakan di login.html
+        const API_BASE_URL = '/api/contacts'; 
+        // **PERHATIKAN INI:** Sesuaikan dengan nama tabel user yang sebenarnya.
+        // Jika di login.html Anda memvalidasi token dari tabel 'nilai1', kemungkinan ini juga 'nilai1'.
+        const USERS_TABLE_NAME = 'nilai1'; // <-- PERBAIKAN PENTING DI SINI
         const SESSION_KEY = 'user_session';
         const COOKIE_NAME = 'user_token';
 
@@ -88,12 +91,11 @@
                                  return userData;
                              } else {
                                  console.warn('Session expired (x_03). Logging out.');
-                                 // Hapus sesi lokal saja, jangan redirect di sini
                                  localStorage.removeItem(SESSION_KEY);
                                  removeCookie(COOKIE_NAME);
                                  return null;
                              }
-                        } else if (userData.role) {
+                        } else { // Jika tidak ada expiry, asumsikan valid jika ada data lain (misal token atau role)
                              return userData;
                         }
                     } catch (error) {
@@ -104,9 +106,13 @@
                     }
                 }
                 
+                // Jika tidak ada sesi di localStorage tapi ada di cookie, coba gunakan cookie
                 if (cookie) {
-                    console.log("Cookie found, but no localStorage session. Attempting to re-validate...");
-                    return { token: cookie };
+                    // Dalam skenario ini, kita mungkin tidak punya semua data user (id, expiry, etc.)
+                    // hanya token. Sebaiknya redirect ke login untuk validasi ulang jika dibutuhkan.
+                    console.log("Cookie found, but no localStorage session. Redirecting to login to re-authenticate.");
+                    window.location.href = 'login.html';
+                    return null; // Return null karena tidak ada sesi lengkap
                 }
                 return null;
             },
@@ -115,17 +121,16 @@
                 return this.isLoggedIn();
             },
 
-            // Fungsi logout ini akan jarang dipanggil langsung di index.html lagi
             logout: function() {
                 localStorage.removeItem(SESSION_KEY);
                 removeCookie(COOKIE_NAME);
                 alert('Anda telah logout.');
-                window.location.href = 'login.html'; // Tetap redirect ke login.html
+                window.location.href = 'login.html';
             },
 
             requireLogin: function() {
                 if (!this.isLoggedIn()) {
-                    window.location.href = 'login.html'; // **INI YANG MENGARAHKAN KE LOGIN.HTML**
+                    window.location.href = 'login.html';
                     return false;
                 }
                 return true;
@@ -135,18 +140,21 @@
     <script>
         $(document).ready(function() {
             // 1. Cek sesi saat halaman dimuat
-            // Ini akan memanggil SessionManager.requireLogin()
-            // Jika tidak ada sesi valid, SessionManager.requireLogin() akan redirect ke login.html
             if (!SessionManager.requireLogin()) {
                 return; // Berhenti eksekusi skrip ini jika sudah diarahkan
             }
 
             const currentUser = SessionManager.getCurrentUser();
-            const username = currentUser.username || currentUser.token; // Sesuaikan jika ada field username lain di data sesi
-
-            $('#welcomeMessage').text(`Halo, ${username}!`);
             
-            // Tombol logout sekarang hanya mengarahkan ke logout.html
+            // **PENTING UNTUK DEBUGGING**: Pastikan ID yang diambil sudah benar (misal: 2)
+            console.log('Current User Session Data:', currentUser); 
+            console.log('User ID from session:', currentUser ? currentUser.id : 'N/A');
+
+            // Sesuaikan properti untuk menampilkan username. Jika x_01 adalah username, gunakan itu.
+            // Pastikan data ini ada di objek sesi yang disimpan di localStorage.
+            const usernameDisplay = currentUser.x_01 || currentUser.token || 'Pengguna'; // Sesuaikan jika ada field username lain di data sesi
+            $('#welcomeMessage').text(`Halo, ${usernameDisplay}!`);
+            
             $('#logoutBtn').on('click', function() {
                 window.location.href = 'logout.html'; 
             });
@@ -156,43 +164,48 @@
             $('#userDataDisplay').hide();
             $('#errorMessage').hide();
 
-            const userId = currentUser.id; 
-            const userRole = currentUser.role; // Jika ada role di data sesi Anda
+            // Pastikan currentUser.id memiliki nilai yang benar (misal: 2)
+            const userId = currentUser ? currentUser.id : null; 
+            // const userRole = currentUser ? currentUser.role : null; // Jika ada role di data sesi Anda
 
             if (userId) {
-                $.get(`${API_BASE_URL}/${userId}?table=${USERS_TABLE_NAME}`)
+                // Memanggil API dengan ID pengguna dan nama tabel yang sudah disesuaikan
+                $.get(`${API_BASE_URL}/${userId}?table=${USERS_TABLE_NAME}`) // <-- PENTING: USERS_TABLE_NAME sudah disesuaikan di atas
                     .done(function(response) {
                         if (response.success && response.data) {
                             const userData = response.data;
-                            $('#displayUsername').text(userData.x_01 || 'Tidak Tersedia');
+                            // Pastikan nama properti data sesuai dengan respons API (misal: x_01, x_02, dst.)
+                            $('#displayUsername').text(userData.x_01 || 'Tidak Tersedia'); 
                             $('#displayX02').text(userData.x_02 || 'Tidak Tersedia');
                             $('#displayX03').text(userData.x_03 || 'Tidak Tersedia');
                             $('#displayX04').text(userData.x_04 || 'Tidak Tersedia');
                             $('#displayX05').text(userData.x_05 || 'Tidak Tersedia');
                             $('#userDataDisplay').show();
                         } else {
-                            $('#errorMessage').text('Data pengguna tidak ditemukan atau terjadi kesalahan.');
+                            $('#errorMessage').text('Data pengguna tidak ditemukan atau terjadi kesalahan respons API.');
                             $('#errorMessage').show();
                             console.error('API response error:', response.message);
                         }
                     })
                     .fail(function(jqXHR) {
-                        let errorMessage = 'Gagal memuat data profil. Silakan coba lagi.';
+                        let errorMessageText = 'Gagal memuat data profil. Silakan coba lagi.';
                         try {
+                            // Coba parse respons error dari API jika ada
                             const errorResponse = JSON.parse(jqXHR.responseText);
-                            errorMessage = errorResponse.message || errorMessage;
+                            errorMessageText = errorResponse.message || errorMessageText;
                         } catch (e) { /* ignore */ }
-                        $('#errorMessage').text(errorMessage);
+                        $('#errorMessage').text(errorMessageText);
                         $('#errorMessage').show();
-                        console.error('Error fetching user data:', jqXHR.responseText);
+                        console.error('Error fetching user data (AJAX fail):', jqXHR.responseText, jqXHR.status);
                     })
                     .always(function() {
                         $('#loadingMessage').hide();
                     });
             } else {
-                $('#errorMessage').text('ID pengguna tidak ditemukan di sesi.');
+                $('#errorMessage').text('ID pengguna tidak ditemukan di sesi atau sesi tidak lengkap. Silakan login ulang.');
                 $('#errorMessage').show();
                 $('#loadingMessage').hide();
+                console.error('User ID is missing from session data.');
             }
         });
     </script>
