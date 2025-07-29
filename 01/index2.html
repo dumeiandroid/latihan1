@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD Data Management - Cover Table</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .table-responsive-custom {
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+        .btn-sm { padding: .25rem .5rem; font-size: .875rem; }
+        .form-control-sm { padding: .25rem .5rem; font-size: .875rem; }
+        .modal-body { max-height: 60vh; overflow-y: auto; }
+        .sticky-top { position: sticky; top: 0; z-index: 1020; }
+        th { background-color: #343a40; color: white; }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container-fluid py-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                        <h4 class="mb-0"><i class="fas fa-database me-2"></i>Data Management - <span id="tableNameDisplay">cover</span></h4>
+                        <div>
+                            <button class="btn btn-light btn-sm me-2" id="filterButton"><i class="fas fa-filter me-1"></i> Filter Data</button>
+                            <button class="btn btn-light btn-sm" id="addDataButton"><i class="fas fa-plus me-1"></i> Tambah Data</button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="tableContainer" class="table-responsive-custom">
+                            <p class="text-center text-muted py-4">Loading data...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="dataModal" tabindex="-1" aria-labelledby="dataModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="dataModalLabel">Tambah/Edit Data</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="dataForm">
+                        <input type="hidden" id="id_x" name="id_x">
+                        <div class="row">
+                            <div class="col-md-4 mb-3"><label for="x_01" class="form-label">X_01</label><input type="text" class="form-control form-control-sm" id="x_01" name="x_01"></div>
+                            <div class="col-md-4 mb-3"><label for="x_02" class="form-label">X_02</label><input type="text" class="form-control form-control-sm" id="x_02" name="x_02"></div>
+                            <div class="col-md-4 mb-3"><label for="x_03" class="form-label">X_03</label><input type="text" class="form-control form-control-sm" id="x_03" name="x_03"></div>
+                            <div class="col-md-4 mb-3"><label for="x_04" class="form-label">X_04</label><input type="text" class="form-control form-control-sm" id="x_04" name="x_04"></div>
+                            <div class="col-md-4 mb-3"><label for="x_05" class="form-label">X_05</label><input type="text" class="form-control form-control-sm" id="x_05" name="x_05"></div>
+                            <div class="col-md-4 mb-3"><label for="x_06" class="form-label">X_06</label><input type="text" class="form-control form-control-sm" id="x_06" name="x_06"></div>
+                            <div class="col-md-4 mb-3"><label for="x_07" class="form-label">X_07</label><input type="text" class="form-control form-control-sm" id="x_07" name="x_07"></div>
+                            <div class="col-md-4 mb-3"><label for="x_08" class="form-label">X_08</label><input type="text" class="form-control form-control-sm" id="x_08" name="x_08"></div>
+                            <div class="col-md-4 mb-3"><label for="x_09" class="form-label">X_09</label><input type="text" class="form-control form-control-sm" id="x_09" name="x_09"></div>
+                            <div class="col-md-4 mb-3"><label for="x_10" class="form-label">X_10</label><input type="text" class="form-control form-control-sm" id="x_10" name="x_10"></div>
+                            <div class="col-md-4 mb-3"><label for="x_11" class="form-label">X_11</label><input type="text" class="form-control form-control-sm" id="x_11" name="x_11"></div>
+                            <div class="col-md-4 mb-3"><label for="x_12" class="form-label">X_12</label><input type="text" class="form-control form-control-sm" id="x_12" name="x_12"></div>
+                            <div class="col-md-4 mb-3"><label for="x_13" class="form-label">X_13</label><input type="text" class="form-control form-control-sm" id="x_13" name="x_13"></div>
+                            <div class="col-md-4 mb-3"><label for="x_14" class="form-label">X_14</label><input type="text" class="form-control form-control-sm" id="x_14" name="x_14"></div>
+                            <div class="col-md-4 mb-3"><label for="x_15" class="form-label">X_15</label><input type="text" class="form-control form-control-sm" id="x_15" name="x_15"></div>
+                            <div class="col-md-4 mb-3"><label for="x_16" class="form-label">X_16</label><input type="text" class="form-control form-control-sm" id="x_16" name="x_16"></div>
+                            <div class="col-md-4 mb-3"><label for="x_17" class="form-label">X_17</label><input type="text" class="form-control form-control-sm" id="x_17" name="x_17"></div>
+                            <div class="col-md-4 mb-3"><label for="x_18" class="form-label">X_18</label><input type="text" class="form-control form-control-sm" id="x_18" name="x_18"></div>
+                            <div class="col-md-4 mb-3"><label for="x_19" class="form-label">X_19</label><input type="text" class="form-control form-control-sm" id="x_19" name="x_19"></div>
+                            <div class="col-md-4 mb-3"><label for="x_20" class="form-label">X_20</label><input type="text" class="form-control form-control-sm" id="x_20" name="x_20"></div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-primary" id="saveDataButton">Simpan Data</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="filterModalLabel">Filter Data</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="filterForm">
+                        <p class="text-muted">Gunakan parameter filter sesuai dengan API: `_eq`, `_gt`, `_lt`, `_like`, `_ne`.</p>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="id_x_gt" class="form-label">ID_X > (misal: 10)</label>
+                                <input type="number" class="form-control form-control-sm" id="id_x_gt" name="id_x_gt">
+                            </div>
+                             <div class="col-md-6 mb-3">
+                                <label for="x_04_like" class="form-label">X_04 mengandung (misal: EMOSIONAL)</label>
+                                <input type="text" class="form-control form-control-sm" id="x_04_like" name="x_04_like">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="x_13_ne" class="form-label">X_13 tidak sama dengan (misal: '' atau 0)</label>
+                                <input type="text" class="form-control form-control-sm" id="x_13_ne" name="x_13_ne">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="x_14_ne" class="form-label">X_14 tidak sama dengan (misal: '' atau 0)</label>
+                                <input type="text" class="form-control form-control-sm" id="x_14_ne" name="x_14_ne">
+                            </div>
+                             <div class="col-md-6 mb-3">
+                                <label for="x_01_eq" class="form-label">X_01 = (misal: latihan)</label>
+                                <input type="text" class="form-control form-control-sm" id="x_01_eq" name="x_01_eq">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-info" id="resetFilterButton">Reset Filter</button>
+                    <button type="button" class="btn btn-primary" id="applyFilterButton">Terapkan Filter</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Set nama tabel dan URL API
+        const currentTable = 'cover';
+        const apiUrl = 'https://lidan-co-id.pages.dev/api/contacts_filter_dinamis'; // URL API Anda
+        let currentFilters = {};
+
+        $(document).ready(function() {
+            $('#tableNameDisplay').text(currentTable);
+            loadData();
+
+            $('#addDataButton').on('click', function() {
+                $('#dataForm')[0].reset();
+                $('#id_x').val('');
+                $('#dataModalLabel').text('Tambah Data Baru');
+                $('#dataModal').modal('show');
+            });
+
+            $('#saveDataButton').on('click', function() {
+                saveData();
+            });
+
+            $('#filterButton').on('click', function() {
+                for (const key in currentFilters) {
+                    $(`#${key}`).val(currentFilters[key]);
+                }
+                $('#filterModal').modal('show');
+            });
+
+            $('#applyFilterButton').on('click', function() {
+                currentFilters = {};
+                $('#filterForm input').each(function() {
+                    const input = $(this);
+                    if (input.val()) {
+                        currentFilters[input.attr('id')] = input.val();
+                    }
+                });
+                loadData(currentFilters);
+                $('#filterModal').modal('hide');
+            });
+
+            $('#resetFilterButton').on('click', function() {
+                $('#filterForm')[0].reset();
+                currentFilters = {};
+                loadData();
+                $('#filterModal').modal('hide');
+            });
+        });
+
+        function loadData(filters = {}) {
+            const tableContainer = $('#tableContainer');
+            tableContainer.html('<p class="text-center py-4"><i class="fas fa-spinner fa-spin me-2"></i>Memuat data...</p>');
+
+            let requestUrl = `${apiUrl}?table=${currentTable}`;
+            for (const key in filters) {
+                requestUrl += `&${key}=${encodeURIComponent(filters[key])}`;
+            }
+
+            $.ajax({
+                url: requestUrl,
+                method: 'GET',
+                headers: { 'X-Table-Name': currentTable },
+                success: function(response) {
+                    if (response.success && response.data && response.data.length > 0) {
+                        renderTable(response.data);
+                    } else {
+                        tableContainer.html('<p class="text-center text-muted py-4">Tidak ada data ditemukan.</p>');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error memuat data:', error);
+                    tableContainer.html(`<p class="text-center text-danger py-4">Error memuat data: ${xhr.responseJSON ? xhr.responseJSON.error : error}</p>`);
+                }
+            });
+        }
+
+        function renderTable(data) {
+            const tableContainer = $('#tableContainer');
+            let tableHtml = `
+                <table class="table table-striped table-hover mb-0">
+                    <thead class="table-dark sticky-top">
+                        <tr>
+            `;
+
+            const headers = Object.keys(data[0]);
+            headers.forEach(header => {
+                tableHtml += `<th>${header.toUpperCase()}</th>`;
+            });
+            tableHtml += `
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            data.forEach(item => {
+                tableHtml += `<tr>`;
+                headers.forEach(header => {
+                    // PERBAIKAN: Tampilkan string kosong jika nilai adalah null atau undefined
+                    tableHtml += `<td>${(item[header] !== undefined && item[header] !== null) ? item[header] : ''}</td>`;
+                });
+                tableHtml += `
+                    <td>
+                        <button class="btn btn-warning btn-sm me-1" onclick="editData(${item.id_x})"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteData(${item.id_x})"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>`;
+            });
+
+            tableHtml += `
+                    </tbody>
+                </table>
+            `;
+            tableContainer.html(tableHtml);
+        }
+
+        function editData(id) {
+            // PERBAIKAN: Gunakan id_x sebagai query parameter
+            $.ajax({
+                url: `${apiUrl}?table=${currentTable}&id_x=${id}`, // <-- URL GET by ID dengan query parameter
+                method: 'GET',
+                headers: { 'X-Table-Name': currentTable },
+                success: function(response) {
+                    if (response.success && response.data) {
+                        const item = response.data;
+                        $('#id_x').val(item.id_x);
+                        for (let i = 1; i <= 20; i++) {
+                            const colName = `x_${i.toString().padStart(2, '0')}`;
+                            // PERBAIKAN: Set value form menjadi kosong jika item[colName] adalah null
+                            $(`#${colName}`).val((item[colName] !== null && item[colName] !== undefined) ? item[colName] : '');
+                        }
+                        $('#dataModalLabel').text('Edit Data');
+                        $('#dataModal').modal('show');
+                    } else {
+                        showAlert('Data tidak ditemukan untuk diedit.', 'warning');
+                    }
+                },
+                error: function(xhr, status, error) { 
+                    console.error('Error memuat data untuk diedit:', error, xhr.responseJSON);
+                    showAlert(xhr.responseJSON ? xhr.responseJSON.error : 'Error memuat data untuk diedit!', 'danger'); 
+                }
+            });
+        }
+
+        function saveData() {
+            const id = $('#id_x').val();
+            const formData = {};
+            for (let i = 1; i <= 20; i++) {
+                const colName = `x_${i.toString().padStart(2, '0')}`;
+                const value = $(`#${colName}`).val();
+                // Kirim string kosong jika input kosong, API akan mengubahnya menjadi NULL
+                formData[colName] = value;
+            }
+
+            let method, url;
+            if (id) {
+                // Jika ada ID, lakukan UPDATE (PUT)
+                method = 'PUT';
+                // PERBAIKAN: Gunakan id_x sebagai query parameter
+                url = `${apiUrl}?table=${currentTable}&id_x=${id}`; // <-- URL PUT dengan query parameter
+            } else {
+                // Jika tidak ada ID, lakukan TAMBAH (POST)
+                method = 'POST';
+                url = `${apiUrl}?table=${currentTable}`; // <-- URL POST
+            }
+
+            $.ajax({
+                url: url,
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Table-Name': currentTable
+                },
+                data: JSON.stringify(formData),
+                success: function(response) {
+                    $('#dataModal').modal('hide');
+                    loadData(currentFilters);
+                    showAlert(response.message || 'Operasi data berhasil!', 'success');
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error menyimpan data:', error, xhr.responseJSON);
+                    showAlert(xhr.responseJSON ? xhr.responseJSON.error : 'Error menyimpan data!', 'danger');
+                }
+            });
+        }
+
+        function deleteData(id) {
+            if(confirm('Yakin ingin menghapus data ini?')) {
+                // PERBAIKAN: Gunakan id_x sebagai query parameter
+                $.ajax({
+                    url: `${apiUrl}?table=${currentTable}&id_x=${id}`, // <-- URL DELETE dengan query parameter
+                    method: 'DELETE',
+                    headers: {'X-Table-Name': currentTable},
+                    success: function(response) {
+                        loadData(currentFilters);
+                        showAlert(response.message || 'Data berhasil dihapus!', 'success');
+                    },
+                    error: function(xhr, status, error) { 
+                        console.error('Error menghapus data:', error, xhr.responseJSON);
+                        showAlert(xhr.responseJSON ? xhr.responseJSON.error : 'Error menghapus data!', 'danger'); 
+                    }
+                });
+            }
+        }
+
+        function showAlert(message, type) {
+            const alertHtml = `<div class="alert alert-${type} alert-dismissible fade show position-fixed" style="top:20px;right:20px;z-index:9999">
+                ${message}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>`;
+            $('body').append(alertHtml);
+            setTimeout(() => $('.alert').alert('close'), 3000);
+        }
+    </script>
+</body>
+</html>

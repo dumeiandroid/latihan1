@@ -1,0 +1,12 @@
+<p id="outputPesan"></p>
+<div id="dataContainer"></div>
+
+<script>
+    const outputPesan = document.getElementById("outputPesan");
+    outputPesan.textContent = "Halo dari JavaScript di halaman!";
+
+    const dataContainer = document.getElementById("dataContainer");
+    const namaProduk = "Laptop Gaming";
+    const hargaProduk = 15000000;
+    dataContainer.innerHTML = `<h3>Detail Produk:</h3><p>Nama: ${namaProduk}</p><p>Harga: Rp${hargaProduk.toLocaleString()}</p>`;
+</script>

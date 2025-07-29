@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soal Psikotest</title>
+    <style>
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <button id="startButton" onclick="startGame()">Start</button>
+    <h1>Pilih yang sesuai <br>atau mendekati diri anda</h1>
+
+    <div id="answersDisplay" class="hidden">
+        Jawaban: <span id="userAnswers"></span>
+    </div>
+
+    <div id="question" class="hidden"></div>
+
+    <div id="options1" class="options turun hidden">
+        <button style="text-align: left;" id="optionA" onclick="submitAnswer('A')"></button>
+        <button style="text-align: left;" id="optionB" onclick="submitAnswer('B')"></button>
+        <button style="text-align: left;" id="optionC" onclick="submitAnswer('C')"></button>
+        <button style="text-align: left;" id="optionD" onclick="submitAnswer('D')"></button>
+        <button style="text-align: left;" id="optionE" onclick="submitAnswer('E')"></button>
+        <button style="text-align: left;" id="optionF" onclick="submitAnswer('F')"></button>
+        <button style="text-align: left;" id="optionG" onclick="submitAnswer('G')"></button>
+        <button style="text-align: left;" id="optionH" onclick="submitAnswer('H')"></button>
+    </div>
+
+    <script>
+    let currentQuestionIndex = 0;
+    let questions = [];
+    let userAnswers = [];
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const soalParam = urlParams.get('soal');
+    const questionFileName = soalParam ? `${soalParam}.js` : `0.js`;
+
+    function loadScript(url, callback) {
+        const script = document.createElement('script');
+        script.src = url;
+        script.onload = callback;
+        script.onerror = () => console.error(`Gagal memuat script: ${url}`);
+        document.head.appendChild(script);
+    }
+
+    // Muat file soal terlebih dahulu
+    loadScript(`../who/${questionFileName}`, () => {
+        if (typeof questionsData !== 'undefined') {
+            questions = questionsData;
+            console.log(`Soal dimuat dari: ../who/${questionFileName}`, questions);
+            loadGameState(); // Panggil loadGameState setelah questions dimuat
+        } else {
+            console.error("questionsData tidak ditemukan dalam script yang dimuat.");
+        }
+    });
+
+    function showElement(elementId) {
+        document.getElementById(elementId).classList.remove("hidden");
+    }
+
+    function hideElement(elementId) {
+        document.getElementById(elementId).classList.add("hidden");
+    }
+
+    function loadGameState() {
+        const savedState = localStorage.getItem(`gameState_${questionFileName}`);
+        if (savedState) {
+            const state = JSON.parse(savedState);
+            currentQuestionIndex = state.currentQuestionIndex || 0;
+            userAnswers = state.userAnswers || [];
+            document.getElementById("userAnswers").innerHTML = userAnswers.join('; ');
+        }
+        // newQuestion() tidak dipanggil di sini, akan dipanggil oleh startGame
+    }
+
+    function saveGameState() {
+        const gameState = {
+            currentQuestionIndex: currentQuestionIndex,
+            userAnswers: userAnswers
+        };
+        localStorage.setItem(`gameState_${questionFileName}`, JSON.stringify(gameState));
+        console.log("Status permainan disimpan:", gameState);
+    }
+
+    function startGame() {
+        document.getElementById("startButton").disabled = true;
+        showElement("answersDisplay"); // Tampilkan div jawaban
+        showElement("question");      // Tampilkan div pertanyaan
+        showElement("options1");      // Tampilkan div opsi
+        newQuestion();                // Mulai menampilkan pertanyaan
+    }
+
+    function newQuestion() {
+        if (currentQuestionIndex >= questions.length) {
+            endGame(false);
+            return;
+        }
+        
+        const currentQuestion = questions[currentQuestionIndex];
+        document.getElementById("question").innerHTML = currentQuestion.question;
+
+        const options = currentQuestion.options;
+        const optionButtons = document.querySelectorAll("#options1 button");
+
+        optionButtons.forEach(button => {
+            button.style.display = "none";
+        });
+
+        Object.keys(options).forEach(optionKey => {
+            const button = document.getElementById(`option${optionKey}`);
+            if (button) {
+                button.innerHTML = optionKey + ". " + options[optionKey];
+                button.style.display = "block"; // Gunakan 'block' agar tombol opsi turun ke baris baru
+            }
+        });
+    }
+
+    function submitAnswer(option) {
+        userAnswers.push(option);
+        document.getElementById("userAnswers").innerHTML = userAnswers.join('; ');
+        console.log("Jawaban Pengguna:", userAnswers.join('; '));
+
+        currentQuestionIndex++;
+        saveGameState();
+
+        newQuestion();
+    }
+
+    function endGame(timeout) {
+        document.getElementById("question").innerHTML = timeout ? "Waktu Habis!" : "Soal telah selesai, semua telah dikerjakan!";
+        
+        hideElement("options1"); // Sembunyikan container opsi
+        hideElement("answersDisplay"); // Sembunyikan juga display jawaban
+
+        console.log("Semua Jawaban Akhir Dikirim:", userAnswers.join(';'));
+
+        setTimeout(() => {
+            console.log("Tes selesai. Anda biasanya akan dialihkan ke sini atau melihat skor akhir.");
+            localStorage.removeItem(`gameState_${questionFileName}`);
+        }, 1000);
+    }
+    </script>
+</body>
+</html>
