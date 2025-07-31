@@ -4,7 +4,7 @@ const currentTable = 'cover';
 const baseUrl = 'https://lidan-co-id.pages.dev/api/contacts_filter_dinamis'; 
 
 // Fungsi untuk memuat data dengan filter dan menampilkannya sebagai tabel HTML
-function loadFilteredDataNotEmptyNotZero() {
+function loadFilteredDataX04Emotional() {
     const tableContainer = document.getElementById("tableContainer");
 
     if (!tableContainer) {
@@ -12,13 +12,11 @@ function loadFilteredDataNotEmptyNotZero() {
         return;
     }
 
-    tableContainer.innerHTML = '<p class="text-center py-4"><i class="fas fa-spinner fa-spin me-2"></i>Loading data where X_13 and X_14 are not empty and not 0...</p>';
+    tableContainer.innerHTML = '<p class="text-center py-4"><i class="fas fa-spinner fa-spin me-2"></i>Loading data where X_04 contains "EMOSIONAL"...</p>';
 
-    // Bangun URL dengan filter untuk x_13 dan x_14
-    // x_13_ne=  : berarti x_13 tidak sama dengan string kosong
-    // x_13_ne=0 : berarti x_13 tidak sama dengan angka/string '0'
-    // Logika yang sama diterapkan untuk x_14
-    const url = `${baseUrl}?table=${currentTable}&x_13_ne=&x_13_ne=0&x_14_ne=&x_14_ne=0`;
+    // Bangun URL dengan parameter tabel dan filter x_04_like=EMOSIONAL
+    // API contacts_filter_dinamis akan memproses parameter ini untuk pencarian 'mengandung'
+    const url = `${baseUrl}?table=${currentTable}&x_04_like=EMOSIONAL`; // <-- FILTER BARU DI SINI
 
     fetch(url, {
         method: 'GET',
@@ -73,7 +71,7 @@ function loadFilteredDataNotEmptyNotZero() {
             tableContainer.appendChild(responsiveDiv);
 
         } else {
-            tableContainer.innerHTML = '<p class="text-center py-4 text-muted">Tidak ada data ditemukan di mana X_13 dan X_14 tidak kosong atau tidak 0.</p>';
+            tableContainer.innerHTML = '<p class="text-center py-4 text-muted">Tidak ada data ditemukan di mana X_04 mengandung "EMOSIONAL".</p>';
         }
     })
     .catch(error => {
@@ -83,4 +81,4 @@ function loadFilteredDataNotEmptyNotZero() {
 }
 
 // Panggil fungsi ini saat seluruh DOM halaman selesai dimuat
-document.addEventListener('DOMContentLoaded', loadFilteredDataNotEmptyNotZero);
+document.addEventListener('DOMContentLoaded', loadFilteredDataX04Emotional);

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manajemen Data - Tambah Data Baru</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .btn-sm { padding: .25rem .5rem; font-size: .875rem; }
+        .form-control-sm { padding: .25rem .5rem; font-size: .875rem; }
+        .card-header {
+            background-color: #007bff; /* Primary color for header */
+            color: white;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container-fluid py-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10">
+                <div class="card shadow">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h4 class="mb-0"><i class="fas fa-plus-circle me-2"></i>Tambah Data Baru - <span id="tableNameDisplay">cover</span></h4>
+                    </div>
+                    <div class="card-body">
+                        <form id="dataForm">
+                            <!-- Input form akan di-generate di sini oleh JavaScript -->
+                            <div id="formFieldsContainer" class="row">
+                                <!-- Placeholder for dynamically generated form fields -->
+                            </div>
+                            <div class="d-grid gap-2 mt-4">
+                                <button type="submit" class="btn btn-primary" id="saveDataButton">Simpan Data</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // --- Konfigurasi Aplikasi ---
+        const currentTable = 'cover';
+        const apiUrl = 'https://lidan-co-id.pages.dev/api/contacts_filter_dinamis';
+
+        // Tentukan field form yang ingin ditampilkan dan atributnya
+        const formFields = [
+            { id: 'x_01', label: 'X_01', type: 'text', placeholder: 'Masukkan X_01' },
+            { id: 'x_02', label: 'X_02', type: 'text', placeholder: 'Masukkan X_02' },
+            { id: 'x_03', label: 'X_03', type: 'text', placeholder: 'Masukkan X_03' },
+            { id: 'x_04', label: 'X_04', type: 'text', placeholder: 'Masukkan X_04' },
+            { id: 'x_05', label: 'X_05', type: 'text', placeholder: 'Masukkan X_05' },
+            { id: 'x_06', label: 'X_06', type: 'text', placeholder: 'Masukkan X_06' },
+            { id: 'x_07', label: 'X_07', type: 'text', placeholder: 'Masukkan X_07' },
+            { id: 'x_08', label: 'X_08', type: 'text', placeholder: 'Masukkan X_08' },
+            { id: 'x_09', label: 'X_09', type: 'text', placeholder: 'Masukkan X_09' },
+            { id: 'x_10', label: 'X_10', type: 'text', placeholder: 'Masukkan X_10' },
+            { id: 'x_11', label: 'X_11', type: 'text', placeholder: 'Masukkan X_11' },
+            { id: 'x_12', label: 'X_12', type: 'text', placeholder: 'Masukkan X_12' },
+            { id: 'x_13', label: 'X_13', type: 'text', placeholder: 'Masukkan X_13' },
+            { id: 'x_14', label: 'X_14', type: 'text', placeholder: 'Masukkan X_14' },
+            { id: 'x_15', label: 'X_15', type: 'text', placeholder: 'Masukkan X_15' },
+            { id: 'x_16', label: 'X_16', type: 'text', placeholder: 'Masukkan X_16' },
+            { id: 'x_17', label: 'X_17', type: 'text', placeholder: 'Masukkan X_17' },
+            { id: 'x_18', label: 'X_18', type: 'text', placeholder: 'Masukkan X_18' },
+            { id: 'x_19', label: 'X_19', type: 'text', placeholder: 'Masukkan X_19' },
+            { id: 'x_20', label: 'X_20', type: 'text', placeholder: 'Masukkan X_20' }
+            // Tambahkan atau hapus field sesuai kebutuhan Anda
+            // Contoh lain: { id: 'tanggal', label: 'Tanggal', type: 'date' }
+        ];
+
+        // --- Event Listener Dokumen ---
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('tableNameDisplay').textContent = currentTable;
+            generateFormFields(); // Generate form fields on page load
+
+            // Tangani submit form
+            document.getElementById('dataForm').addEventListener('submit', (event) => {
+                event.preventDefault(); // Mencegah refresh halaman
+                saveData();
+            });
+        });
+
+        // --- Fungsi Utama ---
+
+        /**
+         * Meng-generate field form secara dinamis berdasarkan array formFields.
+         */
+        function generateFormFields() {
+            const container = document.getElementById('formFieldsContainer');
+            let formHtml = '';
+            formFields.forEach(field => {
+                formHtml += `
+                    <div class="col-md-4 mb-3">
+                        <label for="${field.id}" class="form-label">${field.label}</label>
+                        <input type="${field.type}" class="form-control form-control-sm" id="${field.id}" name="${field.id}" placeholder="${field.placeholder || ''}">
+                    </div>
+                `;
+            });
+            container.innerHTML = formHtml;
+        }
+
+        /**
+         * Mengambil data dari form dan mengirimkannya ke API menggunakan metode POST.
+         */
+        async function saveData() {
+            const formData = {};
+            formFields.forEach(field => {
+                const inputElement = document.getElementById(field.id);
+                if (inputElement) {
+                    formData[field.id] = inputElement.value;
+                }
+            });
+
+            const url = `${apiUrl}?table=${currentTable}`;
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Table-Name': currentTable
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                showAlert(data.message || 'Data berhasil disimpan!', 'success');
+                document.getElementById('dataForm').reset(); // Reset form setelah sukses
+            } catch (error) {
+                console.error('Error menyimpan data:', error);
+                showAlert(`Error menyimpan data: ${error.message || error}`, 'danger');
+            }
+        }
+
+        /**
+         * Menampilkan pesan alert sementara di sudut kanan atas layar.
+         * @param {string} message - Pesan yang akan ditampilkan.
+         * @param {string} type - Tipe alert (e.g., 'success', 'danger', 'warning', 'info').
+         */
+        function showAlert(message, type) {
+            const alertHtml = `<div class="alert alert-${type} alert-dismissible fade show position-fixed" style="top:20px;right:20px;z-index:9999">
+                ${message}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>`;
+            document.body.insertAdjacentHTML('beforeend', alertHtml);
+            setTimeout(() => {
+                const alertElement = document.querySelector('.alert');
+                if (alertElement) {
+                    new bootstrap.Alert(alertElement).close();
+                }
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

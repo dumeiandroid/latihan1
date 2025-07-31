@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manajemen Data - Tampilan Baca Saja</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .table-responsive-custom {
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+        .btn-sm { padding: .25rem .5rem; font-size: .875rem; }
+        .form-control-sm { padding: .25rem .5rem; font-size: .875rem; }
+        .modal-body { max-height: 60vh; overflow-y: auto; }
+        .sticky-top { position: sticky; top: 0; z-index: 1020; }
+        th { background-color: #343a40; color: white; }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container-fluid py-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                        <h4 class="mb-0"><i class="fas fa-database me-2"></i>Manajemen Data - <span id="tableNameDisplay">cover</span></h4>
+                        <!-- Tombol filter telah dihapus dari sini -->
+                    </div>
+                    <div class="card-body">
+                        <div id="tableContainer" class="table-responsive-custom">
+                            <p class="text-center text-muted py-4">Memuat data...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal filter telah dihapus sepenuhnya dari sini -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // --- Konfigurasi Aplikasi ---
+        const currentTable = 'cover';
+        const apiUrl = 'https://lidan-co-id.pages.dev/api/contacts_filter_dinamis';
+
+        // Tentukan kolom yang ingin ditampilkan dalam tabel
+        const displayColumns = [
+            'id_x', 'x_01', 'x_02', 'x_03', 'x_04', 'x_05', 'x_06', 'x_07', 'x_08',
+            'x_09', 'x_10', 'x_11', 'x_12', 'x_13', 'x_14', 'x_15', 'x_16', 'x_17',
+            'x_18', 'x_19', 'x_20'
+        ];
+
+        // Tentukan filter yang akan diterapkan saat memuat data.
+        // Anda dapat mengatur filter di sini secara manual.
+        // Contoh: { 'x_12_eq': 'nilai_x12', 'x_13_like': 'kata_kunci' }
+        // Untuk filter "AND", tambahkan beberapa properti ke objek ini.
+        // Misalnya: { 'x_12_eq': 'example_value', 'x_13_ne': '0' }
+        const currentFilters = {
+            // 'x_12_eq': 'contoh_nilai',
+            // 'x_13_ne': '0',
+            // 'x_04_like': 'EMOSIONAL',
+            // 'id_x_lt': '10',
+            // 'x_02_like': 'siapkan diri',
+        };
+
+        // --- Event Listener Dokumen ---
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('tableNameDisplay').textContent = currentTable;
+            loadData(currentFilters); // Muat data dengan filter yang ditentukan
+        });
+
+        // --- Fungsi Utama ---
+
+        /**
+         * Memuat data dari API berdasarkan filter yang diberikan.
+         * @param {Object} filters - Objek berisi parameter filter.
+         */
+        async function loadData(filters = {}) {
+            const tableContainer = document.getElementById('tableContainer');
+            tableContainer.innerHTML = '<p class="text-center py-4"><i class="fas fa-spinner fa-spin me-2"></i>Memuat data...</p>';
+
+            let requestUrl = `${apiUrl}?table=${currentTable}`;
+            // Tambahkan filter ke URL
+            for (const key in filters) {
+                requestUrl += `&${key}=${encodeURIComponent(filters[key])}`;
+            }
+
+            try {
+                const response = await fetch(requestUrl, {
+                    method: 'GET',
+                    headers: { 'X-Table-Name': currentTable }
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                if (data.success && data.data && data.data.length > 0) {
+                    renderTable(data.data);
+                } else {
+                    tableContainer.innerHTML = '<p class="text-center text-muted py-4">Tidak ada data ditemukan.</p>';
+                }
+            } catch (error) {
+                console.error('Error memuat data:', error);
+                tableContainer.innerHTML = `<p class="text-center text-danger py-4">Error memuat data: ${error.message || error}</p>`;
+                showAlert(`Error memuat data: ${error.message || error}`, 'danger');
+            }
+        }
+
+        /**
+         * Merender data ke dalam tabel HTML.
+         * @param {Array} data - Array objek data yang akan ditampilkan.
+         */
+        function renderTable(data) {
+            const tableContainer = document.getElementById('tableContainer');
+            let tableHtml = `
+                <table class="table table-striped table-hover mb-0">
+                    <thead class="table-dark sticky-top">
+                        <tr>
+            `;
+
+            // Buat header tabel berdasarkan displayColumns
+            displayColumns.forEach(header => {
+                tableHtml += `<th>${header.toUpperCase()}</th>`;
+            });
+            tableHtml += `
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            // Isi baris tabel dengan data
+            data.forEach(item => {
+                tableHtml += `<tr>`;
+                displayColumns.forEach(colName => {
+                    tableHtml += `<td>${(item[colName] !== undefined && item[colName] !== null) ? item[colName] : ''}</td>`;
+                });
+                tableHtml += `</tr>`;
+            });
+
+            tableHtml += `
+                    </tbody>
+                </table>
+            `;
+            tableContainer.innerHTML = tableHtml;
+        }
+
+        /**
+         * Menampilkan pesan alert sementara di sudut kanan atas layar.
+         * @param {string} message - Pesan yang akan ditampilkan.
+         * @param {string} type - Tipe alert (e.g., 'success', 'danger', 'warning', 'info').
+         */
+        function showAlert(message, type) {
+            const alertHtml = `<div class="alert alert-${type} alert-dismissible fade show position-fixed" style="top:20px;right:20px;z-index:9999">
+                ${message}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>`;
+            document.body.insertAdjacentHTML('beforeend', alertHtml);
+            setTimeout(() => {
+                const alertElement = document.querySelector('.alert');
+                if (alertElement) {
+                    new bootstrap.Alert(alertElement).close();
+                }
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

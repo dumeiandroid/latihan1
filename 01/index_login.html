@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Halaman Login</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f8f9fa;
+        }
+        .login-card {
+            width: 100%;
+            max-width: 400px;
+        }
+        .card-header {
+            background-color: #007bff; /* Primary color for header */
+            color: white;
+        }
+        .message-container {
+            margin-top: 1rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6 col-md-8">
+                <div class="card shadow login-card">
+                    <div class="card-header text-center">
+                        <h4 class="mb-0"><i class="fas fa-user-circle me-2"></i>Login - <span id="tableNameDisplay">cover</span></h4>
+                    </div>
+                    <div class="card-body">
+                        <!-- Konten yang ditampilkan berdasarkan status login -->
+                        <div id="loggedInSection" style="display: none;">
+                            <h5 class="text-center text-success mb-3">Selamat datang, <span id="loggedInUser"></span>!</h5>
+                            <p class="text-center">Anda telah berhasil login.</p>
+                            <div class="d-grid gap-2">
+                                <button type="button" class="btn btn-danger" id="logoutButton"><i class="fas fa-sign-out-alt me-2"></i>Logout</button>
+                            </div>
+                        </div>
+
+                        <div id="loginFormSection">
+                            <form id="loginForm">
+                                <!-- Form fields will be dynamically generated here -->
+                                <div id="loginFormFieldsContainer"></div>
+                                <div class="d-grid gap-2 mt-3">
+                                    <button type="submit" class="btn btn-primary" id="loginButton"><i class="fas fa-sign-in-alt me-2"></i>Login</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div id="messageContainer" class="message-container">
+                            <!-- Pesan sukses/gagal login akan ditampilkan di sini -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // --- Konfigurasi Aplikasi ---
+        const currentTable = 'cover';
+        const apiUrl = 'https://lidan-co-id.pages.dev/api/contacts_filter_dinamis';
+        const sessionKey = 'loggedInUserSession'; // Kunci untuk menyimpan sesi di localStorage
+
+        // Tentukan kolom mana saja yang akan digunakan untuk login
+        // Setiap objek harus memiliki 'id' (untuk elemen HTML) dan 'column' (untuk nama kolom di API)
+        const loginFields = [
+            { id: 'x_01_input', column: 'x_01', label: 'Masukkan X_01', placeholder: 'Contoh: SIAPKAN DIRI' },
+            { id: 'x_03_input', column: 'x_03', label: 'Masukkan X_03', placeholder: 'Contoh: DATA PENTING' }
+            // Anda bisa menambahkan lebih banyak kolom di sini, misal:
+            // { id: 'x_03_input', column: 'x_03', label: 'Masukkan X_03', placeholder: 'Contoh: KODE RAHASIA' }
+        ];
+
+        // --- Elemen DOM ---
+        const tableNameDisplay = document.getElementById('tableNameDisplay');
+        const loggedInSection = document.getElementById('loggedInSection');
+        const loggedInUserDisplay = document.getElementById('loggedInUser');
+        const logoutButton = document.getElementById('logoutButton');
+        const loginFormSection = document.getElementById('loginFormSection');
+        const loginForm = document.getElementById('loginForm');
+        const loginFormFieldsContainer = document.getElementById('loginFormFieldsContainer');
+        const messageContainer = document.getElementById('messageContainer');
+
+        // --- Event Listener Dokumen ---
+        document.addEventListener('DOMContentLoaded', () => {
+            tableNameDisplay.textContent = currentTable;
+            generateLoginFormFields(); // Generate form fields dynamically
+            checkSession(); // Periksa sesi saat halaman dimuat
+
+            loginForm.addEventListener('submit', handleLogin);
+            logoutButton.addEventListener('click', handleLogout);
+        });
+
+        // --- Fungsi Utama ---
+
+        /**
+         * Meng-generate field form login secara dinamis berdasarkan array loginFields.
+         */
+        function generateLoginFormFields() {
+            let formHtml = '';
+            loginFields.forEach(field => {
+                formHtml += `
+                    <div class="mb-3">
+                        <label for="${field.id}" class="form-label">${field.label}:</label>
+                        <input type="text" class="form-control" id="${field.id}" placeholder="${field.placeholder}" required>
+                    </div>
+                `;
+            });
+            loginFormFieldsContainer.innerHTML = formHtml;
+        }
+
+        /**
+         * Memeriksa apakah ada sesi login yang aktif.
+         * Menampilkan tampilan yang sesuai (form login atau status login).
+         */
+        function checkSession() {
+            const sessionData = localStorage.getItem(sessionKey);
+            if (sessionData) {
+                try {
+                    const userLoginInfo = JSON.parse(sessionData);
+                    // Tampilkan informasi login, bisa disesuaikan
+                    loggedInUserDisplay.textContent = Object.values(userLoginInfo).join(' / ');
+                    loggedInSection.style.display = 'block';
+                    loginFormSection.style.display = 'none';
+                } catch (e) {
+                    console.error("Error parsing session data from localStorage", e);
+                    localStorage.removeItem(sessionKey); // Hapus data sesi yang rusak
+                    loggedInSection.style.display = 'none';
+                    loginFormSection.style.display = 'block';
+                }
+            } else {
+                // Pengguna belum login
+                loggedInSection.style.display = 'none';
+                loginFormSection.style.display = 'block';
+            }
+        }
+
+        /**
+         * Menangani proses login saat form disubmit.
+         * Memeriksa keberadaan nilai kolom yang ditentukan di API.
+         * @param {Event} event - Objek event submit.
+         */
+        async function handleLogin(event) {
+            event.preventDefault(); // Mencegah refresh halaman
+            messageContainer.innerHTML = '<p class="text-muted"><i class="fas fa-spinner fa-spin me-2"></i>Memeriksa...</p>';
+
+            const loginValues = {};
+            let allFieldsFilled = true;
+            let requestUrl = `${apiUrl}?table=${currentTable}`;
+
+            // Kumpulkan nilai dari setiap field login dan bangun URL filter
+            loginFields.forEach(field => {
+                const inputElement = document.getElementById(field.id);
+                const value = inputElement ? inputElement.value.trim() : '';
+                
+                if (!value) {
+                    allFieldsFilled = false;
+                }
+                loginValues[field.column] = value; // Simpan nilai untuk sesi
+                requestUrl += `&${field.column}_eq=${encodeURIComponent(value)}`;
+            });
+
+            if (!allFieldsFilled) {
+                showAlert('Semua kolom login harus diisi.', 'warning');
+                messageContainer.innerHTML = ''; // Hapus pesan loading
+                return;
+            }
+
+            try {
+                const response = await fetch(requestUrl, {
+                    method: 'GET',
+                    headers: { 'X-Table-Name': currentTable }
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                if (data.success && data.data && data.data.length > 0) {
+                    // Login berhasil
+                    localStorage.setItem(sessionKey, JSON.stringify(loginValues)); // Simpan sesi sebagai JSON
+                    showAlert('Login berhasil!', 'success');
+                    messageContainer.innerHTML = `<p class="text-success"><i class="fas fa-check-circle me-2"></i>Login berhasil!</p>`;
+                    checkSession(); // Perbarui tampilan
+                } else {
+                    // Login gagal
+                    showAlert('Login gagal. Kombinasi data tidak ditemukan.', 'danger');
+                    messageContainer.innerHTML = `<p class="text-danger"><i class="fas fa-times-circle me-2"></i>Login gagal. Kombinasi data tidak ditemukan.</p>`;
+                }
+            } catch (error) {
+                console.error('Error saat login:', error);
+                showAlert(`Error saat login: ${error.message || error}`, 'danger');
+                messageContainer.innerHTML = `<p class="text-danger"><i class="fas fa-times-circle me-2"></i>Error saat login: ${error.message || error}</p>`;
+            }
+        }
+
+        /**
+         * Menangani proses logout.
+         * Menghapus sesi dan memperbarui tampilan.
+         */
+        function handleLogout() {
+            localStorage.removeItem(sessionKey); // Hapus sesi
+            showAlert('Anda telah logout.', 'info');
+            messageContainer.innerHTML = ''; // Bersihkan pesan
+            // Bersihkan semua input form login
+            loginFields.forEach(field => {
+                const inputElement = document.getElementById(field.id);
+                if (inputElement) {
+                    inputElement.value = '';
+                }
+            });
+            checkSession(); // Perbarui tampilan
+        }
+
+        /**
+         * Menampilkan pesan alert sementara di sudut kanan atas layar.
+         * @param {string} message - Pesan yang akan ditampilkan.
+         * @param {string} type - Tipe alert (e.g., 'success', 'danger', 'warning', 'info').
+         */
+        function showAlert(message, type) {
+            const alertHtml = `<div class="alert alert-${type} alert-dismissible fade show position-fixed" style="top:20px;right:20px;z-index:9999">
+                ${message}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>`;
+            document.body.insertAdjacentHTML('beforeend', alertHtml);
+            setTimeout(() => {
+                const alertElement = document.querySelector('.alert');
+                if (alertElement) {
+                    new bootstrap.Alert(alertElement).close();
+                }
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

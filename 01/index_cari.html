@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Halaman Pencarian Data</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Align at the top */
+            min-height: 100vh;
+            background-color: #f8f9fa;
+            padding-top: 50px; /* Add some padding from the top */
+        }
+        .search-card {
+            width: 100%;
+            max-width: 800px;
+        }
+        .card-header {
+            background-color: #17a2b8; /* Info color for header */
+            color: white;
+        }
+        .results-container {
+            margin-top: 1rem;
+            padding: 1rem;
+            border: 1px solid #dee2e6;
+            border-radius: 0.25rem;
+            background-color: #e9ecef;
+            min-height: 150px;
+            max-height: 400px; /* Limit height for scroll */
+            overflow-y: auto; /* Enable scrolling */
+            white-space: pre-wrap; /* Preserve whitespace and wrap text */
+            font-family: monospace; /* Monospace font for better alignment */
+        }
+        .message-container {
+            margin-top: 1rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 col-md-12">
+                <div class="card shadow search-card">
+                    <div class="card-header text-center">
+                        <h4 class="mb-0"><i class="fas fa-search me-2"></i>Pencarian Data - <span id="tableNameDisplay">cover</span></h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" id="searchInput" placeholder="Masukkan kata kunci pencarian..." aria-label="Kata kunci pencarian">
+                            <button class="btn btn-primary" type="button" id="searchButton"><i class="fas fa-search me-2"></i>Cari</button>
+                        </div>
+                        
+                        <div id="resultsContainer" class="results-container">
+                            <p class="text-muted text-center">Hasil pencarian akan muncul di sini.</p>
+                        </div>
+
+                        <div id="messageContainer" class="message-container">
+                            <!-- Pesan status akan ditampilkan di sini -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // --- Konfigurasi Aplikasi ---
+        const currentTable = 'cover';
+        const apiUrl = 'https://lidan-co-id.pages.dev/api/contacts_filter_dinamis';
+
+        // Tentukan kolom mana saja yang akan dicari (menggunakan filter _like)
+        // Jika ada lebih dari satu, pencarian akan dilakukan dengan logika OR (jika API mendukung)
+        // atau akan dibuat query terpisah untuk setiap kolom (jika API tidak mendukung OR).
+        // Untuk API ini, kita akan membuat satu query dengan multiple _like parameters.
+        const searchColumns = ['x_02']; // Contoh: cari di x_01, x_02, x_03, x_04
+
+        // Tentukan kolom mana saja dari hasil pencarian yang akan ditampilkan
+        const displayColumns = [
+            'id_x', 'x_01', 'x_02', 'x_03', 'x_04', 'x_05', 'x_06', 'x_07', 'x_08',
+            'x_09', 'x_10', 'x_11', 'x_12', 'x_13', 'x_14', 'x_15', 'x_16', 'x_17',
+            'x_18', 'x_19', 'x_20'
+        ];
+
+        // --- Elemen DOM ---
+        const tableNameDisplay = document.getElementById('tableNameDisplay');
+        const searchInput = document.getElementById('searchInput');
+        const searchButton = document.getElementById('searchButton');
+        const resultsContainer = document.getElementById('resultsContainer');
+        const messageContainer = document.getElementById('messageContainer');
+
+        // --- Event Listener Dokumen ---
+        document.addEventListener('DOMContentLoaded', () => {
+            tableNameDisplay.textContent = currentTable;
+            searchButton.addEventListener('click', performSearch);
+            // Optional: Trigger search on Enter key press
+            searchInput.addEventListener('keypress', (event) => {
+                if (event.key === 'Enter') {
+                    performSearch();
+                }
+            });
+        });
+
+        // --- Fungsi Utama ---
+
+        /**
+         * Melakukan pencarian data berdasarkan input pengguna dan kolom yang dikonfigurasi.
+         */
+        async function performSearch() {
+            const query = searchInput.value.trim();
+            resultsContainer.innerHTML = ''; // Clear previous results
+            messageContainer.innerHTML = ''; // Clear previous messages
+
+            if (!query) {
+                showAlert('Masukkan kata kunci pencarian.', 'warning');
+                resultsContainer.innerHTML = '<p class="text-muted text-center">Hasil pencarian akan muncul di sini.</p>';
+                return;
+            }
+
+            messageContainer.innerHTML = '<p class="text-muted"><i class="fas fa-spinner fa-spin me-2"></i>Mencari data...</p>';
+
+            let requestUrl = `${apiUrl}?table=${currentTable}`;
+            // Tambahkan filter _like untuk setiap kolom pencarian yang dikonfigurasi
+            // API ini mendukung multiple parameters, yang akan diinterpretasikan sebagai AND atau OR
+            // tergantung implementasi API. Dalam banyak kasus, multiple _like akan menjadi AND.
+            // Jika Anda ingin OR, API Anda harus mendukung parameter seperti `_or_x_01_like`
+            // atau Anda harus membuat beberapa panggilan fetch.
+            searchColumns.forEach(col => {
+                requestUrl += `&${col}_like=${encodeURIComponent(query)}`;
+            });
+
+            try {
+                const response = await fetch(requestUrl, {
+                    method: 'GET',
+                    headers: { 'X-Table-Name': currentTable }
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                if (data.success && data.data && data.data.length > 0) {
+                    renderSearchResults(data.data);
+                    showAlert(`Ditemukan ${data.data.length} hasil.`, 'success');
+                } else {
+                    resultsContainer.innerHTML = '<p class="text-muted text-center">Tidak ada data ditemukan untuk pencarian ini.</p>';
+                    showAlert('Tidak ada data ditemukan.', 'info');
+                }
+            } catch (error) {
+                console.error('Error saat pencarian:', error);
+                resultsContainer.innerHTML = `<p class="text-danger text-center">Error saat pencarian: ${error.message || error}</p>`;
+                showAlert(`Error saat pencarian: ${error.message || error}`, 'danger');
+            } finally {
+                messageContainer.innerHTML = ''; // Hapus pesan loading
+            }
+        }
+
+        /**
+         * Merender hasil pencarian ke dalam resultsContainer.
+         * @param {Array} data - Array objek data hasil pencarian.
+         */
+        function renderSearchResults(data) {
+            let resultsHtml = '';
+            data.forEach(item => {
+                let rowData = [];
+                displayColumns.forEach(colName => {
+                    const value = (item[colName] !== undefined && item[colName] !== null) ? item[colName] : '';
+                    rowData.push(`${colName.toUpperCase()}: ${value}`);
+                });
+                // Tambahkan dua karakter baris baru untuk spasi antar baris
+                resultsHtml += rowData.join(' | ') + '\n\n'; 
+            });
+            resultsContainer.textContent = resultsHtml; // Gunakan textContent untuk keamanan dan pre-wrap
+        }
+
+        /**
+         * Menampilkan pesan alert sementara di sudut kanan atas layar.
+         * @param {string} message - Pesan yang akan ditampilkan.
+         * @param {string} type - Tipe alert (e.g., 'success', 'danger', 'warning', 'info').
+         */
+        function showAlert(message, type) {
+            const alertHtml = `<div class="alert alert-${type} alert-dismissible fade show position-fixed" style="top:20px;right:20px;z-index:9999">
+                ${message}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>`;
+            document.body.insertAdjacentHTML('beforeend', alertHtml);
+            setTimeout(() => {
+                const alertElement = document.querySelector('.alert');
+                if (alertElement) {
+                    new bootstrap.Alert(alertElement).close();
+                }
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

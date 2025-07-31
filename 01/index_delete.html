@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manajemen Data - Hapus Data</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .card-header {
+            background-color: #dc3545; /* Danger color for header */
+            color: white;
+        }
+        .message-container {
+            min-height: 100px; /* Memberikan ruang untuk pesan */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            text-align: center;
+        }
+        /* Style for custom confirmation modal */
+        .custom-modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1050; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+            justify-content: center;
+            align-items: center;
+        }
+        .custom-modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 400px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+        .custom-modal-buttons {
+            margin-top: 20px;
+        }
+        .custom-modal-buttons button {
+            margin: 0 10px;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container-fluid py-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-6 col-md-8">
+                <div class="card shadow">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h4 class="mb-0"><i class="fas fa-trash-alt me-2"></i>Hapus Data - <span id="tableNameDisplay">cover</span></h4>
+                    </div>
+                    <div class="card-body">
+                        <div id="messageContainer" class="message-container">
+                            <p class="text-muted">Klik tombol di bawah untuk menghapus data.</p>
+                        </div>
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="button" class="btn btn-danger" id="confirmDeleteButton">Hapus Data ID: <span id="deleteIdDisplay"></span></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Confirmation Modal -->
+    <div id="confirmationModal" class="custom-modal">
+        <div class="custom-modal-content">
+            <p>Yakin ingin menghapus data ini?</p>
+            <div class="custom-modal-buttons">
+                <button class="btn btn-secondary" id="cancelDelete">Batal</button>
+                <button class="btn btn-danger" id="confirmDelete">Hapus</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // --- Konfigurasi Aplikasi ---
+        const currentTable = 'cover';
+        const apiUrl = 'https://lidan-co-id.pages.dev/api/contacts_filter_dinamis';
+
+        // Tentukan ID data yang akan dihapus secara manual di sini
+        // Ganti nilai ini dengan ID yang ingin Anda hapus
+        const dataToDeleteId = 27; // Contoh: Menghapus data dengan id_x = 1
+
+        // --- Event Listener Dokumen ---
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('tableNameDisplay').textContent = currentTable;
+            document.getElementById('deleteIdDisplay').textContent = dataToDeleteId;
+
+            const confirmDeleteButton = document.getElementById('confirmDeleteButton');
+            const confirmationModal = document.getElementById('confirmationModal');
+            const confirmButton = document.getElementById('confirmDelete');
+            const cancelButton = document.getElementById('cancelDelete');
+
+            // Show confirmation modal when delete button is clicked
+            confirmDeleteButton.addEventListener('click', () => {
+                confirmationModal.style.display = 'flex'; // Show modal
+            });
+
+            // Handle confirmation
+            confirmButton.addEventListener('click', () => {
+                confirmationModal.style.display = 'none'; // Hide modal
+                deleteData(dataToDeleteId); // Proceed with deletion
+            });
+
+            // Handle cancellation
+            cancelButton.addEventListener('click', () => {
+                confirmationModal.style.display = 'none'; // Hide modal
+                showAlert('Penghapusan dibatalkan.', 'info');
+            });
+        });
+
+        // --- Fungsi Utama ---
+
+        /**
+         * Mengirim permintaan DELETE ke API untuk menghapus data.
+         * @param {number} id - ID data yang akan dihapus.
+         */
+        async function deleteData(id) {
+            const messageContainer = document.getElementById('messageContainer');
+            messageContainer.innerHTML = '<p class="text-muted"><i class="fas fa-spinner fa-spin me-2"></i>Sedang menghapus data...</p>';
+
+            if (!id) {
+                messageContainer.innerHTML = '<p class="text-danger">ID data tidak valid untuk dihapus.</p>';
+                showAlert('ID data tidak valid untuk dihapus.', 'danger');
+                return;
+            }
+
+            const url = `${apiUrl}?table=${currentTable}&id_x=${id}`;
+
+            try {
+                const response = await fetch(url, {
+                    method: 'DELETE',
+                    headers: { 'X-Table-Name': currentTable }
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                messageContainer.innerHTML = `<p class="text-success"><i class="fas fa-check-circle me-2"></i>${data.message || 'Data berhasil dihapus!'}</p>`;
+                showAlert(data.message || 'Data berhasil dihapus!', 'success');
+            } catch (error) {
+                console.error('Error menghapus data:', error);
+                messageContainer.innerHTML = `<p class="text-danger"><i class="fas fa-times-circle me-2"></i>Error menghapus data: ${error.message || error}</p>`;
+                showAlert(`Error menghapus data: ${error.message || error}`, 'danger');
+            }
+        }
+
+        /**
+         * Menampilkan pesan alert sementara di sudut kanan atas layar.
+         * @param {string} message - Pesan yang akan ditampilkan.
+         * @param {string} type - Tipe alert (e.g., 'success', 'danger', 'warning', 'info').
+         */
+        function showAlert(message, type) {
+            const alertHtml = `<div class="alert alert-${type} alert-dismissible fade show position-fixed" style="top:20px;right:20px;z-index:9999">
+                ${message}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>`;
+            document.body.insertAdjacentHTML('beforeend', alertHtml);
+            setTimeout(() => {
+                const alertElement = document.querySelector('.alert');
+                if (alertElement) {
+                    new bootstrap.Alert(alertElement).close();
+                }
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
