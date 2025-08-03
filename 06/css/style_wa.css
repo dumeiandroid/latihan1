@@ -1,0 +1,204 @@
+
+        /* Floating WhatsApp Button */
+        .whatsapp-float {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            bottom: 20px;
+            right: 20px;
+            background-color: #25d366;
+            color: #FFF;
+            border-radius: 50px;
+            text-align: center;
+            font-size: 30px;
+            box-shadow: 2px 2px 3px #999;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .whatsapp-float:hover {
+            background-color: #128C7E;
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        /* WhatsApp Popup Styles */
+        .whatsapp-popup-overlay {
+            position: fixed;
+            bottom: 100px; /* Adjust as needed to be above the whatsapp-float button */
+            right: 20px;
+            width: 320px; /* Fixed width for the popup */
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: none; /* Hidden by default */
+            flex-direction: column;
+            padding: 15px;
+            box-sizing: border-box; /* Include padding in the width */
+            animation: fadeInScale 0.3s ease-out forwards;
+            transform-origin: bottom right; /* Scale from bottom right */
+        }
+
+        .whatsapp-popup-overlay.show {
+            display: flex;
+        }
+
+        .whatsapp-popup-content {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        .whatsapp-popup-overlay .close-btn {
+            position: absolute;
+            top: 0px; /* Adjusted position */
+            right: 0px; /* Adjusted position */
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #888;
+            padding: 5px; /* Add padding for easier click */
+        }
+
+        .whatsapp-popup-overlay .close-btn:hover {
+            color: #333;
+        }
+
+        .popup-message-box {
+            background-color: #e0f7fa; /* Light blue background */
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            text-align: center;
+            color: #333;
+            font-size: 16px;
+            line-height: 1.5;
+            width: calc(100% - 20px); /* Adjust width considering padding */
+            box-sizing: border-box; /* Include padding in the width */
+            border: 1px solid #b2ebf2; /* Light border */
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .popup-message-box .emoji {
+            font-size: 20px;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        .popup-button-container {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            gap: 10px; /* Space between buttons */
+        }
+
+        .popup-whatsapp-button {
+            display: block;
+            width: 100%;
+            padding: 12px 15px;
+            background-color: #28a745; /* Green color for WhatsApp feel */
+            color: white;
+            text-align: center;
+            border-radius: 50px; /* Pill shape */
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .popup-whatsapp-button:hover {
+            background-color: #218838; /* Darker green on hover */
+            transform: translateY(-2px); /* Slight lift effect */
+            color: white; /* Ensure text remains white on hover */
+        }
+
+        /* Animation for popup */
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Adjust the existing whatsapp-float button to avoid overlap with popup */
+        .whatsapp-float {
+            position: fixed; /* Ensure it's fixed */
+            bottom: 20px; /* Position at the bottom */
+            right: 20px; /* Position to the right */
+            z-index: 999; /* Lower z-index than popup so popup is above it */
+            background-color: #25D366; /* WhatsApp icon color */
+            color: white;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 30px;
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .whatsapp-float:hover {
+            background-color: #1DA851;
+            transform: scale(1.05);
+        }
+
+        /* Notification badge style */
+        .whatsapp-float .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: red;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 12px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 20px;
+            height: 20px;
+            animation: bounce 1s infinite; /* Add a bounce animation */
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-5px);
+            }
+            60% {
+                transform: translateY(-2px);
+            }
+        }
+
+        /* Responsive adjustments for popup */
+        @media (max-width: 576px) {
+            .whatsapp-popup-overlay {
+                width: 90%; /* Make it more responsive on small screens */
+                right: 5%; /* Center it roughly */
+                left: 5%;
+                bottom: 80px; /* Adjust position for mobile */
+            }
+            .whatsapp-float {
+                right: 10px; /* Move WhatsApp button slightly to the left */
+                bottom: 80px; /* Move WhatsApp button up to avoid overlap with new button */
+            }
+        }
+    

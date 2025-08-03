@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manajemen Data - Perbarui Data</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .btn-sm { padding: .25rem .5rem; font-size: .875rem; }
+        .form-control-sm { padding: .25rem .5rem; font-size: .875rem; }
+        .card-header {
+            background-color: #007bff; /* Primary color for header */
+            color: white;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container-fluid py-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10">
+                <div class="card shadow">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h4 class="mb-0"><i class="fas fa-edit me-2"></i>Perbarui Data - <span id="tableNameDisplay">cover</span></h4>
+                    </div>
+                    <div class="card-body">
+                        <form id="dataForm">
+                            <!-- Hidden input for id_x -->
+                            <input type="hidden" id="id_x" name="id_x">
+                            <!-- Input form akan di-generate di sini oleh JavaScript -->
+                            <div id="formFieldsContainer" class="row">
+                                <!-- Placeholder for dynamically generated form fields -->
+                            </div>
+                            <div class="d-grid gap-2 mt-4">
+                                <button type="submit" class="btn btn-primary" id="saveDataButton">Simpan Perubahan</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // --- Konfigurasi Aplikasi ---
+        const currentTable = 'nilai1';
+        const apiUrl = 'https://lidan-co-id.pages.dev/api/contacts_filter_dinamis';
+
+        // Tentukan ID data yang akan di-update secara manual di sini
+        // Ganti nilai ini dengan ID yang ingin Anda perbarui
+        const dataToUpdateId = 1; // Contoh: Mengupdate data dengan id_x = 1
+
+        // Tentukan field form yang ingin ditampilkan dan atributnya
+        const formFields = [
+            { id: 'x_05', label: 'X_05', type: 'text', placeholder: 'Masukkan X_05' }
+            // Tambahkan atau hapus field sesuai kebutuhan Anda
+        ];
+
+        // --- Event Listener Dokumen ---
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('tableNameDisplay').textContent = currentTable;
+            generateFormFields(); // Generate form fields
+            loadDataForUpdate(dataToUpdateId); // Load data to populate the form
+
+            // Tangani submit form
+            document.getElementById('dataForm').addEventListener('submit', (event) => {
+                event.preventDefault(); // Mencegah refresh halaman
+                saveData();
+            });
+        });
+
+        // --- Fungsi Utama ---
+
+        /**
+         * Meng-generate field form secara dinamis berdasarkan array formFields.
+         */
+        function generateFormFields() {
+            const container = document.getElementById('formFieldsContainer');
+            let formHtml = '';
+            formFields.forEach(field => {
+                formHtml += `
+                    <div class="col-md-4 mb-3">
+                        <label for="${field.id}" class="form-label">${field.label}</label>
+                        <input type="${field.type}" class="form-control form-control-sm" id="${field.id}" name="${field.id}" placeholder="${field.placeholder || ''}">
+                    </div>
+                `;
+            });
+            container.innerHTML = formHtml;
+        }
+
+        /**
+         * Memuat data tunggal dari API untuk mengisi form update.
+         * @param {number} id - ID data yang akan dimuat.
+         */
+        async function loadDataForUpdate(id) {
+            const url = `${apiUrl}?table=${currentTable}&id_x=${id}`;
+            try {
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: { 'X-Table-Name': currentTable }
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                if (data.success && data.data) {
+                    const item = data.data;
+                    document.getElementById('id_x').value = item.id_x; // Set hidden id_x
+                    formFields.forEach(field => {
+                        const inputElement = document.getElementById(field.id);
+                        if (inputElement) {
+                            // Isi nilai form, kosongkan jika null/undefined
+                            inputElement.value = (item[field.id] !== null && item[field.id] !== undefined) ? item[field.id] : '';
+                        }
+                    });
+                } else {
+                    showAlert('Data tidak ditemukan untuk diperbarui.', 'warning');
+                }
+            } catch (error) {
+                console.error('Error memuat data untuk diperbarui:', error);
+                showAlert(`Error memuat data untuk diperbarui: ${error.message || error}`, 'danger');
+            }
+        }
+
+        /**
+         * Mengambil data dari form dan mengirimkannya ke API menggunakan metode PUT.
+         */
+        async function saveData() {
+            const id = document.getElementById('id_x').value;
+            if (!id) {
+                showAlert('ID data tidak ditemukan untuk diperbarui.', 'danger');
+                return;
+            }
+
+            const formData = {};
+            formFields.forEach(field => {
+                const inputElement = document.getElementById(field.id);
+                if (inputElement) {
+                    formData[field.id] = inputElement.value;
+                }
+            });
+
+            const url = `${apiUrl}?table=${currentTable}&id_x=${id}`; // URL untuk PUT dengan id_x
+
+            try {
+                const response = await fetch(url, {
+                    method: 'PUT', // Menggunakan metode PUT untuk update
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Table-Name': currentTable
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                showAlert(data.message || 'Data berhasil diperbarui!', 'success');
+                // Tidak perlu reset form, biarkan data yang diperbarui tetap terlihat
+            } catch (error) {
+                console.error('Error menyimpan data:', error);
+                showAlert(`Error menyimpan data: ${error.message || error}`, 'danger');
+            }
+        }
+
+        /**
+         * Menampilkan pesan alert sementara di sudut kanan atas layar.
+         * @param {string} message - Pesan yang akan ditampilkan.
+         * @param {string} type - Tipe alert (e.g., 'success', 'danger', 'warning', 'info').
+         */
+        function showAlert(message, type) {
+            const alertHtml = `<div class="alert alert-${type} alert-dismissible fade show position-fixed" style="top:20px;right:20px;z-index:9999">
+                ${message}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>`;
+            document.body.insertAdjacentHTML('beforeend', alertHtml);
+            setTimeout(() => {
+                const alertElement = document.querySelector('.alert');
+                if (alertElement) {
+                    new bootstrap.Alert(alertElement).close();
+                }
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

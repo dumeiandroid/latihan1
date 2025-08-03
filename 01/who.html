@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soal Psikotest</title>
+    <link rel="stylesheet" type="text/css" href="css_tes.css">
+</head>
+<body>
+    <button id="startButton" onclick="startGame()">Start</button>
+    <h1>Pilih yang sesuai <br>atau mendekati diri anda</h1>
+    <div class="scoreboard putih">
+        <div style="color: #f4f4f4; user-select: none; pointer-events: none;">Jawaban: <span id="userAnswers"></span></div>
+    </div>
+
+    <div id="question" class="hidden"></div>
+
+    <div class="options1 options turun hidden">
+        <button style="text-align: left;" id="optionA" onclick="submitAnswer('A')"></button>
+        <button style="text-align: left;" id="optionB" onclick="submitAnswer('B')"></button>
+        <button style="text-align: left;" id="optionC" onclick="submitAnswer('C')"></button>
+        <button style="text-align: left;" id="optionD" onclick="submitAnswer('D')"></button>
+        <button style="text-align: left;" id="optionE" onclick="submitAnswer('E')"></button>
+        <button style="text-align: left;" id="optionF" onclick="submitAnswer('F')"></button>
+        <button style="text-align: left;" id="optionG" onclick="submitAnswer('G')"></button>
+        <button style="text-align: left;" id="optionH" onclick="submitAnswer('H')"></button>
+    </div>
+
+    <script>
+    let currentQuestionIndex = 0; // Menyimpan indeks pertanyaan saat ini
+    let questions = [];
+    let userAnswers = []; // Array untuk menyimpan jawaban pengguna
+
+    // Muat pertanyaan dari file JSON
+    fetch(`who/20.txt?v=` + new Date().getTime())
+        .then(response => response.json())
+        .then(data => {
+            questions = data;
+            loadGameState(); // Memuat status permainan saat data berhasil dimuat
+        })
+        .catch(error => console.error('Error fetching the questions:', error));
+let kol = <?php echo $kolom; ?>; // Menyisipkan nilai PHP ke dalam JavaScript
+
+// Muat status permainan dari localStorage
+function loadGameState() {
+    const savedState = localStorage.getItem(`gameHow${kol}`); // Menggunakan nilai kolom
+    if (savedState) {
+        const state = JSON.parse(savedState);
+        currentQuestionIndex = state.currentQuestionIndex || 0;
+        userAnswers = state.userAnswers || [];
+        document.getElementById("userAnswers").innerHTML = userAnswers.join('; '); // Tampilkan jawaban yang sudah disimpan
+    }
+    newQuestion(); // Tampilkan pertanyaan setelah memuat status
+}
+
+// Simpan status permainan ke localStorage
+function saveGameState() {
+    const gameState = {
+        currentQuestionIndex: currentQuestionIndex,
+        userAnswers: userAnswers
+    };
+    localStorage.setItem(`gameHow${kol}`, JSON.stringify(gameState)); // Menggunakan nilai kolom
+}
+    function startGame() {
+        document.getElementById("startButton").disabled = true; // Nonaktifkan tombol Start
+        document.querySelector(".options1").classList.remove("hidden"); // Tampilkan opsi
+        document.getElementById("question").classList.remove("hidden"); // Tampilkan pertanyaan
+        newQuestion();
+    }
+
+    function newQuestion() {
+        if (currentQuestionIndex >= questions.length) {
+            endGame(false); // Akhiri permainan karena semua soal telah dikerjakan
+            return;
+        }
+        
+        // Ambil pertanyaan berdasarkan indeks saat ini
+        const currentQuestion = questions[currentQuestionIndex];
+        document.getElementById("question").innerHTML = currentQuestion.question;
+
+        // Mengatur opsi jawaban secara dinamis
+        const options = currentQuestion.options;
+        const optionButtons = document.querySelectorAll(".options1 button");
+
+        optionButtons.forEach((button, index) => {
+            const optionKey = String.fromCharCode(65 + index); // Menghasilkan 'A', 'B', 'C', ...
+            if (options[optionKey] !== undefined) {
+                button.innerHTML = optionKey + ". " + options[optionKey];
+                button.style.display = "inline-block"; // Tampilkan tombol
+            } else {
+                button.style.display = "none"; // Sembunyikan tombol jika tidak ada
+            }
+        });
+    }
+
+    function submitAnswer(option) {
+        userAnswers.push(option); // Simpan jawaban pengguna
+        document.getElementById("userAnswers").innerHTML = userAnswers.join('; '); // Tampilkan jawaban dengan pemisah ;
+
+        // Simpan status permainan sebelum berpindah ke pertanyaan berikutnya
+        saveGameState(); 
+
+        currentQuestionIndex++; // Pindah ke pertanyaan berikutnya
+        saveGameState(); // Simpan status permainan setelah menjawab
+        newQuestion();
+    }
+
+    function endGame(timeout) {
+        document.getElementById("question").innerHTML = timeout ? "Waktu Habis!" : "Soal telah selesai, semua telah dikerjakan!";
+
+        document.querySelectorAll(".options1 button").forEach(button => button.disabled = true);
+
+        // Kirim jawaban yang dipilih ke server dengan pemisah ;
+        let xhr = new XMLHttpRequest();
+        xhr.open("POST", "save_who.php?soal=iq1&jawaban=" + userAnswers.join(';'), true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.send("rankings=" + userAnswers.join(';') + "&kolom=<?= $kolom ?>&array=0&kolom_awal=x_20&kolom_kunjungan=x_21&kolom_tanggal_hari_ini=x_22&kolom_nilai_terbaik=x_07&kolom_tanggal_dikerjakan=x_25");
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                console.log("Jawaban berhasil dikirim!");
+            }
+        };
+
+        // Tambahkan logika untuk kembali ke halaman sebelumnya setelah 2 detik
+        setTimeout(() => {
+            if (document.referrer) {
+                window.location.href = document.referrer; // Kembali ke halaman sebelumnya
+            }
+        }, 2000); // Delay 2 detik
+
+        setTimeout(() => {
+            window.location.href = "index_who.php";
+        }, 1000);
+    }
+    </script>
+
+</body>
+</html>

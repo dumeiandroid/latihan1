@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manajemen Data - Tampilan Baca Saja</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            padding: 20px;
+        }
+        .data-item {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px; /* Menggunakan rounded-corners */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* Menambahkan bayangan */
+        }
+        .exploded-item {
+            background-color: #e9ecef;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .data-item strong {
+            color: #007bff;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container py-4">
+        <div class="card shadow rounded-3"> <!-- Menggunakan rounded-corners -->
+            <div class="card-header bg-primary text-white rounded-top-3">
+                <h4 class="mb-0"><i class="fas fa-database me-2"></i>Manajemen Data - <span id="tableNameDisplay">cover</span></h4>
+            </div>
+            <div class="card-body">
+                <div id="dataContainer">
+                    <p class="text-center text-muted py-4">Memuat data...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // --- Konfigurasi Aplikasi ---
+        const currentTable = 'nilai1';
+        const apiUrl = 'https://lidan-co-id.pages.dev/api/contacts_filter_dinamis';
+
+        // Tentukan kolom yang ingin ditampilkan
+        // Dalam kasus ini, kita akan fokus pada x_04 untuk dipecah
+        const displayColumns = ['x_04'];
+
+        // Tentukan filter yang akan diterapkan saat memuat data.
+        const currentFilters = {
+            'id_x_eq': '1',
+        };
+
+        // --- Event Listener Dokumen ---
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('tableNameDisplay').textContent = currentTable;
+            loadData(currentFilters); // Muat data dengan filter yang ditentukan
+        });
+
+        // --- Fungsi Utama ---
+
+        /**
+         * Memuat data dari API berdasarkan filter yang diberikan.
+         * @param {Object} filters - Objek berisi parameter filter.
+         */
+        async function loadData(filters = {}) {
+            const dataContainer = document.getElementById('dataContainer');
+            dataContainer.innerHTML = '<p class="text-center py-4"><i class="fas fa-spinner fa-spin me-2"></i>Memuat data...</p>';
+
+            let requestUrl = `${apiUrl}?table=${currentTable}`;
+            // Tambahkan filter ke URL
+            for (const key in filters) {
+                requestUrl += `&${key}=${encodeURIComponent(filters[key])}`;
+            }
+
+            try {
+                const response = await fetch(requestUrl, {
+                    method: 'GET',
+                    headers: { 'X-Table-Name': currentTable }
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                if (data.success && data.data && data.data.length > 0) {
+                    renderExplodedData(data.data);
+                } else {
+                    dataContainer.innerHTML = '<p class="text-center text-muted py-4">Tidak ada data ditemukan.</p>';
+                }
+            } catch (error) {
+                console.error('Error memuat data:', error);
+                dataContainer.innerHTML = `<p class="text-center text-danger py-4">Error memuat data: ${error.message || error}</p>`;
+                showAlert(`Error memuat data: ${error.message || error}`, 'danger');
+            }
+        }
+
+        /**
+         * Mengurai dan merender data dari kolom x_04.
+         * @param {Array} data - Array objek data yang akan diurai dan ditampilkan.
+         */
+        function renderExplodedData(data) {
+            const dataContainer = document.getElementById('dataContainer');
+            let htmlContent = '';
+
+            data.forEach(item => {
+                const rawValue = item['x_04'];
+                if (rawValue) {
+                    // Memecah string dengan delimiter '|'
+                    const explodedValues = rawValue.split('|');
+
+                    htmlContent += `<div class="data-item">`;
+                    htmlContent += `<strong>Nilai dari X_04 yang Diurai:</strong><br>`;
+                    
+                    // Menampilkan setiap nilai hasil pecah secara terpisah
+                    explodedValues.forEach(value => {
+                        htmlContent += `<div class="exploded-item">${value.trim()}</div>`;
+                    });
+
+                    htmlContent += `</div>`;
+                } else {
+                    htmlContent += `<div class="data-item"><strong>X_04:</strong> Tidak ada data</div>`;
+                }
+            });
+            dataContainer.innerHTML = htmlContent;
+        }
+
+        /**
+         * Menampilkan pesan alert sementara di sudut kanan atas layar.
+         * @param {string} message - Pesan yang akan ditampilkan.
+         * @param {string} type - Tipe alert (e.g., 'success', 'danger', 'warning', 'info').
+         */
+        function showAlert(message, type) {
+            const alertHtml = `<div class="alert alert-${type} alert-dismissible fade show position-fixed" style="top:20px;right:20px;z-index:9999">
+                ${message}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>`;
+            document.body.insertAdjacentHTML('beforeend', alertHtml);
+            setTimeout(() => {
+                const alertElement = document.querySelector('.alert');
+                if (alertElement) {
+                    new bootstrap.Alert(alertElement).close();
+                }
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

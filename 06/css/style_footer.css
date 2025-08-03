@@ -1,0 +1,153 @@
+
+        /* Custom Colors */
+        :root {
+            --primary: #20c997; /* A calming teal-ish green */
+            --secondary: #6c757d; /* Bootstrap secondary grey */
+            --light: #f8f9fa; /* Bootstrap light */
+            --dark: #343a40; /* Bootstrap dark */
+            --gradient-primary: linear-gradient(to right, #20c997, #17a2b8); /* Teal to Cyan gradient */
+            --gradient-light: linear-gradient(to right, #f8f9fa, #e9ecef); /* Softer light gradient */
+            --gradient-dark: linear-gradient(to right, #343a40, #2c3135); /* Slightly softer dark gradient */
+        }
+
+        /* General Section Styling */
+        .page-section {
+            padding: 6rem 0; /* Mengurangi padding vertikal antar section */
+        }
+
+        .page-section h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+
+        .page-section p {
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+
+        /* Dividers */
+        .divider {
+            max-width: 3.25rem;
+            border-width: 0.2rem;
+            border-color: var(--primary);
+            margin: 1.5rem auto;
+        }
+
+        .divider.light {
+            border-color: #fff;
+        }
+
+        /* Buttons */
+        .btn-xl {
+            padding: 1.25rem 2.25rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            border-radius: 50rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            border-color: var(--primary);
+            box-shadow: 0 4px 10px rgba(32, 201, 151, 0.3); /* Shadow reflecting new primary color */
+        }
+
+        .btn-primary:hover {
+            background-color: #17a2b8; /* A shade of cyan for hover */
+            border-color: #17a2b8;
+            transform: translateY(-3px); /* Slightly more pronounced lift */
+            box-shadow: 0 8px 16px rgba(32, 201, 151, 0.4);
+        }
+
+        /* Embed Responsive for Video */
+        .embed-responsive {
+            position: relative;
+            display: block;
+            width: 100%;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .embed-responsive-16by9::before {
+            padding-top: 56.25%; /* 16:9 aspect ratio */
+        }
+
+        .embed-responsive .embed-responsive-item {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        .ratio {
+            position: relative;
+            width: 100%;
+            height: 0;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+        }
+        .ratio iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Form Styling */
+        .form-floating .form-control {
+            border-radius: 0.5rem;
+        }
+
+        .form-floating > label {
+            padding: 1rem 0.75rem;
+        }
+
+        /* Footer Styling */
+        footer {
+            background-color: var(--dark); /* Dark background */
+            color: white; /* White text for contrast */
+        }
+
+        footer h5 {
+            color: white; /* Ensure headings are white */
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        footer p,
+        footer li {
+            color: rgba(255, 255, 255, 0.75); /* Lighter white for body text */
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        footer .logo-footer {
+            height: 50px;
+            width: auto;
+            border-radius: 50%;
+        }
+
+        footer .social-links a {
+            color: rgba(255, 255, 255, 0.75);
+            transition: color 0.2s ease;
+        }
+
+        footer .social-links a:hover {
+            color: var(--primary);
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .page-section {
+                padding: 4rem 0; /* Mengurangi padding lebih lanjut untuk mobile */
+            }
+            .page-section h2 {
+                font-size: 2rem;
+            }
+        }
+    

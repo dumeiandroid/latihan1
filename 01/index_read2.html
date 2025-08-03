@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manajemen Data - Tampilan Baca Saja</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            padding: 20px;
+        }
+        .data-item {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .exploded-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: flex-start;
+        }
+        .exploded-column {
+            background-color: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            flex-grow: 1;
+            min-width: 150px;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .exploded-row {
+            padding: 5px;
+            margin: 5px 0;
+            font-weight: bold;
+            background-color: #d1e7dd; /* Warna hijau muda */
+            border-radius: 3px;
+        }
+        .data-item strong {
+            color: #007bff;
+        }
+        .mb-2 {
+            margin-bottom: 0.5rem !important;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container py-4">
+        <div class="card shadow rounded-3">
+            <div class="card-header bg-primary text-white rounded-top-3">
+                <h4 class="mb-0"><i class="fas fa-database me-2"></i>Manajemen Data - <span id="tableNameDisplay">cover</span></h4>
+            </div>
+            <div class="card-body">
+                <div id="dataContainer">
+                    <p class="text-center text-muted py-4">Memuat data...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // --- Konfigurasi Aplikasi ---
+        const currentTable = 'nilai1';
+        const apiUrl = 'https://lidan-co-id.pages.dev/api/contacts_filter_dinamis';
+
+        // Tentukan kolom yang ingin ditampilkan, sekarang fokus pada x_05
+        const displayColumns = ['x_05'];
+
+        // Tentukan filter yang akan diterapkan saat memuat data.
+        const currentFilters = {
+            'id_x_eq': '1',
+        };
+
+        // --- Event Listener Dokumen ---
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('tableNameDisplay').textContent = currentTable;
+            loadData(currentFilters); // Muat data dengan filter yang ditentukan
+        });
+
+        // --- Fungsi Utama ---
+
+        /**
+         * Memuat data dari API berdasarkan filter yang diberikan.
+         * @param {Object} filters - Objek berisi parameter filter.
+         */
+        async function loadData(filters = {}) {
+            const dataContainer = document.getElementById('dataContainer');
+            dataContainer.innerHTML = '<p class="text-center py-4"><i class="fas fa-spinner fa-spin me-2"></i>Memuat data...</p>';
+
+            let requestUrl = `${apiUrl}?table=${currentTable}`;
+            // Tambahkan filter ke URL
+            for (const key in filters) {
+                requestUrl += `&${key}=${encodeURIComponent(filters[key])}`;
+            }
+
+            try {
+                const response = await fetch(requestUrl, {
+                    method: 'GET',
+                    headers: { 'X-Table-Name': currentTable }
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                if (data.success && data.data && data.data.length > 0) {
+                    renderDoubleExplodedData(data.data);
+                } else {
+                    dataContainer.innerHTML = '<p class="text-center text-muted py-4">Tidak ada data ditemukan.</p>';
+                }
+            } catch (error) {
+                console.error('Error memuat data:', error);
+                dataContainer.innerHTML = `<p class="text-center text-danger py-4">Error memuat data: ${error.message || error}</p>`;
+                showAlert(`Error memuat data: ${error.message || error}`, 'danger');
+            }
+        }
+
+        /**
+         * Mengurai dan merender data dari kolom x_05 dengan dua kali explode.
+         * @param {Array} data - Array objek data yang akan diurai dan ditampilkan.
+         */
+        function renderDoubleExplodedData(data) {
+            const dataContainer = document.getElementById('dataContainer');
+            let htmlContent = '';
+
+            data.forEach(item => {
+                const rawValue = item['x_05'];
+                if (rawValue) {
+                    // Explode pertama dengan delimiter '|' untuk membuat "kolom"
+                    const explodedColumns = rawValue.split('|');
+
+                    htmlContent += `<div class="data-item">`;
+                    htmlContent += `<strong>Nilai dari X_05 yang Diurai:</strong><br><br>`;
+                    htmlContent += `<div class="exploded-container">`;
+                    
+                    // Loop untuk setiap "kolom" hasil explode pertama
+                    explodedColumns.forEach(columnValue => {
+                        // Explode kedua dengan delimiter ';' untuk membuat "baris"
+                        const explodedRows = columnValue.split(';');
+
+                        htmlContent += `<div class="exploded-column">`;
+                        
+                        // Loop untuk setiap "baris" hasil explode kedua
+                        explodedRows.forEach(rowValue => {
+                            htmlContent += `<div class="exploded-row">${rowValue.trim()}</div>`;
+                        });
+                        htmlContent += `</div>`;
+                    });
+
+                    htmlContent += `</div>`;
+                    htmlContent += `</div>`;
+                } else {
+                    htmlContent += `<div class="data-item"><strong>X_05:</strong> Tidak ada data</div>`;
+                }
+            });
+            dataContainer.innerHTML = htmlContent;
+        }
+
+        /**
+         * Menampilkan pesan alert sementara di sudut kanan atas layar.
+         * @param {string} message - Pesan yang akan ditampilkan.
+         * @param {string} type - Tipe alert (e.g., 'success', 'danger', 'warning', 'info').
+         */
+        function showAlert(message, type) {
+            const alertHtml = `<div class="alert alert-${type} alert-dismissible fade show position-fixed" style="top:20px;right:20px;z-index:9999">
+                ${message}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>`;
+            document.body.insertAdjacentHTML('beforeend', alertHtml);
+            setTimeout(() => {
+                const alertElement = document.querySelector('.alert');
+                if (alertElement) {
+                    new bootstrap.Alert(alertElement).close();
+                }
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

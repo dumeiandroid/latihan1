@@ -50,13 +50,6 @@
                             <form id="loginForm">
                                 <!-- Form fields will be dynamically generated here -->
                                 <div id="loginFormFieldsContainer"></div>
-                                <!-- Checkbox untuk fitur "Ingat Saya" -->
-                                <div class="form-check mb-3">
-                                    <input class="form-check-input" type="checkbox" id="rememberMe">
-                                    <label class="form-check-label" for="rememberMe">
-                                        Ingat Saya
-                                    </label>
-                                </div>
                                 <div class="d-grid gap-2 mt-3">
                                     <button type="submit" class="btn btn-primary" id="loginButton"><i class="fas fa-sign-in-alt me-2"></i>Login</button>
                                 </div>
@@ -74,16 +67,17 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script>
         // --- Konfigurasi Aplikasi ---
-        const currentTable = 'user';
+        const currentTable = 'cover';
         const apiUrl = 'https://lidan-co-id.pages.dev/api/contacts_filter_dinamis';
-        const sessionKey = 'loggedInUserSession'; // Kunci untuk menyimpan sesi di kedua storage
+        const sessionKey = 'loggedInUserSession'; // Kunci untuk menyimpan sesi di localStorage
 
         // Tentukan kolom mana saja yang akan digunakan untuk login
+        // Setiap objek harus memiliki 'id' (untuk elemen HTML) dan 'column' (untuk nama kolom di API)
         const loginFields = [
-            // x_01 diubah menjadi USER NAME dengan type text
-            { id: 'x_01_input', column: 'x_01', label: 'USER NAME', type: 'text' },
-            // x_02 diubah menjadi PASSWORD dengan type password
-            { id: 'x_02_input', column: 'x_02', label: 'PASSWORD', type: 'password' }
+            { id: 'x_01_input', column: 'x_01', label: 'Masukkan X_01', placeholder: 'Contoh: SIAPKAN DIRI' },
+            { id: 'x_02_input', column: 'x_02', label: 'Masukkan X_02', placeholder: 'Contoh: DATA PENTING' }
+            // Anda bisa menambahkan lebih banyak kolom di sini, misal:
+            // { id: 'x_02_input', column: 'x_02', label: 'Masukkan X_02', placeholder: 'Contoh: KODE RAHASIA' }
         ];
 
         // --- Elemen DOM ---
@@ -94,7 +88,6 @@
         const loginFormSection = document.getElementById('loginFormSection');
         const loginForm = document.getElementById('loginForm');
         const loginFormFieldsContainer = document.getElementById('loginFormFieldsContainer');
-        const rememberMeCheckbox = document.getElementById('rememberMe'); // Referensi ke checkbox
         const messageContainer = document.getElementById('messageContainer');
 
         // --- Event Listener Dokumen ---
@@ -115,11 +108,10 @@
         function generateLoginFormFields() {
             let formHtml = '';
             loginFields.forEach(field => {
-                const placeholderAttr = field.placeholder ? `placeholder="${field.placeholder}"` : '';
                 formHtml += `
                     <div class="mb-3">
                         <label for="${field.id}" class="form-label">${field.label}:</label>
-                        <input type="${field.type}" class="form-control" id="${field.id}" ${placeholderAttr} required>
+                        <input type="text" class="form-control" id="${field.id}" placeholder="${field.placeholder}" required>
                     </div>
                 `;
             });
@@ -127,25 +119,21 @@
         }
 
         /**
-         * Memeriksa apakah ada sesi login yang aktif di localStorage atau sessionStorage.
-         * localStorage diprioritaskan untuk fitur "Ingat Saya".
+         * Memeriksa apakah ada sesi login yang aktif.
+         * Menampilkan tampilan yang sesuai (form login atau status login).
          */
         function checkSession() {
-            // Periksa localStorage terlebih dahulu (untuk "Ingat Saya"), lalu sessionStorage
-            const sessionData = localStorage.getItem(sessionKey) || sessionStorage.getItem(sessionKey);
-
+            const sessionData = localStorage.getItem(sessionKey);
             if (sessionData) {
                 try {
                     const userLoginInfo = JSON.parse(sessionData);
-                    // Tampilkan USER NAME dan id_x
-                    loggedInUserDisplay.textContent = `${userLoginInfo.x_01} / ${userLoginInfo.id_x}`;
+                    // Tampilkan informasi login, bisa disesuaikan
+                    loggedInUserDisplay.textContent = Object.values(userLoginInfo).join(' / ');
                     loggedInSection.style.display = 'block';
                     loginFormSection.style.display = 'none';
                 } catch (e) {
-                    console.error("Error parsing session data", e);
-                    // Hapus sesi yang rusak dari kedua storage
-                    localStorage.removeItem(sessionKey);
-                    sessionStorage.removeItem(sessionKey);
+                    console.error("Error parsing session data from localStorage", e);
+                    localStorage.removeItem(sessionKey); // Hapus data sesi yang rusak
                     loggedInSection.style.display = 'none';
                     loginFormSection.style.display = 'block';
                 }
@@ -159,32 +147,31 @@
         /**
          * Menangani proses login saat form disubmit.
          * Memeriksa keberadaan nilai kolom yang ditentukan di API.
-         * Menyimpan sesi berdasarkan status checkbox "Ingat Saya".
          * @param {Event} event - Objek event submit.
          */
         async function handleLogin(event) {
-            event.preventDefault();
+            event.preventDefault(); // Mencegah refresh halaman
             messageContainer.innerHTML = '<p class="text-muted"><i class="fas fa-spinner fa-spin me-2"></i>Memeriksa...</p>';
 
             const loginValues = {};
             let allFieldsFilled = true;
             let requestUrl = `${apiUrl}?table=${currentTable}`;
 
+            // Kumpulkan nilai dari setiap field login dan bangun URL filter
             loginFields.forEach(field => {
                 const inputElement = document.getElementById(field.id);
-                // Biarkan input apa adanya, case-sensitive
-                let value = inputElement ? inputElement.value.trim() : '';
+                const value = inputElement ? inputElement.value.trim() : '';
                 
                 if (!value) {
                     allFieldsFilled = false;
                 }
-                loginValues[field.column] = value;
+                loginValues[field.column] = value; // Simpan nilai untuk sesi
                 requestUrl += `&${field.column}_eq=${encodeURIComponent(value)}`;
             });
 
             if (!allFieldsFilled) {
                 showAlert('Semua kolom login harus diisi.', 'warning');
-                messageContainer.innerHTML = '';
+                messageContainer.innerHTML = ''; // Hapus pesan loading
                 return;
             }
 
@@ -194,25 +181,19 @@
                     headers: { 'X-Table-Name': currentTable }
                 });
 
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+                }
+
                 const data = await response.json();
 
                 if (data.success && data.data && data.data.length > 0) {
                     // Login berhasil
-                    const userLoginInfo = {
-                        x_01: loginValues.x_01, // Simpan USER NAME
-                        id_x: data.data[0].id_x // Simpan id_x dari respons API
-                    };
-
-                    // Simpan sesi berdasarkan status checkbox "Ingat Saya"
-                    if (rememberMeCheckbox.checked) {
-                        localStorage.setItem(sessionKey, JSON.stringify(userLoginInfo));
-                    } else {
-                        sessionStorage.setItem(sessionKey, JSON.stringify(userLoginInfo));
-                    }
-                    
+                    localStorage.setItem(sessionKey, JSON.stringify(loginValues)); // Simpan sesi sebagai JSON
                     showAlert('Login berhasil!', 'success');
                     messageContainer.innerHTML = `<p class="text-success"><i class="fas fa-check-circle me-2"></i>Login berhasil!</p>`;
-                    checkSession();
+                    checkSession(); // Perbarui tampilan
                 } else {
                     // Login gagal
                     showAlert('Login gagal. Kombinasi data tidak ditemukan.', 'danger');
@@ -227,20 +208,20 @@
 
         /**
          * Menangani proses logout.
-         * Menghapus sesi dari kedua storage.
+         * Menghapus sesi dan memperbarui tampilan.
          */
         function handleLogout() {
-            localStorage.removeItem(sessionKey); // Hapus dari localStorage
-            sessionStorage.removeItem(sessionKey); // Hapus dari sessionStorage
+            localStorage.removeItem(sessionKey); // Hapus sesi
             showAlert('Anda telah logout.', 'info');
-            messageContainer.innerHTML = '';
+            messageContainer.innerHTML = ''; // Bersihkan pesan
+            // Bersihkan semua input form login
             loginFields.forEach(field => {
                 const inputElement = document.getElementById(field.id);
                 if (inputElement) {
                     inputElement.value = '';
                 }
             });
-            checkSession();
+            checkSession(); // Perbarui tampilan
         }
 
         /**
