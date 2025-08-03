@@ -32,7 +32,7 @@
     let userAnswers = []; // Array untuk menyimpan jawaban pengguna
 
     // Muat pertanyaan dari file JSON
-    fetch(`who/20.txt?v=` + new Date().getTime())
+    fetch(`https://latihan1.pages.dev/01/who/20.txt?v=` + new Date().getTime())
         .then(response => response.json())
         .then(data => {
             questions = data;
