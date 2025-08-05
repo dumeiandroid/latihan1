@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soal Psikotest</title>
+    <link rel="stylesheet" href="css_tes.css">
+</head>
+<body>
+
+    <h1>Kerjakan Dengan Teliti</h1>
+    <button id="startButton" onclick="startGame()">Mulai</button>
+    <div id="question" class="hidden"></div>
+    <div id="timer" class="hidden">Waktu Tersisa: 360 detik</div>
+    <div class="options hidden"></div>
+    
+    <div class="scoreboard putih">
+        <div style="color: #f4f4f4; user-select: none; pointer-events: none;">Jawaban Pengguna: <span id="userAnswers"></span></div>
+    </div>
+
+    <script>
+        let correctScore = 0;
+        let wrongScore = 0;
+        let timeLeft = 360;
+        let currentQuestionIndex = 0;
+        let currentQuestion, correctAnswer;
+        let answeredQuestions = [];
+        let skippedQuestions = [];
+        let questions = [];
+        let userAnswers = []; // Array to store user's answers
+        let timerInterval;
+
+        // Load game state from localStorage
+        function loadGameState() {
+            const savedState = localStorage.getItem('gameIst2');
+            if (savedState) {
+                const state = JSON.parse(savedState);
+                correctScore = state.correctScore || 0;
+                wrongScore = state.wrongScore || 0;
+                currentQuestionIndex = state.currentQuestionIndex || 0;
+                userAnswers = state.userAnswers || [];
+                timeLeft = state.timeLeft || 360;
+                document.getElementById("userAnswers").innerHTML = userAnswers.join('; ');
+            }
+            newQuestion();
+        }
+
+        // Save game state to localStorage
+        function saveGameState() {
+            const gameState = {
+                correctScore: correctScore,
+                wrongScore: wrongScore,
+                currentQuestionIndex: currentQuestionIndex,
+                userAnswers: userAnswers,
+                timeLeft: timeLeft
+            };
+            localStorage.setItem('gameIst2', JSON.stringify(gameState));
+        }
+
+        // Fetch questions from the specified URL
+        fetch('https://latihan1.pages.dev/01/test/psikotest/ist2.txt?v=' + new Date().getTime())
+            .then(response => response.json())
+            .then(data => {
+                questions = data;
+                loadGameState(); // Load game state after data is successfully loaded
+            })
+            .catch(error => console.error('Error fetching the questions:', error));
+
+        function startGame() {
+            document.getElementById("startButton").disabled = true;
+            document.querySelector(".options").classList.remove("hidden");
+            document.getElementById("question").classList.remove("hidden");
+            document.getElementById("timer").classList.remove("hidden");
+            startTimer();
+            // newQuestion() is called by loadGameState
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(function() {
+                timeLeft--;
+                document.getElementById("timer").innerHTML = "Waktu Tersisa: " + timeLeft + " detik";
+                saveGameState(); // Save game state every second
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    endGame(true); // End game due to timeout
+                }
+            }, 1000);
+        }
+
+        function newQuestion() {
+            // Check if we've reached the end of the questions
+            if (currentQuestionIndex >= questions.length) {
+                endGame(false); // End game because all questions have been answered
+                return;
+            }
+
+            // Get the next question
+            currentQuestion = questions[currentQuestionIndex];
+            correctAnswer = currentQuestion.answer;
+
+            // Update the question text
+            document.getElementById("question").innerHTML = currentQuestion.question;
+
+            // Clear previous options
+            const optionsDiv = document.querySelector(".options");
+            optionsDiv.innerHTML = ""; // Clear existing options
+
+            // Create buttons for each defined option
+            for (const option in currentQuestion.options) {
+                if (currentQuestion.options[option] !== undefined) {
+                    const button = document.createElement("button");
+                    button.innerHTML = `${option}. ${currentQuestion.options[option]}`;
+                    button.onclick = () => submitAnswer(option);
+                    optionsDiv.appendChild(button);
+                }
+            }
+
+            // Add skip button
+            const skipButton = document.createElement("button");
+            skipButton.innerHTML = "Lewati";
+            skipButton.onclick = skipQuestion;
+            optionsDiv.appendChild(skipButton);
+        }
+
+        function submitAnswer(option) {
+            answeredQuestions.push({
+                question: currentQuestion.question,
+                userAnswer: option,
+                correctAnswer: correctAnswer
+            });
+
+            // Get question number from the question attribute
+            const questionNumber = currentQuestion.question.split('.')[0].trim();
+
+            // Determine if the answer is correct or wrong
+            const resultIndicator = (option === correctAnswer) ? 'v' : 'x';
+
+            // Store the user's answer in the desired format
+            userAnswers.push(`${questionNumber}${option}${resultIndicator}`);
+
+            // Update score
+            if (option === correctAnswer) {
+                correctScore++;
+            } else {
+                wrongScore++;
+            }
+
+            // Update the displayed user answers
+            document.getElementById("userAnswers").innerHTML = userAnswers.join('; ');
+
+            currentQuestionIndex++; // Move to the next question
+            saveGameState(); // Save game state after answering
+            newQuestion();
+        }
+
+        function skipQuestion() {
+            // Add skipped question to the end of the questions array to be answered later
+            questions.push(currentQuestion);
+            currentQuestionIndex++; // Move to the next question in the original list
+            newQuestion();
+            saveGameState(); // Save game state after skipping
+        }
+
+        function endGame(timeout) {
+            clearInterval(timerInterval);
+            document.querySelector(".options").classList.add("hidden");
+            document.getElementById("timer").classList.add("hidden");
+
+            if (timeout) {
+                document.getElementById("question").innerHTML = "Waktu Habis! Soal telah selesai, tunggu soal berikutnya.";
+            } else {
+                document.getElementById("question").innerHTML = "Soal telah selesai, semua telah dikerjakan!";
+            }
+
+            // Log the results to the console, as we cannot send it to a server
+            console.log("Quiz completed!");
+            console.log("Correct Answers:", correctScore);
+            console.log("Wrong Answers:", wrongScore);
+            console.log("Final answers:", userAnswers.join('; '));
+
+            // Redirect to index.php after a delay
+            setTimeout(() => {
+                window.location.href = "index.php";
+            }, 2000);
+        }
+
+        // Set up the button to be initially clickable
+        window.onload = function() {
+            document.getElementById("startButton").disabled = false;
+        };
+    </script>
+</body>
+</html>

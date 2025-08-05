@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem CRUD Manajemen Data</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .table-responsive-custom { max-height: 70vh; overflow-y: auto; }
+        .sticky-top { position: sticky; top: 0; z-index: 1020; }
+        th { background-color: #1f2937; color: white; }
+        .modal { display: none; }
+        .modal.open { display: flex; }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+
+    <!-- Login Page -->
+    <div id="login-page" class="w-full max-w-md p-8 space-y-6 bg-white rounded-xl shadow-lg">
+        <h2 class="text-2xl font-bold text-center text-gray-800">Login Admin</h2>
+        <form id="loginForm" class="space-y-4">
+            <div>
+                <label for="username" class="sr-only">Username</label>
+                <input id="username" name="username" type="text" autocomplete="username" required class="relative block w-full px-3 py-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Username">
+            </div>
+            <div>
+                <label for="password" class="sr-only">Password</label>
+                <input id="password" name="password" type="password" autocomplete="current-password" required class="relative block w-full px-3 py-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Password">
+            </div>
+            <div id="loginMessage" class="text-red-500 text-sm hidden"></div>
+            <div>
+                <button type="submit" class="relative flex justify-center w-full px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md group hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Masuk
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Main CRUD App -->
+    <div id="main-app" class="container mx-auto px-4 py-8 hidden">
+        <div class="row">
+            <div class="col-12">
+                <div class="bg-white rounded-xl shadow-lg">
+                    <div class="px-6 py-4 bg-indigo-600 text-white rounded-t-xl flex justify-between items-center">
+                        <h4 class="mb-0 text-xl font-bold"><i class="fas fa-database me-2"></i>Data Management - <span id="tableNameDisplay"></span></h4>
+                        <div class="flex items-center space-x-2">
+                            <button id="logoutButton" class="px-3 py-1 text-sm font-medium text-indigo-600 bg-white rounded-md shadow-sm hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                <i class="fas fa-sign-out-alt"></i> Keluar
+                            </button>
+                            <button id="filterButton" class="px-3 py-1 text-sm font-medium text-indigo-600 bg-white rounded-md shadow-sm hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                <i class="fas fa-filter"></i> Filter
+                            </button>
+                            <button id="addDataButton" class="px-3 py-1 text-sm font-medium text-indigo-600 bg-white rounded-md shadow-sm hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                <i class="fas fa-plus"></i> Tambah
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <!-- Client Selection Dropdown -->
+                        <div class="mb-4">
+                            <label for="clientDropdown" class="block text-sm font-medium text-gray-700">Pilih Client</label>
+                            <div class="mt-1 relative">
+                                <input type="text" id="searchInput" placeholder="Cari..." class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
+                                <div id="dropdownContent" class="absolute z-10 w-full mt-1 bg-white rounded-md shadow-lg hidden">
+                                    <!-- Dropdown items will be inserted here by JS -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Search and other filters -->
+                        <div class="mb-4 flex space-x-2">
+                            <input type="text" id="search" placeholder="Cari data..." class="flex-grow shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
+                            <button id="applySearchButton" class="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+
+                        <div id="tableContainer" class="table-responsive-custom rounded-md border border-gray-200">
+                            <p class="text-center text-gray-500 py-4">Memuat data...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Modal -->
+    <div id="dataModal" class="modal fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full justify-center items-center">
+        <div class="relative p-6 bg-white rounded-lg shadow-xl max-w-4xl mx-auto my-12">
+            <div class="flex justify-between items-center pb-3 border-b">
+                <h3 class="text-lg font-bold" id="dataModalLabel">Tambah/Edit Data</h3>
+                <button class="text-black close-modal-btn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="mt-4 modal-body">
+                <form id="dataForm" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <input type="hidden" id="id_x" name="id_x">
+                    <div class="col-span-1"><label for="x_01" class="block text-sm font-medium text-gray-700">X_01</label><input type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" id="x_01" name="x_01"></div>
+                    <div class="col-span-1"><label for="x_02" class="block text-sm font-medium text-gray-700">X_02</label><input type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" id="x_02" name="x_02"></div>
+                    <div class="col-span-1"><label for="x_03" class="block text-sm font-medium text-gray-700">X_03</label><input type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" id="x_03" name="x_03"></div>
+                    <div class="col-span-1"><label for="x_04" class="block text-sm font-medium text-gray-700">X_04</label><input type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" id="x_04" name="x_04"></div>
+                    <div class="col-span-1"><label for="x_05" class="block text-sm font-medium text-gray-700">X_05</label><input type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" id="x_05" name="x_05"></div>
+                    <div class="col-span-1"><label for="x_06" class="block text-sm font-medium text-gray-700">X_06</label><input type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" id="x_06" name="x_06"></div>
+                    <div class="col-span-1"><label for="x_07" class="block text-sm font-medium text-gray-700">X_07</label><input type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" id="x_07" name="x_07"></div>
+                    <div class="col-span-1"><label for="x_08" class="block text-sm font-medium text-gray-700">X_08</label><input type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" id="x_08" name="x_08"></div>
+                    <div class="col-span-1"><label for="x_09" class="block text-sm font-medium text-gray-700">X_09</label><input type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" id="x_09" name="x_09"></div>
+                    <div class="col-span-1"><label for="x_10" class="block text-sm font-medium text-gray-700">X_10</label><input type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" id="x_10" name="x_10"></div>
+                    <div class="col-span-1"><label for="x_11" class="block text-sm font-medium text-gray-700">X_11</label><input type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" id="x_11" name="x_11"></div>
+                    <div class="col-span-1"><label for="x_12" class="block text-sm font-medium text-gray-700">X_12</label><input type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" id="x_12" name="x_12"></div>
+                    <div class="col-span-1"><label for="x_13" class="block text-sm font-medium text-gray-700">X_13</label><input type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" id="x_13" name="x_13"></div>
+                    <div class="col-span-1"><label for="x_14" class="block text-sm font-medium text-gray-700">X_14</label><input type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" id="x_14" name="x_14"></div>
+                    <div class="col-span-1"><label for="x_15" class="block text-sm font-medium text-gray-700">X_15</label><input type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" id="x_15" name="x_15"></div>
+                    <div class="col-span-1"><label for="x_16" class="block text-sm font-medium text-gray-700">X_16</label><input type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" id="x_16" name="x_16"></div>
+                    <div class="col-span-1"><label for="x_17" class="block text-sm font-medium text-gray-700">X_17</label><input type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" id="x_17" name="x_17"></div>
+                    <div class="col-span-1"><label for="x_18" class="block text-sm font-medium text-gray-700">X_18</label><input type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" id="x_18" name="x_18"></div>
+                    <div class="col-span-1"><label for="x_19" class="block text-sm font-medium text-gray-700">X_19</label><input type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" id="x_19" name="x_19"></div>
+                    <div class="col-span-1"><label for="x_20" class="block text-sm font-medium text-gray-700">X_20</label><input type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" id="x_20" name="x_20"></div>
+                </form>
+            </div>
+            <div class="mt-4 flex justify-end space-x-2 border-t pt-4">
+                <button type="button" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 close-modal-btn">Batal</button>
+                <button type="button" class="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700" id="saveDataButton">Simpan Data</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Filter Modal -->
+    <div id="filterModal" class="modal fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full justify-center items-center">
+        <div class="relative p-6 bg-white rounded-lg shadow-xl max-w-4xl mx-auto my-12">
+            <div class="flex justify-between items-center pb-3 border-b">
+                <h3 class="text-lg font-bold" id="filterModalLabel">Filter Data</h3>
+                <button class="text-black close-modal-btn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="mt-4 modal-body">
+                <form id="filterForm">
+                    <p class="text-gray-500 text-sm mb-4">Gunakan parameter filter sesuai dengan API: `_eq`, `_gt`, `_lt`, `_like`, `_ne`.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="col-span-1">
+                            <label for="id_x_gt" class="block text-sm font-medium text-gray-700">ID_X > (misal: 10)</label>
+                            <input type="number" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" id="id_x_gt" name="id_x_gt">
+                        </div>
+                        <div class="col-span-1">
+                            <label for="x_04_like" class="block text-sm font-medium text-gray-700">X_04 mengandung (misal: EMOSIONAL)</label>
+                            <input type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" id="x_04_like" name="x_04_like">
+                        </div>
+                        <div class="col-span-1">
+                            <label for="x_13_ne" class="block text-sm font-medium text-gray-700">X_13 tidak sama dengan (misal: '' atau 0)</label>
+                            <input type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" id="x_13_ne" name="x_13_ne">
+                        </div>
+                        <div class="col-span-1">
+                            <label for="x_14_ne" class="block text-sm font-medium text-gray-700">X_14 tidak sama dengan (misal: '' atau 0)</label>
+                            <input type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" id="x_14_ne" name="x_14_ne">
+                        </div>
+                        <div class="col-span-1">
+                            <label for="x_01_eq" class="block text-sm font-medium text-gray-700">X_01 = (misal: latihan)</label>
+                            <input type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" id="x_01_eq" name="x_01_eq">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="mt-4 flex justify-end space-x-2 border-t pt-4">
+                <button type="button" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 close-modal-btn">Batal</button>
+                <button type="button" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300" id="resetFilterButton">Reset Filter</button>
+                <button type="button" class="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700" id="applyFilterButton">Terapkan Filter</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alert Modal -->
+    <div id="alertModal" class="modal fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full justify-center items-center z-50">
+        <div class="relative p-6 bg-white rounded-lg shadow-xl max-w-sm mx-auto my-12">
+            <div class="flex justify-between items-center pb-3 border-b">
+                <h3 class="text-lg font-bold" id="alertModalTitle"></h3>
+                <button class="text-black close-alert-btn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="mt-4" id="alertModalBody"></div>
+            <div class="mt-4 flex justify-end">
+                <button type="button" class="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 close-alert-btn">Tutup</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        const currentTable = 'nilai1';
+        const clientTable = 'analisa_grafik';
+        const apiUrl = 'https://lidan-co-id.pages.dev/api/contacts_filter_dinamis';
+        
+        let currentFilters = {};
+        let currentX04 = '';
+        const columns = {
+            'id_x': 'ID',
+            'x_04': 'x_04',
+            'x_01': 'Token',
+            'x_02': 'Nama',
+            'x_05': 'CFIT & TKD',
+            'x_06': 'EPPS & RMIB',
+            'x_07': 'WHO?',
+            'x_14': 'x_14'
+        };
+        const loginUsername = 'admin';
+        const loginPassword = 'admin';
+        
+        // Cek autentikasi saat halaman dimuat
+        $(document).ready(function() {
+            checkAuth();
+            
+            // Event listener untuk tombol login
+            $('#loginForm').on('submit', function(e) {
+                e.preventDefault();
+                const username = $('#username').val();
+                const password = $('#password').val();
+                if (username === loginUsername && password === loginPassword) {
+                    sessionStorage.setItem('isLoggedIn', 'true');
+                    checkAuth();
+                } else {
+                    $('#loginMessage').removeClass('hidden').text('Username atau password salah.');
+                }
+            });
+
+            // Event listener untuk tombol logout
+            $('#logoutButton').on('click', function() {
+                sessionStorage.removeItem('isLoggedIn');
+                location.reload();
+            });
+
+            $('#tableNameDisplay').text(currentTable);
+            
+            // Event listeners untuk tombol CRUD dari contoh Anda
+            $('#addDataButton').on('click', function() {
+                $('#dataForm')[0].reset();
+                $('#id_x').val('');
+                $('#dataModalLabel').text('Tambah Data Baru');
+                $('#dataModal').addClass('open');
+            });
+
+            $('#saveDataButton').on('click', function() {
+                saveData();
+            });
+            
+            $('#filterButton').on('click', function() {
+                // Pre-fill filter form with current filters
+                for (const key in currentFilters) {
+                    if ($(`#${key}`).length) {
+                         $(`#${key}`).val(currentFilters[key]);
+                    }
+                }
+                $('#filterModal').addClass('open');
+            });
+
+            $('#applyFilterButton').on('click', function() {
+                currentFilters = {};
+                $('#filterForm input').each(function() {
+                    const input = $(this);
+                    if (input.val()) {
+                        currentFilters[input.attr('id')] = input.val();
+                    }
+                });
+                loadData(currentFilters);
+                $('#filterModal').removeClass('open');
+            });
+
+            $('#resetFilterButton').on('click', function() {
+                $('#filterForm')[0].reset();
+                currentFilters = {};
+                loadData();
+                $('#filterModal').removeClass('open');
+            });
+            
+            // Event listener untuk dropdown client
+            $('#searchInput').on('focus', function() {
+                $('#dropdownContent').removeClass('hidden');
+            });
+            $('#searchInput').on('input', function() {
+                var filter = this.value.toLowerCase();
+                var items = $('#dropdownContent .dropdown-item');
+                items.each(function() {
+                    if ($(this).text().toLowerCase().includes(filter)) {
+                        $(this).removeClass('hidden');
+                    } else {
+                        $(this).addClass('hidden');
+                    }
+                });
+            });
+            
+            // Event listener untuk tombol pencarian
+            $('#applySearchButton').on('click', function() {
+                const searchValue = $('#search').val();
+                let filters = { ...currentFilters };
+                if (searchValue) {
+                    // Membuat filter 'like' untuk semua kolom yang ditampilkan
+                    Object.keys(columns).forEach(col => {
+                        filters[`${col}_like`] = searchValue;
+                    });
+                } else {
+                    // Menghapus filter like jika input kosong
+                    Object.keys(columns).forEach(col => {
+                        delete filters[`${col}_like`];
+                    });
+                }
+                loadData(filters);
+            });
+            
+            // Close modals
+            $('.close-modal-btn').on('click', function() {
+                $(this).closest('.modal').removeClass('open');
+            });
+            $('.close-alert-btn').on('click', function() {
+                $(this).closest('.modal').removeClass('open');
+            });
+            
+        });
+
+        function checkAuth() {
+            if (sessionStorage.getItem('isLoggedIn') === 'true') {
+                $('#login-page').addClass('hidden');
+                $('#main-app').removeClass('hidden');
+                loadClients(); // Load client dropdown after login
+                loadData();
+            } else {
+                $('#login-page').removeClass('hidden');
+                $('#main-app').addClass('hidden');
+            }
+        }
+        
+        function loadClients() {
+            $.ajax({
+                url: `${apiUrl}?table=${clientTable}`,
+                method: 'GET',
+                headers: { 'X-Table-Name': clientTable },
+                success: function(response) {
+                    if (response.success && response.data && response.data.length > 0) {
+                        const dropdownContent = $('#dropdownContent');
+                        dropdownContent.empty();
+                        response.data.forEach(client => {
+                            const item = `<div class="p-2 cursor-pointer hover:bg-gray-100 dropdown-item" data-value="${client.x_04}">${client.x_01}</div>`;
+                            dropdownContent.append(item);
+                        });
+                        
+                        // Attach click handler for client selection
+                        $('.dropdown-item').on('click', function() {
+                            const value = $(this).data('value');
+                            currentX04 = value;
+                            $('#searchInput').val($(this).text().trim());
+                            $('#dropdownContent').addClass('hidden');
+                            
+                            // Reload data with new filter
+                            let newFilters = { ...currentFilters };
+                            if (currentX04) {
+                                newFilters['x_04_eq'] = currentX04;
+                            } else {
+                                delete newFilters['x_04_eq'];
+                            }
+                            loadData(newFilters);
+                        });
+                        
+                        // Handle clicking outside the dropdown
+                        $(document).on('click', function(e) {
+                            if (!$(e.target).closest('#clientDropdown').length) {
+                                $('#dropdownContent').addClass('hidden');
+                            }
+                        });
+                        
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error memuat data client:', error);
+                    showAlert('Error memuat data client!', 'error');
+                }
+            });
+        }
+        
+        function loadData(filters = {}) {
+            const tableContainer = $('#tableContainer');
+            tableContainer.html('<p class="text-center text-gray-500 py-4"><i class="fas fa-spinner fa-spin me-2"></i>Memuat data...</p>');
+            
+            // Gabungkan filter dari dropdown x_04 dengan filter lainnya
+            const finalFilters = { ...filters };
+            if (currentX04) {
+                finalFilters['x_04_eq'] = currentX04;
+            }
+
+            let requestUrl = `${apiUrl}?table=${currentTable}`;
+            for (const key in finalFilters) {
+                requestUrl += `&${key}=${encodeURIComponent(finalFilters[key])}`;
+            }
+
+            $.ajax({
+                url: requestUrl,
+                method: 'GET',
+                headers: { 'X-Table-Name': currentTable },
+                success: function(response) {
+                    if (response.success && response.data && response.data.length > 0) {
+                        renderTable(response.data);
+                    } else {
+                        tableContainer.html('<p class="text-center text-gray-500 py-4">Tidak ada data ditemukan.</p>');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error memuat data:', error);
+                    tableContainer.html(`<p class="text-center text-red-500 py-4">Error memuat data: ${xhr.responseJSON ? xhr.responseJSON.error : error}</p>`);
+                }
+            });
+        }
+
+        function renderTable(data) {
+            const tableContainer = $('#tableContainer');
+            let tableHtml = `
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-800 sticky-top">
+                        <tr>
+            `;
+            
+            // Ambil header dari kunci-kunci objek 'columns'
+            Object.values(columns).forEach(header => {
+                tableHtml += `<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">${header.toUpperCase()}</th>`;
+            });
+            tableHtml += `<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Aksi</th>`;
+            tableHtml += `
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+            `;
+
+            data.forEach(item => {
+                tableHtml += `<tr>`;
+                Object.keys(columns).forEach(key => {
+                    let cellContent = (item[key] !== undefined && item[key] !== null) ? item[key] : '';
+                    
+                    // PERHATIAN: Logika PHP untuk membuat link tidak diimplementasikan
+                    // secara langsung. Ini hanya menampilkan teks aslinya.
+                    // Untuk mengimplementasikan link, Anda perlu menyiapkan
+                    // halaman HTML terpisah seperti 'psikogram.html', dll.
+
+                    tableHtml += `<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${cellContent}</td>`;
+                });
+                tableHtml += `
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <button class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded-full mr-2" onclick="editData(${item.id_x})"><i class="fas fa-edit"></i></button>
+                        <button class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-full" onclick="deleteData(${item.id_x})"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>`;
+            });
+
+            tableHtml += `
+                    </tbody>
+                </table>
+            `;
+            tableContainer.html(tableHtml);
+        }
+        
+        function editData(id) {
+            $.ajax({
+                url: `${apiUrl}?table=${currentTable}&id_x_eq=${id}`,
+                method: 'GET',
+                headers: { 'X-Table-Name': currentTable },
+                success: function(response) {
+                    if (response.success && response.data && response.data.length > 0) {
+                        const item = response.data[0];
+                        $('#id_x').val(item.id_x);
+                        // Loop through all columns to populate the form
+                        for (let i = 1; i <= 20; i++) {
+                            const colName = `x_${i.toString().padStart(2, '0')}`;
+                            $(`#${colName}`).val((item[colName] !== null && item[colName] !== undefined) ? item[colName] : '');
+                        }
+                        $('#dataModalLabel').text('Edit Data');
+                        $('#dataModal').addClass('open');
+                    } else {
+                        showAlert('Data tidak ditemukan untuk diedit.', 'error');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error memuat data untuk diedit:', error, xhr.responseJSON);
+                    showAlert(xhr.responseJSON ? xhr.responseJSON.error : 'Error memuat data untuk diedit!', 'error');
+                }
+            });
+        }
+        
+        function saveData() {
+            const id = $('#id_x').val();
+            const formData = {};
+            for (let i = 1; i <= 20; i++) {
+                const colName = `x_${i.toString().padStart(2, '0')}`;
+                const value = $(`#${colName}`).val();
+                formData[colName] = value;
+            }
+            
+            let method, url;
+            if (id) {
+                method = 'PUT';
+                url = `${apiUrl}?table=${currentTable}&id_x=${id}`;
+            } else {
+                method = 'POST';
+                url = `${apiUrl}?table=${currentTable}`;
+            }
+            
+            $.ajax({
+                url: url,
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Table-Name': currentTable
+                },
+                data: JSON.stringify(formData),
+                success: function(response) {
+                    $('#dataModal').removeClass('open');
+                    loadData(currentFilters);
+                    showAlert(response.message || 'Operasi data berhasil!', 'success');
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error menyimpan data:', error, xhr.responseJSON);
+                    showAlert(xhr.responseJSON ? xhr.responseJSON.error : 'Error menyimpan data!', 'error');
+                }
+            });
+        }
+        
+        function deleteData(id) {
+            const isConfirmed = window.confirm('Yakin ingin menghapus data ini?');
+            if (isConfirmed) {
+                $.ajax({
+                    url: `${apiUrl}?table=${currentTable}&id_x=${id}`,
+                    method: 'DELETE',
+                    headers: {'X-Table-Name': currentTable},
+                    success: function(response) {
+                        loadData(currentFilters);
+                        showAlert(response.message || 'Data berhasil dihapus!', 'success');
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error menghapus data:', error, xhr.responseJSON);
+                        showAlert(xhr.responseJSON ? xhr.responseJSON.error : 'Error menghapus data!', 'error');
+                    }
+                });
+            }
+        }
+        
+        function showAlert(message, type) {
+            const alertModal = $('#alertModal');
+            const title = type === 'success' ? 'Berhasil' : 'Error';
+            const bgColor = type === 'success' ? 'bg-green-100' : 'bg-red-100';
+            const textColor = type === 'success' ? 'text-green-800' : 'text-red-800';
+
+            $('#alertModalTitle').text(title);
+            $('#alertModalBody').html(`<div class="${bgColor} ${textColor} p-4 rounded-md">${message}</div>`);
+            alertModal.addClass('open');
+        }
+        
+    </script>
+</body>
+</html>

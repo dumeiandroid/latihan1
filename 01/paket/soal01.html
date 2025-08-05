@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soal Psikotest</title>
+    <style>
+        /* CSS yang digabungkan dari css_tes.php dan style tambahan */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        
+        #timer {
+            font-size: 1.5em;
+            text-align: center;
+            margin: 20px 0;
+            color: #f4f4f4;
+        }
+
+        #startButton {
+            display: block;
+            margin: 0 auto;
+            padding: 10px 20px;
+            background-color: #585353;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #startButton:hover {
+            background-color: #050000;
+        }
+
+        #question {
+            text-align: center;
+            margin: 30px 0;
+            font-size: 1.2em;
+            color: #333;
+        }
+
+        .image {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            transition: transform 0.3s;
+        }
+
+        button {
+            user-select: none;
+        }
+
+        .options {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px; /* Jarak antar elemen */
+            user-select: none;
+        }
+        
+        .options img {
+            width: 100px;
+            height: auto;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: border-color 0.3s, transform 0.3s;
+            user-select: none;
+        }
+        
+        .options img:hover {
+            border-color: #007BFF;
+            transform: scale(1.05);
+        }
+
+        .options button {
+            padding: 10px 20px;
+            background-color: #ccc;
+            color: #333;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .options button:hover {
+            background-color: #999;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Responsive design for larger screens */
+        @media (min-width: 601px) {
+            .options img {
+                width: 120px;
+            }
+
+            #timer {
+                font-size: 2em;
+            }
+
+            #question {
+                font-size: 1.5em;
+            }
+        }
+
+        /* Responsive adjustments for mobile screens */
+        @media (max-width: 768px) {
+            h1 {
+                margin-bottom: 0px;
+                margin-top: -10px;
+            }
+
+            #question {
+                margin-top: -50px;
+            }
+            .options {
+                gap: 0px;
+            }
+            .options img {
+                width: 80px; /* Ukuran gambar lebih kecil untuk mobile */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Kerjakan Dengan Teliti</h1>
+
+    <button id="startButton" onclick="startGame()">Start</button>
+    <div class="image">
+        <div id="question" class="hidden"></div>
+        <div class="options hidden"></div>
+    </div>
+    <div id="timer">Waktu Tersisa: 240 detik</div>
+
+    <script>
+        let correctScore = 0;
+        let wrongScore = 0;
+        let timeLeft = 240;
+        let currentQuestionIndex = 0;
+        let currentQuestion, correctAnswer;
+        let answeredQuestions = [];
+        let skippedQuestions = [];
+        let questions = [];
+        let userAnswers = [];
+        let timerInterval;
+
+        // Mendefinisikan URL dasar untuk file pertanyaan (cfit1.txt)
+        const QUESTIONS_BASE_URL = 'https://latihan1.pages.dev/01/test/psikotest/';
+        // Mendefinisikan URL dasar untuk gambar-gambar
+        const IMAGES_BASE_URL = 'https://latihan1.pages.dev/01/test/';
+
+        // Mengambil pertanyaan dari file cfit1.txt
+        fetch(QUESTIONS_BASE_URL + 'cfit1.txt?v=' + new Date().getTime())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Gagal memuat pertanyaan: ' + response.statusText);
+            }
+            return response.json();
+        })
+        .then(data => {
+            questions = data;
+            loadGameState();
+        })
+        .catch(error => {
+            console.error('Error fetching the questions:', error);
+            // Menampilkan pesan kesalahan di UI
+            document.getElementById("question").innerHTML = "Gagal memuat soal. Pastikan Anda menjalankan file ini di server web.";
+            document.getElementById("question").classList.remove("hidden");
+            document.getElementById("startButton").disabled = true;
+        });
+
+        function loadGameState() {
+            const savedState = localStorage.getItem('gameCfit1');
+            if (savedState) {
+                const state = JSON.parse(savedState);
+                correctScore = state.correctScore || 0;
+                wrongScore = state.wrongScore || 0;
+                currentQuestionIndex = state.currentQuestionIndex || 0;
+                userAnswers = state.userAnswers || [];
+                timeLeft = state.timeLeft || 240;
+            }
+        }
+
+        function startGame() {
+            document.getElementById("startButton").disabled = true;
+            document.querySelector("h1").classList.add("hidden");
+            startTimer();
+            newQuestion();
+            document.querySelector(".options").classList.remove("hidden");
+            document.getElementById("question").classList.remove("hidden");
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(function() {
+                timeLeft--;
+                document.getElementById("timer").innerHTML = "Waktu Tersisa: " + timeLeft + " detik";
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    endGame(true);
+                } else {
+                    saveGameState();
+                }
+            }, 1000);
+        }
+
+        function newQuestion() {
+            if (currentQuestionIndex >= questions.length) {
+                endGame(false);
+                return;
+            }
+
+            currentQuestion = questions[currentQuestionIndex];
+            correctAnswer = currentQuestion.answer;
+
+            // Ambil URL gambar dari pertanyaan
+            // Asumsi format: "1. 1.1.jpg" atau "1. cfit/1.1.jpg"
+            const questionNumber = currentQuestion.question.split('.')[0];
+            let questionImageSrc = currentQuestion.question.split(' ')[1];
+            // Hapus jalur ganda jika ada, misal: 'cfit/1.1.jpg' menjadi '1.1.jpg'
+            if (questionImageSrc && questionImageSrc.startsWith('cfit/')) {
+                questionImageSrc = questionImageSrc.substring(5);
+            }
+            const fullQuestionImageUrl = IMAGES_BASE_URL + questionImageSrc;
+
+            // Tampilkan pertanyaan (nomor dan gambar) dengan URL absolut
+            document.getElementById("question").innerHTML = `${questionNumber}. <img class="question-image" src="${fullQuestionImageUrl}" alt="">`;
+            console.log("Memuat gambar soal dari:", fullQuestionImageUrl);
+
+            const optionsDiv = document.querySelector(".options");
+            optionsDiv.innerHTML = ""; // Bersihkan opsi sebelumnya
+
+            // Buat gambar untuk setiap opsi dengan URL absolut
+            for (const option in currentQuestion.options) {
+                if (currentQuestion.options[option] !== undefined) {
+                    const img = document.createElement("img");
+                    let optionImageSrc = currentQuestion.options[option];
+                     // Hapus jalur ganda jika ada
+                    if (optionImageSrc && optionImageSrc.startsWith('cfit/')) {
+                        optionImageSrc = optionImageSrc.substring(5);
+                    }
+                    const fullOptionImageUrl = IMAGES_BASE_URL + optionImageSrc;
+                    img.src = fullOptionImageUrl;
+                    img.alt = optionImageSrc;
+                    img.onclick = () => submitAnswer(option);
+                    optionsDiv.appendChild(img);
+                    console.log("Memuat gambar opsi dari:", fullOptionImageUrl);
+                }
+            }
+
+            // Tambahkan tombol lewati
+            const skipButton = document.createElement("button");
+            skipButton.innerHTML = "Lewati";
+            skipButton.onclick = skipQuestion;
+            optionsDiv.appendChild(skipButton);
+        }
+
+        function submitAnswer(option) {
+            answeredQuestions.push({
+                question: currentQuestion.question,
+                userAnswer: option,
+                correctAnswer: correctAnswer
+            });
+
+            const questionNumber = currentQuestion.question.split('.')[0];
+            const resultIndicator = (option === correctAnswer) ? 'v' : 'x';
+            userAnswers.push(`${questionNumber}${option}${resultIndicator}`);
+
+            if (option === correctAnswer) {
+                correctScore++;
+            } else {
+                wrongScore++;
+            }
+
+            currentQuestionIndex++;
+            newQuestion();
+            saveGameState();
+        }
+
+        function endGame(timeout) {
+            clearInterval(timerInterval);
+            document.querySelector(".options").classList.add("hidden");
+
+            let finalMessage = "";
+            if (timeout) {
+                finalMessage = "Waktu Habis, kuis selesai!";
+            } else {
+                finalMessage = "Soal telah selesai, semua telah dikerjakan!";
+            }
+
+            document.getElementById("question").innerHTML = `
+                <div style="text-align: center;">
+                    <h2>${finalMessage}</h2>
+                    <p>Skor Benar: ${correctScore}</p>
+                    <p>Skor Salah: ${wrongScore}</p>
+                    <p>Jawaban Anda: ${userAnswers.join(', ')}</p>
+                    <p>Penyimpanan data ke server tidak dapat dilakukan di file statis ini.</p>
+                </div>
+            `;
+
+            document.querySelectorAll(".options img").forEach(img => img.onclick = null);
+            localStorage.removeItem('gameCfit1');
+        }
+
+        function skipQuestion() {
+            skippedQuestions.push(currentQuestion);
+            questions.push(currentQuestion);
+            currentQuestionIndex++;
+            newQuestion();
+            saveGameState();
+        }
+
+        function saveGameState() {
+            const gameState = {
+                correctScore: correctScore,
+                wrongScore: wrongScore,
+                currentQuestionIndex: currentQuestionIndex,
+                userAnswers: userAnswers,
+                timeLeft: timeLeft
+            };
+            localStorage.setItem('gameCfit1', JSON.stringify(gameState));
+        }
+    </script>
+
+</body>
+</html>

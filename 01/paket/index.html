@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Tes Online</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f4f7f6;
+        }
+        .container {
+            max-width: 800px;
+        }
+        .info-card {
+            background-color: #e9f7ff;
+            border-left: 4px solid #007bff;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        .single-message {
+            background-color: #e2f0d9;
+            border-color: #c9e2b3;
+            color: #38761d;
+        }
+        .message-error {
+            background-color: #fcebeb;
+            border-color: #f5c2c2;
+            color: #a02828;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-4">
+    <div class="container mx-auto bg-white rounded-xl shadow-lg p-6 my-8">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-bold text-blue-600">Dashboard Tes</h1>
+            <button id="logoutButton" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded transition duration-150 ease-in-out">
+                <i class="fas fa-sign-out-alt mr-2"></i> Logout
+            </button>
+        </div>
+        
+        <!-- Menampilkan ID, Token, dan Paket -->
+        <div id="userInfo" class="info-card rounded-md">
+            <p><strong class="font-bold">ID Pengguna:</strong> <span id="displayIdX"></span></p>
+            <p><strong class="font-bold">Token:</strong> <span id="displayToken"></span></p>
+            <p><strong class="font-bold">Paket:</strong> <span id="displayPaket"></span></p>
+        </div>
+
+        <div id="loadingMessage" class="text-center text-gray-500 text-xl my-8">
+            <i class="fas fa-spinner fa-spin mr-2"></i> Memuat data...
+        </div>
+
+        <div id="content" class="space-y-6" style="display:none;">
+            <div>
+                <h2 class="text-2xl font-semibold text-gray-800">Keterangan Soal</h2>
+                <div id="pesan" class="single-message rounded-lg p-4 mt-2"></div>
+            </div>
+
+            <div>
+                <h3 class="text-xl font-semibold text-gray-800">Contoh 1</h3>
+                <div class="image-container text-center mt-2">
+                    <img id="image1" src="" alt="Contoh 1" class="image rounded-md shadow-sm max-w-full h-auto">
+                </div>
+            </div>
+
+            <div>
+                <h3 class="text-xl font-semibold text-gray-800">Contoh 2</h3>
+                <div class="image-container text-center mt-2">
+                    <img id="image2" src="" alt="Contoh 2" class="image rounded-md shadow-sm max-w-full h-auto">
+                </div>
+            </div>
+
+            <div>
+                <h2 class="text-2xl font-semibold text-gray-800">Penjelasan Jawaban</h2>
+                <div id="penjelasan" class="single-message rounded-lg p-4 mt-2"></div>
+            </div>
+
+            <div class="button-container text-center mt-8">
+                <a id="startButton" href="#" class="inline-block py-3 px-8 bg-green-500 hover:bg-green-600 text-white font-bold rounded-full text-lg transition duration-150 ease-in-out">Mulai</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'https://lidan-co-id.pages.dev/api/contacts_filter_dinamis';
+        const TABLE_NILAI1 = 'nilai1';
+        const TABLE_PAKET = 'paket';
+        const NAMA_SESI_TOKEN = 'user';
+        const NAMA_SESI_ID = 'id_x';
+        const NAMA_SESI_PAKET = 'paket';
+
+        // Data mockup keterangan soal (sesuai dengan logika PHP Anda)
+        const KETERANGAN_TES = {
+            "cfit1": { "keterangan": "CFIT Subtes 1. Soal terdiri dari deretan gambar yang ada...", "gambar": "https://placehold.co/400x200/efefef/555555?text=CFIT+1", "gambar2": "https://placehold.co/400x200/f8f8f8/555555?text=CFIT+1+Contoh", "penjelasan": "Penjelasan Jawaban CFIT Subtes 1.", "tujuan": "form1.html" },
+            "cfit2": { "keterangan": "CFIT Subtes 2. Soal terdiri dari barisan gambar...", "gambar": "https://placehold.co/400x200/efefef/555555?text=CFIT+2", "gambar2": "https://placehold.co/400x200/f8f8f8/555555?text=CFIT+2+Contoh", "penjelasan": "Penjelasan Jawaban CFIT Subtes 2.", "tujuan": "form2.html" },
+            "cfit3": { "keterangan": "CFIT Subtes 3. Soal terdiri dari matriks gambar yang harus Anda...", "gambar": "https://placehold.co/400x200/efefef/555555?text=CFIT+3", "gambar2": "https://placehold.co/400x200/f8f8f8/555555?text=CFIT+3+Contoh", "penjelasan": "Penjelasan Jawaban CFIT Subtes 3.", "tujuan": "form3.html" },
+            "cfit4": { "keterangan": "CFIT Subtes 4. Soal terdiri dari deretan gambar...", "gambar": "https://placehold.co/400x200/efefef/555555?text=CFIT+4", "gambar2": "https://placehold.co/400x200/f8f8f8/555555?text=CFIT+4+Contoh", "penjelasan": "Penjelasan Jawaban CFIT Subtes 4.", "tujuan": "form4.html" },
+            "ist1": { "keterangan": "IST Subtes 1...", "gambar": "https://placehold.co/400x200/efefef/555555?text=IST+1", "gambar2": "https://placehold.co/400x200/f8f8f8/555555?text=IST+1+Contoh", "penjelasan": "Penjelasan Jawaban IST Subtes 1.", "tujuan": "form5.html" },
+            "ist2": { "keterangan": "IST Subtes 2...", "gambar": "https://placehold.co/400x200/efefef/555555?text=IST+2", "gambar2": "https://placehold.co/400x200/f8f8f8/555555?text=IST+2+Contoh", "penjelasan": "Penjelasan Jawaban IST Subtes 2.", "tujuan": "form6.html" },
+            "ist3": { "keterangan": "IST Subtes 3...", "gambar": "https://placehold.co/400x200/efefef/555555?text=IST+3", "gambar2": "https://placehold.co/400x200/f8f8f8/555555?text=IST+3+Contoh", "penjelasan": "Penjelasan Jawaban IST Subtes 3.", "tujuan": "form7.html" },
+            "ist4": { "keterangan": "IST Subtes 4...", "gambar": "https://placehold.co/400x200/efefef/555555?text=IST+4", "gambar2": "https://placehold.co/400x200/f8f8f8/555555?text=IST+4+Contoh", "penjelasan": "Penjelasan Jawaban IST Subtes 4.", "tujuan": "form8.html" },
+            "ist5": { "keterangan": "IST Subtes 5...", "gambar": "https://placehold.co/400x200/efefef/555555?text=IST+5", "gambar2": "https://placehold.co/400x200/f8f8f8/555555?text=IST+5+Contoh", "penjelasan": "Penjelasan Jawaban IST Subtes 5.", "tujuan": "form9.html" },
+            "ist6": { "keterangan": "IST Subtes 6...", "gambar": "https://placehold.co/400x200/efefef/555555?text=IST+6", "gambar2": "https://placehold.co/400x200/f8f8f8/555555?text=IST+6+Contoh", "penjelasan": "Penjelasan Jawaban IST Subtes 6.", "tujuan": "form10.html" },
+            "ist7": { "keterangan": "IST Subtes 7...", "gambar": "https://placehold.co/400x200/efefef/555555?text=IST+7", "gambar2": "https://placehold.co/400x200/f8f8f8/555555?text=IST+7+Contoh", "penjelasan": "Penjelasan Jawaban IST Subtes 7.", "tujuan": "form11.html" },
+            "ist8": { "keterangan": "IST Subtes 8...", "gambar": "https://placehold.co/400x200/efefef/555555?text=IST+8", "gambar2": "https://placehold.co/400x200/f8f8f8/555555?text=IST+8+Contoh", "penjelasan": "Penjelasan Jawaban IST Subtes 8.", "tujuan": "form12.html" },
+            "ist9": { "keterangan": "IST Subtes 9...", "gambar": "https://placehold.co/400x200/efefef/555555?text=IST+9", "gambar2": "https://placehold.co/400x200/f8f8f8/555555?text=IST+9+Contoh", "penjelasan": "Penjelasan Jawaban IST Subtes 9.", "tujuan": "form13.html" },
+            "rmib": { "keterangan": "RMIB. Silakan pilih 2 pilihan yang paling menggambarkan diri Anda...", "gambar": "https://placehold.co/400x200/efefef/555555?text=RMIB", "gambar2": "https://placehold.co/400x200/f8f8f8/555555?text=RMIB+Contoh", "penjelasan": "Penjelasan RMIB.", "tujuan": "form7a.html?kolom=2" },
+            "epps": { "keterangan": "EPPS. Silakan pilih salah satu dari 2 pilihan yang ada...", "gambar": "https://placehold.co/400x200/efefef/555555?text=EPPS", "gambar2": "https://placehold.co/400x200/f8f8f8/555555?text=EPPS+Contoh", "penjelasan": "Penjelasan EPPS.", "tujuan": "form15.html" }
+        };
+
+        // Fungsi untuk mengalihkan ke halaman lain
+        function redirect(url) {
+            console.log(`[Redirect] Mengalihkan ke: ${url}`);
+            window.location.href = url;
+        }
+        
+        // Fungsi logout
+        document.getElementById('logoutButton').addEventListener('click', () => {
+            console.log('[Logout] User logout.');
+            sessionStorage.clear();
+            redirect('login.html');
+        });
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            console.log('[App Start] Halaman dimuat, memulai proses...');
+            const loadingMessage = document.getElementById('loadingMessage');
+            const contentDiv = document.getElementById('content');
+            
+            // Ambil ID, Token, dan Paket dari sessionStorage
+            const id_x = sessionStorage.getItem(NAMA_SESI_ID);
+            const userToken = sessionStorage.getItem(NAMA_SESI_TOKEN);
+            const paket = sessionStorage.getItem(NAMA_SESI_PAKET);
+            
+            // Log data sesi untuk debugging
+            console.log(`[Session Check] Debug Data Sesi -> id_x: "${id_x}", userToken: "${userToken}", paket: "${paket}"`);
+
+            // Cek apakah pengguna sudah login
+            if (!id_x || !userToken || !paket) {
+                console.log('[Session Check] Data sesi tidak lengkap, mengalihkan ke halaman login.');
+                redirect('login.html');
+                return;
+            }
+
+            // Tampilkan ID, Token, dan Paket di UI
+            document.getElementById('displayIdX').textContent = id_x;
+            document.getElementById('displayToken').textContent = userToken;
+            document.getElementById('displayPaket').textContent = paket;
+
+            try {
+                // Ambil data nilai pengguna berdasarkan id_x
+                console.log('[API Call] Langkah 1: Mengambil data pengguna dari API...');
+                const nilaiUrl = `${API_URL}?table=${TABLE_NILAI1}&id_x_eq=${encodeURIComponent(id_x)}`;
+                console.log(`[API Call] URL API Nilai: ${nilaiUrl}`);
+                
+                const nilaiResponse = await fetch(nilaiUrl);
+                const nilaiResult = await nilaiResponse.json();
+                
+                console.log("[API Call] Respons API Nilai:", nilaiResult);
+
+                // Pemeriksaan yang lebih defensif terhadap respons API
+                if (!nilaiResponse.ok || !nilaiResult.success || !nilaiResult.data || nilaiResult.data.length === 0) {
+                    throw new Error('Data pengguna tidak ditemukan atau respons API tidak valid. Periksa token atau ID.');
+                }
+                
+                const userRecord = nilaiResult.data[0];
+                
+                // Gunakan fallback ';;' jika x_02 tidak ada
+                const x02Data = userRecord.x_02 || ';;';
+                const x05Data = userRecord.x_05 || '';
+                const x06Data = userRecord.x_06 || '';
+                
+                console.log(`[Data Processing] Debug Data Pengguna -> x_02: "${x02Data}"`);
+                console.log(`[Data Processing] Debug Data Pengguna -> x_05: "${x05Data}"`);
+                console.log(`[Data Processing] Debug Data Pengguna -> x_06: "${x06Data}"`);
+
+
+                const multiExplode02 = x02Data.split(';;').map(row => row.split(';').map(item => item.trim()));
+                const explode05 = x05Data.split('|').map(item => item.trim());
+                const explode06 = x06Data.split('|').map(item => item.trim());
+
+                console.log("[Data Processing] Data Biodata (multiExplode02):", multiExplode02);
+                console.log("[Data Processing] Data Status Tes x_05:", explode05);
+                console.log("[Data Processing] Data Status Tes x_06:", explode06);
+
+                // Cek data biodata, jika belum lengkap, alihkan ke form0.html
+                if (!multiExplode02[0] || multiExplode02[0].length < 3 || multiExplode02[0][0] === "" || multiExplode02[0][1] === "" || multiExplode02[0][2] === "") {
+                    console.log('[Flow Control] Biodata tidak lengkap, mengalihkan ke form0.html.');
+                    redirect('form0.html');
+                    return;
+                }
+
+                // Ambil data paket
+                console.log('[API Call] Langkah 3: Mengambil data paket dari API...');
+                const paketUrl = `${API_URL}?table=${TABLE_PAKET}&x_01_eq=${encodeURIComponent(paket)}`;
+                console.log(`[API Call] URL API Paket: ${paketUrl}`);
+
+                const paketResponse = await fetch(paketUrl);
+                const paketResult = await paketResponse.json();
+                
+                console.log("[API Call] Respons API Paket:", paketResult);
+
+                if (!paketResponse.ok || !paketResult.success || !paketResult.data || paketResult.data.length === 0) {
+                     throw new Error('Paket tes tidak ditemukan.');
+                }
+                const explodePaket02 = paketResult.data[0].x_02.split('|').map(item => item.trim());
+                console.log("[Data Processing] Daftar tes dalam paket:", explodePaket02);
+
+                // Memetakan nama tes ke status penyelesaiannya. Tambahkan validasi panjang array.
+                const testStatus = {
+                    'cfit1': explode05.length > 0 ? explode05[0] : null,
+                    'cfit2': explode05.length > 1 ? explode05[1] : null,
+                    'cfit3': explode05.length > 2 ? explode05[2] : null,
+                    'cfit4': explode05.length > 3 ? explode05[3] : null,
+                    'ist1': explode05.length > 4 ? explode05[4] : null,
+                    'ist2': explode05.length > 5 ? explode05[5] : null,
+                    'ist3': explode05.length > 6 ? explode05[6] : null,
+                    'ist4': explode05.length > 7 ? explode05[7] : null,
+                    'ist5': explode05.length > 8 ? explode05[8] : null,
+                    'ist6': explode05.length > 9 ? explode05[9] : null,
+                    'ist7': explode05.length > 10 ? explode05[10] : null,
+                    'ist8': explode05.length > 11 ? explode05[11] : null,
+                    'ist9': explode05.length > 12 ? explode05[12] : null,
+                    'tkd3': explode05.length > 15 ? explode05[15] : null,
+                    'tkd6': explode05.length > 17 ? explode05[17] : null,
+                    'rmib': explode06.length > 2 ? explode06[2] : null,
+                    'epps': explode06.length > 1 ? explode06[1] : null,
+                };
+                
+                console.log("[Data Processing] Status penyelesaian tes:", testStatus);
+
+                // Menentukan tes berikutnya yang belum dikerjakan
+                let nextTestName = null;
+                for (const test of explodePaket02) {
+                    // Cek apakah tes ada dalam KETERANGAN_TES dan belum diselesaikan
+                    if (KETERANGAN_TES[test] && !testStatus[test]) {
+                        nextTestName = test;
+                        break;
+                    }
+                }
+                console.log(`[Flow Control] Tes berikutnya yang akan ditampilkan: ${nextTestName || 'Tidak ada tes yang tersisa'}`);
+
+
+                // Tampilkan konten sesuai progres
+                if (nextTestName) {
+                    const testInfo = KETERANGAN_TES[nextTestName];
+                    if (testInfo) {
+                        document.getElementById('pesan').innerHTML = testInfo.keterangan;
+                        document.getElementById('image1').src = testInfo.gambar;
+                        document.getElementById('image2').src = testInfo.gambar2;
+                        document.getElementById('penjelasan').innerHTML = testInfo.penjelasan;
+                        
+                        let targetUrl = testInfo.tujuan;
+                        // Logika khusus untuk RMIB berdasarkan jenis kelamin
+                        if (nextTestName === 'rmib') {
+                            const gender = multiExplode02[0][2];
+                            console.log(`[RMIB Logic] Jenis Kelamin terdeteksi: ${gender}`);
+                            if (gender === 'Perempuan') {
+                                targetUrl = 'form7a.html?kolom=2';
+                            } else if (gender === 'Laki-laki') {
+                                targetUrl = 'form7.html?kolom=1';
+                            }
+                        }
+                        
+                        document.getElementById('startButton').href = targetUrl;
+                    } else {
+                        document.getElementById('pesan').innerHTML = `<p class="message-error">Instruksi untuk tes <strong>${nextTestName}</strong> tidak ditemukan.</p>`;
+                        document.getElementById('startButton').href = "#";
+                    }
+                    contentDiv.style.display = 'block';
+                } else {
+                    // Semua tes selesai
+                    console.log('[Flow Control] Semua tes dalam paket sudah selesai, mengalihkan ke halaman akhir.');
+                    redirect('index_who.html');
+                }
+            } catch (error) {
+                console.error('[Error] Terjadi kesalahan memuat data:', error);
+                loadingMessage.innerHTML = `<div class="text-red-500 font-bold">Terjadi kesalahan: ${error.message}</div>`;
+            } finally {
+                loadingMessage.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

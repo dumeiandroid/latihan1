@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soal Psikotest</title>
+    <!-- CSS yang diambil dari file eksternal -->
+    <link rel="stylesheet" href="css_tes.css">
+</head>
+<body>
+
+    <div class="quiz-container">
+        <h1>Kerjakan Dengan Teliti</h1>
+        <button id="startButton" onclick="startGame()">Start</button>
+        <div id="question" class="hidden"></div>
+        <div class="options hidden"></div>
+        <div class="tengah">
+            <button onclick="calculateScore()" class="hidden" id="scoreButton" disabled>Jawab</button>
+            <button onclick="skipQuestion()" class="hidden" id="skipButton">Lewati</button>
+        </div>
+        <div class="result" id="result"></div>
+        <div id="timer">Waktu Tersisa: 300 detik</div>
+    </div>
+
+    <script>
+        let correctScore = 0;
+        let timeLeft = 300;
+        let currentQuestionIndex = 0;
+        let timerInterval;
+        let allSelectedAnswers = [];
+        let questions = [];
+
+        // Mendefinisikan URL dasar untuk file pertanyaan
+        const QUESTIONS_URL = 'https://latihan1.pages.dev/01/test/psikotest/cfit2_a.txt';
+        // Mendefinisikan URL dasar untuk gambar
+        const IMAGES_BASE_URL = 'https://latihan1.pages.dev/01/test/';
+
+        // Mengambil pertanyaan dari file cfit2_a.txt
+        fetch(QUESTIONS_URL)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Gagal memuat pertanyaan: ' + response.statusText);
+            }
+            return response.json();
+        })
+        .then(data => {
+            questions = data;
+            loadGameState();
+        })
+        .catch(error => {
+            console.error('Error fetching the questions:', error);
+            document.getElementById("question").innerHTML = "Gagal memuat soal. Pastikan Anda menjalankan file ini di server web.";
+            document.getElementById("question").classList.remove("hidden");
+            document.getElementById("startButton").disabled = true;
+        });
+        
+        // Muat status permainan dari localStorage
+        function loadGameState() {
+            const savedState = localStorage.getItem('gameCfit2');
+            if (savedState) {
+                const state = JSON.parse(savedState);
+                correctScore = state.correctScore || 0;
+                currentQuestionIndex = state.currentQuestionIndex || 0;
+                allSelectedAnswers = state.allSelectedAnswers || [];
+                timeLeft = state.timeLeft || 300;
+            }
+        }
+
+        // Simpan status permainan ke localStorage
+        function saveGameState() {
+            const gameState = {
+                correctScore: correctScore,
+                currentQuestionIndex: currentQuestionIndex,
+                allSelectedAnswers: allSelectedAnswers,
+                timeLeft: timeLeft
+            };
+            localStorage.setItem('gameCfit2', JSON.stringify(gameState));
+        }
+
+        function startGame() {
+            loadGameState();
+            document.getElementById("startButton").disabled = true;
+            document.querySelector("h1").classList.add("hidden");
+            startTimer();
+            loadQuestion();
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(function() {
+                timeLeft--;
+                document.getElementById("timer").innerHTML = "Waktu Tersisa: " + timeLeft + " detik";
+                saveGameState();
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    endGame(true);
+                }
+            }, 1000);
+        }
+
+        function loadQuestion() {
+            if (currentQuestionIndex >= questions.length) {
+                endGame(false);
+                return;
+            }
+
+            const currentQuestion = questions[currentQuestionIndex];
+            document.getElementById("question").innerHTML = "Ada 5 gambar. 2 gambar berbeda dan 3 gambar lainnya sama. Tentukan 2 gambar yang berbeda.";
+            document.getElementById("question").classList.remove("hidden");
+            const optionsDiv = document.querySelector(".options");
+            optionsDiv.innerHTML = "";
+
+            currentQuestion.options.forEach((option, index) => {
+                const checkbox = document.createElement("input");
+                checkbox.type = "checkbox";
+                checkbox.id = `option${currentQuestionIndex}-${index}`;
+                checkbox.value = option;
+                
+                checkbox.addEventListener('change', function() {
+                    const checkedCheckboxes = Array.from(document.querySelectorAll('.options input[type="checkbox"]:checked'));
+                    document.getElementById("scoreButton").disabled = checkedCheckboxes.length < 2 || checkedCheckboxes.length > 2;
+                });
+
+                const label = document.createElement("label");
+                label.htmlFor = `option${currentQuestionIndex}-${index}`;
+                label.innerHTML = `<img src="${IMAGES_BASE_URL}${option}" alt="Option Image" class="option-img">`;
+
+                optionsDiv.appendChild(checkbox);
+                optionsDiv.appendChild(label);
+            });
+            
+            optionsDiv.classList.remove("hidden");
+            document.getElementById("scoreButton").classList.remove("hidden");
+            document.getElementById("scoreButton").disabled = true;
+            document.getElementById("skipButton").classList.remove("hidden");
+        }
+
+        function skipQuestion() {
+            questions.push(questions[currentQuestionIndex]);
+            currentQuestionIndex++;
+            loadQuestion();
+            saveGameState();
+        }
+
+        function calculateScore() {
+            const selectedAnswers = [];
+            const correctAnswers = questions[currentQuestionIndex].correctAnswers;
+
+            const checkboxes = document.querySelectorAll('.options input[type="checkbox"]:checked');
+            checkboxes.forEach(checkbox => {
+                selectedAnswers.push(checkbox.value);
+            });
+            
+            const questionNumber = currentQuestionIndex + 1;
+            const formattedAnswers = selectedAnswers.map(answer => {
+                const isCorrect = correctAnswers.includes(answer);
+                return `${questionNumber}${answer.slice(-5, -4)} ${isCorrect ? 'v' : 'x'}`;
+            });
+
+            allSelectedAnswers.push(formattedAnswers);
+
+            const isCorrect = selectedAnswers.length === correctAnswers.length && selectedAnswers.every(ans => correctAnswers.includes(ans));
+            if (isCorrect) {
+                correctScore++;
+            }
+
+            currentQuestionIndex++;
+            loadQuestion();
+            saveGameState();
+        }
+
+        function endGame(timeout) {
+            clearInterval(timerInterval);
+
+            // Menghapus tombol
+            document.querySelector(".tengah").classList.add("hidden");
+            document.querySelector(".options").classList.add("hidden");
+
+            let finalMessage = "";
+            if (timeout) {
+                finalMessage = "Waktu Habis! Kuis selesai.";
+            } else {
+                finalMessage = "Soal telah selesai!";
+            }
+
+            const resultDiv = document.getElementById("result");
+            resultDiv.innerHTML = `
+                <div style="text-align: center;">
+                    <h2>${finalMessage}</h2>
+                    <p>Skor Benar: ${correctScore}</p>
+                    <p>Jawaban Anda: ${allSelectedAnswers.map(answers => answers.join(', ')).join('; ')}</p>
+                    <p>Penyimpanan data ke server tidak dapat dilakukan di file statis ini.</p>
+                </div>
+            `;
+            
+            localStorage.removeItem('gameCfit2');
+        }
+    </script>
+
+</body>
+</html>
