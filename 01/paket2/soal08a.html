@@ -9,24 +9,107 @@
             window.location.href = 'login.html';
         }
     </script>
-    <link rel="stylesheet" href="css_tes.css">
-    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        #startButton {
+            display: block;
+            margin: 0 auto;
+            padding: 10px 20px;
+            background-color: #585353;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #startButton:hover {
+            background-color: #050000;
+        }
+
+        #question {
+            text-align: center;
+            margin: 30px 0;
+            font-size: 1.2em;
+            color: #333;
+        }
+        
+        .options1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .options1 button {
+            display: block;
+            width: 80%;
+            margin: 10px auto;
+            padding: 15px;
+            font-size: 1.1em;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        
+        .options1 button:hover {
+            background-color: #e2e2e2;
+            transform: translateY(-2px);
+        }
+
+        .scoreboard {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #585353;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            font-size: 1em;
+        }
+        
+        .hidden {
+            display: none;
+        }
+
+        /* Prevent text selection */
+        .options {
+            user-select: none;
+        }
+        .scoreboard {
+            user-select: none;
+            pointer-events: none;
+        }
+
+        /* Responsive design for larger screens */
+        @media (min-width: 601px) {
+            #question {
+                font-size: 1.5em;
+            }
+            .options1 button {
+                width: 60%;
+            }
+        }
+    </style>
 </head>
 <body>
 
-    <div class="keterangan_soal">
-        <h1>Keterangan Soal</h1>
-        <p><span style=\'color: rgb(85, 85, 85); font-size: 19.2px; text-align: justify;\'>Deskripsi berikut ini terdiri dari sejumlah pasangan pernyataan, dan tugas Anda adalah memilih satu pernyataan dalam setiap pasangan yang paling sesuai dengan diri Anda. Petunjuk Pengerjaan:&nbsp;</span></p><p><span style=\'color: rgb(85, 85, 85); font-size: 19.2px; text-align: justify;\'>(1) Setiap item memiliki dua pernyataan (a dan b).&nbsp;</span></p><p>(2) Bacalah kedua pernyataan dengan cermat.&nbsp;</p><p>(3) Pilih salah satu pernyataan yang paling sesuai dengan kepribadian Anda atau yang paling menggambarkan apa yang Anda sukai atau ingin lakukan.&nbsp;</p><p>(4) Tidak ada jawaban \"benar\" atau \"salah\". Jawablah secara jujur dan sesuai dengan diri Anda sendiri, bukan sesuai dengan apa yang Anda pikirkan diharapkan oleh orang lain.&nbsp;</p><p>(5) Usahakan untuk tidak memilih berdasarkan apa yang menurut Anda benar secara sosial, tetapi berdasarkan apa yang benar-benar mencerminkan diri Anda.&nbsp;</p><p>(6) Jika kedua pernyataan dalam satu item terasa sulit dipilih, tetap pilih salah satu yang lebih mendekati diri Anda.&nbsp;</p><p>(7) Jangan menghabiskan terlalu banyak waktu pada satu item. Jawab dengan spontan dan sesuai dengan perasaan pertama Anda</p>
-        <h2>Contoh 1</h2>
-        <img src="https://latihan1.pages.dev/01/test/gambar/epps_a.png" alt="">
-        <h2>Contoh 2</h2>
-        <img src="https://latihan1.pages.dev/01/test/gambar/epps_b.png" alt="">
-        <h2>Penjelasan Jawaban</h2>
-        <b>Contoh pertama & Kedua</b>
-        <p>Perhatikan penjelasan diatas dan pilihlah salah satu pernyataan A atau B yang paling sesuai dengan diri anda.</p>
-    </div>
-    <h1 class="sembunyikan">Kerjakan Dengan Teliti</h1>
     <button id="startButton" onclick="startGame()">Mulai</button>
+    <h1>Kerjakan Dengan Teliti</h1>
+
     <div id="question" class="hidden"></div>
     <div class="options1 options turun hidden">
         <button style="text-align: left;" id="optionA" onclick="submitAnswer('A')"></button>
@@ -52,12 +135,12 @@
 
         // Muat pertanyaan dari file JSON
         fetch('https://latihan1.pages.dev/01/test/psikotest/epps.txt?v=' + new Date().getTime())
-        .then(response => response.json())
-        .then(data => {
-            questions = data;
+            .then(response => response.json())
+            .then(data => {
+                questions = data;
                 loadGameState(); // Memuat status permainan setelah data berhasil dimuat
             })
-        .catch(error => console.error('Error fetching the questions:', error));
+            .catch(error => console.error('Error fetching the questions:', error));
 
         // Muat status permainan dari localStorage
         function loadGameState() {
@@ -68,7 +151,7 @@
                 userAnswers = state.userAnswers || [];
                 document.getElementById("userAnswers").innerHTML = userAnswers.join('; ');
             }
-            // newQuestion() TIDAK dipanggil di sini lagi
+            newQuestion();
         }
 
         // Simpan status permainan ke localStorage
@@ -81,12 +164,10 @@
         }
 
         function startGame() {
-            document.querySelector(".sembunyikan").classList.add("hidden");
-            document.querySelector(".keterangan_soal").classList.add("hidden");
             document.getElementById("startButton").disabled = true;
             document.querySelector(".options1").classList.remove("hidden");
             document.getElementById("question").classList.remove("hidden");
-            newQuestion(); // Panggil newQuestion HANYA saat tombol "Mulai" diklik
+            // newQuestion() dipanggil oleh loadGameState yang dipanggil setelah fetch berhasil
         }
 
         function newQuestion() {
@@ -118,8 +199,8 @@
         function submitAnswer(option) {
             userAnswers.push(option);
             document.getElementById("userAnswers").innerHTML = userAnswers.join('; ');
-            currentQuestionIndex++; // Pindahkan ke indeks pertanyaan berikutnya
-            saveGameState(); // Pindahkan ke sini, setelah currentQuestionIndex di-update
+            saveGameState();
+            currentQuestionIndex++;
             newQuestion();
         }
 

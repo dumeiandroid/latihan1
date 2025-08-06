@@ -115,8 +115,7 @@
         <button id="startButton" onclick="startGame()">Mulai</button>
         <h1>Pilih yang sesuai <br>atau mendekati diri anda</h1>
 
-        <!-- Scoreboard is initially hidden using inline style for robustness -->
-        <div class="scoreboard putih" style="display: none;">
+        <div class="scoreboard putih">
             <div style="color: #f4f4f4; user-select: none; pointer-events: none;">Jawaban: <span id="userAnswers"></span></div>
         </div>
 
@@ -162,7 +161,7 @@
             // Periksa apakah parameter 'kolom' ada
             if (!kol) {
                 document.getElementById("question").innerHTML = "Gagal memuat soal. Mohon masukkan parameter kolom di URL. Contoh: ?kolom=20";
-                document.getElementById("startButton").style.display = 'none'; // Sembunyikan tombol mulai
+                document.getElementById("startButton").classList.add("hidden"); // Sembunyikan tombol mulai
                 return; // Berhenti jika tidak ada parameter
             }
 
@@ -230,10 +229,11 @@
 
         // Fungsi untuk memulai permainan
         function startGame() {
-            document.getElementById("startButton").style.display = 'none'; // Sembunyikan tombol mulai
-            document.querySelector('h1').style.display = 'none'; // Sembunyikan elemen h1
+            document.getElementById("startButton").classList.add("hidden");
             document.querySelector(".options1").classList.remove("hidden");
             document.getElementById("question").classList.remove("hidden");
+            // loadQuestions() sudah dipanggil di window.onload, jadi tidak perlu lagi di sini
+            // Cukup panggil newQuestion() untuk menampilkan pertanyaan berdasarkan currentQuestionIndex
             newQuestion();
         }
 
@@ -283,8 +283,8 @@
         function endGame(fromLoadProgress = false) {
             document.getElementById("question").innerHTML = "Soal telah selesai, semua telah dikerjakan!";
             document.querySelector(".options1").classList.add("hidden");
-            document.getElementById("startButton").style.display = 'none'; // Sembunyikan tombol mulai juga
-            document.querySelector(".scoreboard").style.display = 'none'; // Sembunyikan scoreboard
+            document.getElementById("startButton").classList.add("hidden"); // Sembunyikan tombol mulai juga
+            document.querySelector(".scoreboard").classList.add("hidden"); // Sembunyikan scoreboard
 
             console.log("Semua jawaban:", userAnswers);
             
@@ -377,10 +377,10 @@
                 successMessage.innerText = 'Data berhasil disimpan!';
                 successMessage.style.display = 'block';
 
-                // Tambahkan redirect ke index.html setelah sukses
-                setTimeout(() => {
-                    window.location.href = 'index.html';
-                }, 1500); // Redirect setelah 1.5 detik
+                // Opsional: Redirect ke halaman lain setelah sukses
+                // setTimeout(() => {
+                //     window.location.href = 'next_page.html';
+                // }, 1000); 
                 
             } catch (error) {
                 console.error('Error saving data:', error);

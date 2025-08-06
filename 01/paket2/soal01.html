@@ -13,21 +13,8 @@
 </head>
 <body>
 
-    <div class="keterangan_soal">
-        <h1>Keterangan Soal</h1>
-        <p>Tes ini terdiri dari 4 subtes yang masing-masing memiliki durasi waktu tersendiri, jadi harap anda mengerjakannya secepat dan setepat mungkin. Pada subtes pertama ini anda diminta untuk melengkapi kotak keempat pada tiap soal. Di contoh pertama ini, Anda akan menemukan sederet kotak yang berisi urutan gambar. Namun kotak terakhir belum ada isinya. Perlu Anda ingat bahwa kotak tersebut adalah pola yang berkesinambungan.Tugas Anda memilih jawaban yang sesuai, yang bisa dipilih dari 6 pilihan jawaban.</p>
-        <h2>Contoh 1</h2>
-        <img src="https://latihan1.pages.dev/01/test/gambar/cfit1a.png" alt="">
-        <h2>Contoh 2</h2>
-        <img src="https://latihan1.pages.dev/01/test/gambar/cfit1b.png" alt="">
-        <h2>Penjelasan Jawaban</h2>
-        <b>Contoh pertama</b>
-        <p>Perhatikan dengan seksama pola yang ada dalam kotak-kotak di atas. Setiap gambar menunjukkan sebuah ranting dengan cabang-cabang kecil. Jika diamati, ada perubahan bertahap dari satu gambar ke gambar berikutnya. Pada kotak pertama, ranting memiliki dua cabang yang mengarah sedikit ke atas, pada kotak kedua, posisi cabang mulai sedikit lebih miring ke bawah. Dan pada kotak ketiga, cabang semakin turun lebih jauh dibandingkan gambar sebelumnya. Dari pola ini, kita bisa menyimpulkan bahwa semakin ke kanan, cabang kecil pada ranting semakin menunduk atau mengarah ke bawah. Jika diperhatikan, jawaban C adalah yang paling sesuai, karena posisi cabangnya lebih turun dibandingkan gambar sebelumnya, sesuai dengan pola perubahan dalam urutan gambar.</p>
-        <b>Contoh kedua</b>
-        <p>Bayangkan bahwa bagian berwarna dalam gambar ini adalah tirai yang sedang diturunkan secara bertahap. Jika kita memperhatikan gambar dari kiri ke kanan, kita bisa melihat bahwa tirai semakin lama semakin turun menutupi bagian bawah kotak. Pada kotak pertama, tirai masih berada di bagian atas, hanya menutupi sedikit bagian atas kotak., pada kotak kedua, tirai mulai turun lebih rendah, menutupi lebih banyak bagian kotak dan pada gambar ketiga, tirai semakin turun lebih jauh, hampir mencapai bagian tengah kotak. Dari pola ini, kita dapat melihat bahwa tirai terus bergerak turun sedikit demi sedikit dalam setiap langkah. Jawaban yang benar harus mengikuti pola ini, yaitu tirai semakin turun lebih jauh lagi. Jika diperhatikan, jawaban E adalah yang paling sesuai, karena tirai sudah hampir sepenuhnya turun, menutupi lebih banyak bagian bawah kotak.</p>
-    </div>
-
     <h1>Kerjakan Dengan Teliti</h1>
+
     <button id="startButton" onclick="startGame()">Start</button>
     <div class="image">
         <div id="question" class="hidden"></div>
@@ -90,7 +77,6 @@
         }
 
         function startGame() {
-            document.querySelector(".keterangan_soal").classList.add("hidden");
             document.getElementById("startButton").disabled = true;
             document.querySelector("h1").classList.add("hidden");
             startTimer();
@@ -196,19 +182,21 @@
                 finalMessage = "Soal telah selesai, semua telah dikerjakan!";
             }
 
-            // Tampilkan hanya pesan akhir dan status pengiriman data
+            // Panggil fungsi untuk mengirim data ke API
+            sendResultToApi(correctScore, userAnswers);
+
             document.getElementById("question").innerHTML = `
             <div style="text-align: center;">
             <h2>${finalMessage}</h2>
-            <p id="apiStatus">Data sedang dikirim ke server...</p>
+            <p>Skor Benar: ${correctScore}</p>
+            <p>Skor Salah: ${wrongScore}</p>
+            <p>Jawaban Anda: ${userAnswers.join(', ')}</p>
+            <p>Data sedang dikirim ke server...</p>
             </div>
             `;
 
             document.querySelectorAll(".options img").forEach(img => img.onclick = null);
             localStorage.removeItem('gameCfit1');
-
-            // Panggil fungsi untuk mengirim data ke API
-            sendResultToApi(correctScore, userAnswers);
         }
 
         /**
@@ -218,10 +206,12 @@
          */
          async function sendResultToApi(score, answers) {
             const id = ID_TO_UPDATE;
-            const apiStatusDiv = document.getElementById("apiStatus");
+            const resultDiv = document.getElementById("question");
             
             // Tampilkan pesan loading
-            apiStatusDiv.innerHTML = `<p style="color: blue;">Memproses data dan mengirim ke server...</p>`;
+            resultDiv.innerHTML += `
+            <p style="color: blue;">Memproses data dan mengirim ke server...</p>
+            `;
 
             try {
                 // Langkah 1: Ambil data yang ada dari API
@@ -285,17 +275,16 @@
                 console.log('Save API response:', data);
 
                 // Perbarui pesan di UI setelah sukses
-                apiStatusDiv.innerHTML = `<p style="color: green;">Data berhasil disimpan!</p>`;
-
-                // Alihkan ke index.html setelah 2 detik
-                setTimeout(() => {
-                    window.location.href = 'index.html';
-                }, 2000);
+                resultDiv.innerHTML += `
+                <p style="color: green;">Data berhasil disimpan!</p>
+                `;
 
             } catch (error) {
                 console.error('Error saving data:', error);
                 // Perbarui pesan di UI jika terjadi error
-                apiStatusDiv.innerHTML = `<p style="color: red;">Error menyimpan data: ${error.message || error}</p>`;
+                resultDiv.innerHTML += `
+                <p style="color: red;">Error menyimpan data: ${error.message || error}</p>
+                `;
             }
         }
 

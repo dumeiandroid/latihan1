@@ -133,7 +133,7 @@
                 if (data.success && data.data && data.data.length > 0) {
                     const item = data.data[0];
                     document.getElementById('id_x').value = item.id_x; // Set hidden id_x
-                    renderExplodedForm(item['x_04']); // Render formulir dari data x_04
+                    renderExplodedForm(item['x_05']); // Render formulir dari data x_05
                     messageContainer.classList.add('hidden');
                     dataForm.classList.remove('hidden');
                 } else {
@@ -146,8 +146,8 @@
         }
 
         /**
-         * Mengurai data x_04 dan merender formulir input yang dapat diedit.
-         * @param {string} rawValue - Nilai mentah dari kolom x_04.
+         * Mengurai data x_05 dan merender formulir input yang dapat diedit.
+         * @param {string} rawValue - Nilai mentah dari kolom x_05.
          */
         function renderExplodedForm(rawValue) {
             const container = document.getElementById('formFieldsContainer');
@@ -215,9 +215,9 @@
             
             const newX04Value = newExplodedColumns.join('|'); // Implode kolom dengan '|'
 
-            // Data yang akan dikirim di body permintaan, hanya x_04
+            // Data yang akan dikirim di body permintaan, hanya x_05
             const formData = {
-                x_04: newX04Value
+                x_05: newX04Value
             };
 
             // URL untuk PUT dengan id_x sebagai parameter kueri
