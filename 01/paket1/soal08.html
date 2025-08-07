@@ -122,17 +122,49 @@
             saveGameState(); // Pindahkan ke sini, setelah currentQuestionIndex di-update
             newQuestion();
         }
-
-        // Fungsi untuk mengirim hasil ke API
+        
+        // --- FUNGSI sendResultToApi DIMAODIFIKASI ---
         async function sendResultToApi(answersString) {
             const statusMessage = document.getElementById("statusMessage");
             statusMessage.style.color = "blue";
             statusMessage.innerText = "Mengirim data ke server...";
 
             try {
-                // Siapkan data untuk permintaan PUT
+                // Langkah 1: Ambil data yang ada dari API
+                const getUrl = `${API_URL}?table=${TABLE_NAME}&id_x_eq=${ID_TO_UPDATE}`;
+                const getResponse = await fetch(getUrl, {
+                    method: 'GET',
+                    headers: {
+                        'X-Table-Name': TABLE_NAME
+                    }
+                });
+
+                if (!getResponse.ok) {
+                    throw new Error(`Gagal mengambil data dari API, status: ${getResponse.status}`);
+                }
+                const existingData = await getResponse.json();
+
+                if (!existingData.data || existingData.data.length === 0) {
+                    throw new Error('Data tidak ditemukan untuk ID yang diberikan.');
+                }
+
+                // Ambil nilai x_06 yang sudah ada
+                let x06 = existingData.data[0].x_06 || '';
+                
+                // Langkah 2 & 3: "Explode" string, perbarui elemen pada indeks 0
+                let x06Parts = x06.split('|');
+                const targetIndex = 0; // Target indeks untuk soal08 adalah 0
+                
+                // Pastikan array cukup besar untuk menampung indeks yang ditargetkan
+                while (x06Parts.length <= targetIndex) {
+                    x06Parts.push('');
+                }
+                x06Parts[targetIndex] = answersString;
+                let newX06Value = x06Parts.join('|');
+                
+                // Langkah 4: Siapkan data untuk permintaan PUT
                 const formData = {
-                    x_06: answersString
+                    x_06: newX06Value
                 };
 
                 // Kirim permintaan PUT ke API
@@ -162,27 +194,24 @@
         }
         
         function endGame(timeout) {
-            // Display a final message to the user
             document.getElementById("question").innerHTML = timeout ? "Waktu Habis!" : "Soal telah selesai, semua telah dikerjakan!";
             document.querySelectorAll(".options1 button").forEach(button => button.disabled = true);
             document.querySelector('.options1').classList.add('hidden');
             
-            // Gabungkan semua jawaban menjadi satu string
             const finalAnswersString = userAnswers.join(';');
             
-            // Kirim hasil ke API
+            // Panggil fungsi sendResultToApi untuk menyimpan data pada indeks 0
             sendResultToApi(finalAnswersString);
 
             // Hapus status game dari localStorage
             localStorage.removeItem('gameEpps');
 
-            // Redirect to index.html after a delay
+            // Redirect ke index.html setelah penundaan
             setTimeout(() => {
                 window.location.href = "index.html";
             }, 3000); // Tunggu 3 detik untuk menampilkan pesan status
         }
 
-        // Set up the button to be initially clickable
         window.onload = function() {
             document.getElementById("startButton").disabled = false;
         };
