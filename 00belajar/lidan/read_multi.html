@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+<body>
+	
+	<script>
+		// Nama file: read-only-console.js
+
+// --- Konfigurasi Aplikasi ---
+// Mendapatkan parameter dari URL.
+// Di lingkungan browser, Anda bisa menggunakan `window.location.search`.
+// Untuk skrip yang berdiri sendiri, ini adalah placeholder.
+const urlParams = {
+    get: (key) => {
+        // Contoh data dummy untuk simulasi.
+        const params = {
+            'tabel': 'nilai1',
+            'kolom': 'x_05',
+            'id': '2'
+        };
+        return params[key];
+    }
+};
+
+const currentTable = urlParams.get('tabel') || 'nilai1';
+const dynamicColumnName = urlParams.get('kolom') || 'x_06';
+const dataToUpdateId = parseInt(urlParams.get('id')) || 1;
+const apiUrl = 'https://lidan-co-id.pages.dev/api/contacts_filter_dinamis';
+
+console.log('--- Aplikasi Tampilan Data Hanya-Baca (Konsol) ---');
+console.log(`Konfigurasi: Tabel = ${currentTable}, Kolom = ${dynamicColumnName}, ID = ${dataToUpdateId}`);
+
+// --- Fungsi Utama ---
+
+/**
+ * Memuat data tunggal dari API dan menampilkannya di konsol.
+ * @param {number} id - ID data yang akan dimuat.
+ */
+async function loadDataAndDisplayInConsole(id) {
+    console.log(`Memuat data untuk ID: ${id}...`);
+    
+    // Menggunakan id_x_eq sebagai parameter filter untuk permintaan GET
+    const url = `${apiUrl}?table=${currentTable}&id_x_eq=${id}`;
+    
+    try {
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: { 'X-Table-Name': currentTable }
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        if (data.success && data.data && data.data.length > 0) {
+            const item = data.data[0];
+            const rawValue = item[dynamicColumnName];
+            console.log('Data Mentah dari API:', rawValue);
+            renderDataInConsole(rawValue);
+        } else {
+            console.error('Data tidak ditemukan. Silakan periksa respons API.');
+        }
+    } catch (error) {
+        console.error('Error memuat data:', error.message || error);
+    }
+}
+
+/**
+ * Mengurai data dan menampilkannya di konsol dalam format yang mudah dibaca.
+ * @param {string} rawValue - Nilai mentah dari kolom yang dipilih.
+ */
+function renderDataInConsole(rawValue) {
+    console.log('--- Data yang Ditemukan ---');
+    
+    if (!rawValue) {
+        console.log('Tidak ada data untuk ditampilkan.');
+        return;
+    }
+
+    // Explode pertama dengan delimiter '|' untuk membuat "kolom"
+    const explodedColumns = rawValue.split('|');
+    
+    explodedColumns.forEach((columnValue, colIndex) => {
+        // Explode kedua dengan delimiter ';' untuk membuat "baris"
+        const explodedRows = columnValue.split(';');
+        
+        console.log(`\nKolom Data ${colIndex + 1}:`);
+        explodedRows.forEach((rowValue, rowIndex) => {
+            console.log(`  Baris ${rowIndex + 1}: ${rowValue.trim()}`);
+        });
+    });
+}
+
+// Jalankan fungsi utama saat skrip dimuat.
+// Anda bisa memanggilnya di sini untuk langsung menjalankan.
+loadDataAndDisplayInConsole(dataToUpdateId);
+
+	</script>
+</body>
+</html>

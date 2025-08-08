@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+<body>
+	
+	<script>
+		// new_index_delete.js
+// Skrip ini menghapus data yang sudah ada di API dan mencetak respons ke konsol.
+
+// Fungsi asinkron untuk menghapus data
+async function deleteData() {
+  const apiUrl = 'https://lidan-co-id.pages.dev/api/contacts_filter_dinamis';
+  const tableName = 'data_latihan';
+  // Tentukan ID dari data yang akan dihapus
+  const dataId = 1; // Ganti dengan ID yang valid
+
+  try {
+    console.log(`Menghapus data dengan ID ${dataId} dari tabel '${tableName}'...`);
+
+    // Melakukan permintaan DELETE ke API
+    const response = await fetch(`${apiUrl}?table=${tableName}&id_x=${dataId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    // Memeriksa jika respons tidak berhasil
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || `Kesalahan HTTP! Status: ${response.status}`);
+    }
+
+    const result = await response.json();
+    console.log('Data berhasil dihapus:');
+    console.log(result); // Mencetak respons dari API
+  } catch (error) {
+    console.error('Terjadi kesalahan saat menghapus data:', error);
+  }
+}
+
+// Menjalankan fungsi
+deleteData();
+
+	</script>
+</body>
+</html>

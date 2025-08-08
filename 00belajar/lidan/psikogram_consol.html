@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+<body>
+	
+	<script>
+		// Nama file: multi-column-console.js
+
+// --- Konfigurasi Aplikasi ---
+// Menggunakan data dummy untuk mensimulasikan parameter yang diinginkan.
+const config = {
+    tabel: 'nilai1',
+    id: 2, // ID yang diminta
+    kolom: ['x_02', 'x_05', 'x_06'] // Kolom-kolom yang akan diambil
+};
+const apiUrl = 'https://lidan-co-id.pages.dev/api/contacts_filter_dinamis';
+
+console.log('--- Aplikasi Pengambilan Data Multi-Kolom (Konsol) ---');
+console.log(`Konfigurasi: Tabel = ${config.tabel}, ID = ${config.id}, Kolom = ${config.kolom.join(', ')}`);
+
+// --- Fungsi Utama ---
+
+/**
+ * Mengambil data dari sebuah kolom berdasarkan ID dan nama tabel.
+ * @param {string} columnName - Nama kolom yang akan diambil datanya (misal: 'x_02').
+ * @param {number} id - ID data yang akan diambil.
+ * @returns {Promise<string|null>} Nilai mentah dari kolom atau null jika terjadi error.
+ */
+async function fetchDataForColumn(columnName, id) {
+    const url = `${apiUrl}?table=${config.tabel}&id_x_eq=${id}`;
+    
+    try {
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: { 'X-Table-Name': config.tabel }
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        if (data.success && data.data && data.data.length > 0) {
+            const item = data.data[0];
+            return item[columnName] || null;
+        } else {
+            console.error(`Data untuk kolom '${columnName}' tidak ditemukan.`);
+            return null;
+        }
+    } catch (error) {
+        console.error(`Error saat mengambil data untuk kolom '${columnName}':`, error.message);
+        return null;
+    }
+}
+
+/**
+ * Fungsi utama untuk mengambil, memproses, dan menampilkan semua data.
+ */
+async function fetchAndProcessAllData() {
+    console.log(`\nMengambil data untuk ID: ${config.id}...`);
+
+    // Objek untuk menyimpan hasil akhir
+    const extractedData = {
+        kolom_x_02: {},
+        kolom_x_05: {},
+        kolom_x_06: {}
+    };
+
+    // --- Ambil dan proses data dari kolom x_02 ---
+    const rawX02 = await fetchDataForColumn('x_02', config.id);
+    if (rawX02) {
+        const explodedColumns = rawX02.split('|');
+        if (explodedColumns.length > 0) {
+            const explodedRows = explodedColumns[0].split(';');
+            extractedData.kolom_x_02 = {
+                nama: explodedRows[0] ? explodedRows[0].trim() : 'Tidak ada data',
+                usia: explodedRows[2] ? explodedRows[2].trim() : 'Tidak ada data',
+                jenisKelamin: explodedRows[4] ? explodedRows[4].trim() : 'Tidak ada data'
+            };
+        }
+    }
+
+    // --- Ambil dan proses data dari kolom x_05 ---
+    const rawX05 = await fetchDataForColumn('x_05', config.id);
+    if (rawX05) {
+        const explodedColumns = rawX05.split('|');
+        const getRowValue = (colIndex) => explodedColumns[colIndex] ? explodedColumns[colIndex].split(';')[0].trim() : 'Tidak ada data';
+        
+        extractedData.kolom_x_05 = {
+            cfit1: getRowValue(0), // Kolom data 1, baris 1
+            cfit2: getRowValue(1), // Kolom data 2, baris 1
+            cfit3: getRowValue(2), // Kolom data 3, baris 1
+            cfit4: getRowValue(3), // Kolom data 4, baris 1
+            tkd3: getRowValue(15), // Kolom data 16, baris 1
+            tkd5: getRowValue(17)  // Kolom data 18, baris 1
+        };
+    }
+
+    // --- Ambil dan proses data dari kolom x_06 ---
+    const rawX06 = await fetchDataForColumn('x_06', config.id);
+    if (rawX06) {
+        const explodedColumns = rawX06.split('|');
+        const rmibData = {};
+        for(let i = 1; i <= 8; i++) {
+            rmibData[`rmib ${i}`] = explodedColumns[i] ? explodedColumns[i].split(';').map(s => s.trim()) : 'Tidak ada data';
+        }
+
+        extractedData.kolom_x_06 = {
+            epps: explodedColumns[0] ? explodedColumns[0].split(';').map(s => s.trim()) : 'Tidak ada data',
+            ...rmibData
+        };
+    }
+    
+    // --- Tampilkan hasil di konsol ---
+    console.log('\n--- Hasil Ekstraksi Data ---');
+    console.log(extractedData);
+}
+
+// Jalankan fungsi utama saat skrip dimuat.
+fetchAndProcessAllData();
+
+	</script>
+</body>
+</html>

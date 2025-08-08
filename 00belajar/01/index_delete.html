@@ -1,0 +1,277 @@
+<!-- 
+  Nama File: index_delete.html
+  Fungsi: Menghapus data dari API menggunakan metode DELETE.
+  - Menampilkan daftar data yang bisa dihapus.
+  - Membutuhkan ID data untuk dihapus.
+  - Menggunakan modal kustom untuk konfirmasi hapus.
+  - Menggunakan Tailwind CSS untuk styling.
+-->
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manajemen Data - Hapus Data</title>
+    <!-- Tailwind CSS untuk styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome untuk ikon -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Font Inter dari Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .table-container { max-height: 70vh; overflow-y: auto; }
+        .table-container::-webkit-scrollbar { height: 8px; }
+        .table-container::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
+        .table-container::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        /* Custom modal */
+        .modal {
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+            visibility: hidden;
+            opacity: 0;
+        }
+        .modal.open {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="container mx-auto">
+        <div class="bg-white shadow-xl rounded-2xl overflow-hidden">
+            <!-- Card Header -->
+            <div class="bg-red-600 text-white p-6 rounded-t-2xl flex items-center justify-between">
+                <h4 class="text-2xl font-bold flex items-center">
+                    <i class="fas fa-trash-alt mr-3"></i>
+                    Hapus Data - <span id="tableNameDisplay">data_latihan</span>
+                </h4>
+            </div>
+
+            <!-- Card Body -->
+            <div class="p-6">
+                <!-- Loading & Error Message Container -->
+                <div id="messageContainer" class="text-center text-gray-500 py-8 hidden">
+                    <i class="fas fa-spinner fa-spin text-4xl mb-4"></i>
+                    <p class="text-lg">Memuat data...</p>
+                </div>
+
+                <!-- Tabel Data -->
+                <div id="tableContainer" class="table-container overflow-auto max-h-[70vh] rounded-xl shadow-inner">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-red-800 sticky top-0 z-10">
+                            <tr id="tableHeader"></tr>
+                        </thead>
+                        <tbody id="tableBody" class="bg-white divide-y divide-gray-200"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal untuk Konfirmasi Hapus -->
+    <div id="deleteModal" class="modal fixed inset-0 z-50 flex items-center justify-center bg-gray-600 bg-opacity-50">
+        <div class="bg-white rounded-lg shadow-xl max-w-sm w-full p-6 m-4 text-center">
+            <div class="flex flex-col items-center mb-4">
+                <i class="fas fa-exclamation-triangle text-yellow-500 text-5xl mb-4"></i>
+                <h3 class="text-2xl font-bold text-gray-800">Konfirmasi Hapus</h3>
+            </div>
+            <p class="text-gray-600 mb-6">Anda yakin ingin menghapus data ini?</p>
+            <div class="flex justify-center space-x-4">
+                <button onclick="closeDeleteModal()" class="bg-gray-300 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-400">Batal</button>
+                <button id="confirmDeleteBtn" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700">Hapus</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Wadah untuk notifikasi kustom -->
+    <div id="alertContainer" class="fixed bottom-4 right-4 z-[9999]"></div>
+
+    <script>
+        // --- Konfigurasi API ---
+        const apiBaseUrl = 'https://lidan-co-id.pages.dev/api/contacts';
+        const currentTable = 'data_latihan';
+        let idToDelete = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadData();
+        });
+
+        /**
+         * Memuat data dari API dan menampilkan di tabel.
+         */
+        async function loadData() {
+            const messageContainer = document.getElementById('messageContainer');
+            const tableContainer = document.getElementById('tableContainer');
+            const tableHeader = document.getElementById('tableHeader');
+            const tableBody = document.getElementById('tableBody');
+            
+            messageContainer.classList.remove('hidden');
+            tableContainer.classList.add('hidden');
+            tableHeader.innerHTML = '';
+            tableBody.innerHTML = '';
+            
+            try {
+                const response = await fetch(`${apiBaseUrl}?table=${currentTable}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const result = await response.json();
+                
+                if (result.data && result.data.length > 0) {
+                    renderTable(result.data);
+                } else {
+                    showMessage('Tidak ada data yang ditemukan.', 'warning');
+                }
+            } catch (error) {
+                console.error('Error memuat data:', error);
+                showMessage(`Error memuat data: ${error.message || error}`, 'danger');
+            } finally {
+                messageContainer.classList.add('hidden');
+                tableContainer.classList.remove('hidden');
+            }
+        }
+
+        /**
+         * Merender data ke dalam tabel HTML dengan tombol hapus.
+         * @param {Array} data - Array data dari API.
+         */
+        function renderTable(data) {
+            const tableHeader = document.getElementById('tableHeader');
+            const tableBody = document.getElementById('tableBody');
+            
+            const headers = Object.keys(data[0]);
+            
+            let headerHtml = `<th class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">ID</th>`;
+            headers.filter(h => h !== 'id_x').forEach(header => {
+                 headerHtml += `<th class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">${header.toUpperCase()}</th>`;
+            });
+            headerHtml += `<th class="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Aksi</th>`;
+            tableHeader.innerHTML = headerHtml;
+
+            data.forEach(item => {
+                let rowHtml = `<tr class="hover:bg-gray-50 transition duration-150">`;
+                rowHtml += `<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${item.id_x}</td>`;
+                headers.filter(h => h !== 'id_x').forEach(header => {
+                    const value = item[header] !== undefined && item[header] !== null ? item[header] : '';
+                    rowHtml += `<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${value}</td>`;
+                });
+                rowHtml += `
+                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
+                        <button onclick="openDeleteModal(${item.id_x})" class="text-red-600 hover:text-red-900 mx-2 transition">
+                            <i class="fas fa-trash-alt"></i> Hapus
+                        </button>
+                    </td>
+                </tr>`;
+                tableBody.insertAdjacentHTML('beforeend', rowHtml);
+            });
+        }
+        
+        /**
+         * Menampilkan modal konfirmasi hapus.
+         * @param {number} id - ID data yang akan dihapus.
+         */
+        function openDeleteModal(id) {
+            idToDelete = id;
+            document.getElementById('deleteModal').classList.add('open');
+        }
+
+        /**
+         * Menutup modal konfirmasi hapus.
+         */
+        function closeDeleteModal() {
+            idToDelete = null;
+            document.getElementById('deleteModal').classList.remove('open');
+        }
+        
+        document.getElementById('confirmDeleteBtn').addEventListener('click', deleteData);
+
+        /**
+         * Mengirim permintaan DELETE ke API.
+         */
+        async function deleteData() {
+            if (!idToDelete) return;
+
+            try {
+                const response = await fetch(`${apiBaseUrl}/${idToDelete}?table=${currentTable}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-Table-Name': currentTable
+                    }
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                showAlert(result.message || 'Data berhasil dihapus!', 'success');
+                closeDeleteModal();
+                loadData(); // Muat ulang data setelah penghapusan
+            } catch (error) {
+                console.error('Error menghapus data:', error);
+                showAlert(`Error menghapus data: ${error.message || error}`, 'danger');
+                closeDeleteModal();
+            }
+        }
+        
+        /**
+         * Menampilkan pesan di kontainer utama saat memuat atau error.
+         * @param {string} message - Pesan yang akan ditampilkan.
+         * @param {string} type - Tipe pesan ('danger' atau 'warning').
+         */
+        function showMessage(message, type) {
+            const messageContainer = document.getElementById('messageContainer');
+            let iconHtml = '';
+            let textColor = '';
+
+            if (type === 'danger') {
+                iconHtml = '<i class="fas fa-times-circle text-red-500 text-4xl mb-4"></i>';
+                textColor = 'text-red-500';
+            } else if (type === 'warning') {
+                iconHtml = '<i class="fas fa-exclamation-triangle text-yellow-500 text-4xl mb-4"></i>';
+                textColor = 'text-yellow-500';
+            } else {
+                iconHtml = '<i class="fas fa-info-circle text-gray-500 text-4xl mb-4"></i>';
+                textColor = 'text-gray-500';
+            }
+            messageContainer.innerHTML = `${iconHtml}<p class="${textColor} text-lg">${message}</p>`;
+            messageContainer.classList.remove('hidden');
+        }
+
+        /**
+         * Menampilkan pesan alert sementara di sudut kanan bawah layar.
+         * @param {string} message - Pesan yang akan ditampilkan.
+         * @param {string} type - Tipe alert (e.g., 'success', 'danger').
+         */
+        function showAlert(message, type) {
+            const alertContainer = document.getElementById('alertContainer');
+            const alertClass = type === 'success' ? 'bg-green-500' : 'bg-red-500';
+            const alertHtml = `
+                <div class="relative flex items-center p-4 rounded-xl text-white shadow-lg ${alertClass} mb-2 transition-all duration-300 transform translate-x-full ease-out">
+                    <div class="flex-shrink-0">
+                        <i class="${type === 'success' ? 'fas fa-check-circle' : 'fas fa-times-circle'} text-lg"></i>
+                    </div>
+                    <div class="ml-3 text-sm font-medium">
+                        ${message}
+                    </div>
+                    <button class="ml-auto text-white opacity-90 hover:opacity-100" onclick="this.closest('.relative').remove()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+            alertContainer.insertAdjacentHTML('beforeend', alertHtml);
+            const newAlert = alertContainer.lastElementChild;
+            setTimeout(() => {
+                newAlert.classList.remove('translate-x-full');
+            }, 10);
+            setTimeout(() => {
+                newAlert.classList.add('translate-x-full');
+                newAlert.addEventListener('transitionend', () => newAlert.remove());
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

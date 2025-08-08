@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+<body>
+	
+	<script>
+		// new_update_multi.js
+// Skrip ini mensimulasikan proses "explode" dan "implode" dari file update_multi.html
+// dan mengirimkannya kembali ke API.
+
+// Fungsi asinkron untuk mensimulasikan proses multi-update
+async function updateMultiData() {
+  const apiUrl = 'https://lidan-co-id.pages.dev/api/contacts_filter_dinamis';
+  const tableName = 'data_latihan';
+
+  try {
+    console.log(`Mensimulasikan update massal untuk tabel '${tableName}'...`);
+
+    // Langkah 1: Simulasikan pengambilan data dari API
+    const initialData = [
+      { id_x: 1, x_01: 'data1_1', x_02: 'data1_2' },
+      { id_x: 2, x_01: 'data2_1', x_02: 'data2_2' }
+    ];
+
+    // Langkah 2: Simulasikan perubahan data (misal dari formulir HTML)
+    const changes = [
+      { id_x: 1, x_01: 'data1_1_baru', x_02: 'data1_2_baru' },
+      { id_x: 2, x_01: 'data2_1_baru', x_02: 'data2_2_baru' }
+    ];
+
+    console.log('Data awal yang disimulasikan:');
+    console.log(initialData);
+
+    console.log('Perubahan yang disimulasikan:');
+    console.log(changes);
+
+    // Langkah 3: Menerapkan logika "implode"
+    // Buat array baru yang hanya berisi nilai kolom, tidak termasuk id_x
+    const dataToImplode = changes.map(item => [item.x_01, item.x_02]);
+
+    // Lakukan "implode" pertama dengan ';' untuk setiap baris
+    const rowsImploded = dataToImplode.map(row => row.join(';')); // ["data1_1_baru;data1_2_baru", "data2_1_baru;data2_2_baru"]
+
+    // Lakukan "implode" kedua dengan '|' untuk menggabungkan semua baris menjadi satu string
+    const finalDataString = rowsImploded.join('|'); // "data1_1_baru;data1_2_baru|data2_1_baru;data2_2_baru"
+
+    // Langkah 4: Kirim data yang sudah di-implode ke API
+    const response = await fetch(`${apiUrl}/multi_update?table=${tableName}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'text/plain', // API multi-update biasanya menerima plain text
+        'X-Table-Name': tableName
+      },
+      body: finalDataString
+    });
+
+    // Memeriksa jika respons tidak berhasil
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || `Kesalahan HTTP! Status: ${response.status}`);
+    }
+
+    const result = await response.json();
+    console.log('Data berhasil diperbarui secara massal:');
+    console.log(result); // Mencetak respons dari API
+  } catch (error) {
+    console.error('Terjadi kesalahan saat memperbarui data:', error);
+  }
+}
+
+// Menjalankan fungsi
+updateMultiData();
+
+	</script>
+</body>
+</html>

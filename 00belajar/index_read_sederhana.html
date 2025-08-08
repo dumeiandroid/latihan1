@@ -1,0 +1,158 @@
+<!-- 
+  Ini adalah file HTML lengkap yang akan menjadi struktur dasar aplikasi kita.
+  Kita akan memisahkan kode ini menjadi beberapa bagian dengan komentar yang jelas.
+-->
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manajemen Data - Tampilan Sederhana</title>
+    <!-- 
+      Menggunakan Tailwind CSS untuk styling. Ini lebih modern dan mudah
+      dipelajari daripada Bootstrap, dan lebih cocok untuk pemula.
+    -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-8">
+
+    <!-- BAGIAN 1: Struktur HTML Halaman -->
+    <!-- 
+      Bagian ini adalah kerangka HTML murni. Kita siapkan "wadah"
+      atau elemen kosong yang nantinya akan diisi oleh JavaScript.
+      Ini sesuai dengan konsep "Menghubungkan JavaScript dan HTML"
+      yang sudah Anda pelajari.
+    -->
+    <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-lg p-6">
+        <h1 class="text-3xl font-bold text-center mb-6 text-gray-800">Tabel Data API</h1>
+
+        <!-- Ini adalah "wadah" utama untuk tabel kita. -->
+        <div id="tableContainer" class="overflow-x-auto">
+            <!-- 
+              Di sini kita tambahkan pesan awal yang akan diganti
+              oleh JavaScript setelah data berhasil dimuat.
+            -->
+            <p class="text-center text-gray-500 py-10">Memuat data...</p>
+        </div>
+    </div>
+
+    <!-- BAGIAN 2: Kode JavaScript untuk Interaksi API dan DOM -->
+    <!-- 
+      Bagian <script> ini berisi semua logika aplikasi kita.
+      Sesuai dengan pemahaman Anda, kita akan:
+      a. Mengambil data dari API dengan `fetch`.
+      b. Memanipulasi DOM untuk menampilkan data tersebut.
+    -->
+    <script>
+        // --- Konfigurasi dan Variabel ---
+        // Kita simpan URL API di sini agar mudah diubah.
+        const apiUrl = 'https://lidan-co-id.pages.dev/api/contacts_filter_dinamis?table=cover';
+
+        // Kita tentukan kolom apa saja yang mau kita tampilkan
+        const displayColumns = [
+            'id_x', 'x_01', 'x_02', 'x_03', 'x_04', 'x_05', 'x_06', 'x_07', 'x_08',
+            'x_09', 'x_10', 'x_11', 'x_12', 'x_13', 'x_14', 'x_15', 'x_16', 'x_17',
+            'x_18', 'x_19', 'x_20'
+        ];
+
+        // --- Fungsi Utama Aplikasi ---
+        // Fungsi ini bertugas untuk mengambil data dan menampilkannya.
+        async function loadData() {
+            // 1. Mengakses elemen HTML sebagai "wadah"
+            const tableContainer = document.getElementById('tableContainer');
+
+            // Kita tampilkan pesan loading saat proses fetch dimulai
+            tableContainer.innerHTML = `
+                <p class="text-center text-gray-500 py-10 animate-pulse">
+                    Memuat data...
+                </p>
+            `;
+
+            try {
+                // 2. Ambil data dari API dengan `fetch` (Metode GET)
+                // Ini sesuai dengan konsep "Dasar-Dasar Interaksi dengan API".
+                const response = await fetch(apiUrl);
+                
+                // Periksa apakah respons dari API berhasil
+                if (!response.ok) {
+                    throw new Error(`Kesalahan HTTP: ${response.status}`);
+                }
+
+                // Ubah respons menjadi format JSON
+                const dataObj = await response.json();
+
+                // Periksa apakah data berhasil didapat dan tidak kosong
+                if (dataObj.success && dataObj.data && dataObj.data.length > 0) {
+                    // Jika data ada, panggil fungsi untuk merender tabel
+                    renderTable(dataObj.data);
+                } else {
+                    // Jika data kosong, tampilkan pesan
+                    tableContainer.innerHTML = '<p class="text-center text-gray-500 py-10">Tidak ada data ditemukan.</p>';
+                }
+
+            } catch (error) {
+                // Tangani kesalahan jika ada masalah saat mengambil data
+                console.error('Error memuat data:', error);
+                tableContainer.innerHTML = `<p class="text-center text-red-500 py-10">Error: ${error.message}</p>`;
+            }
+        }
+
+        // --- Fungsi Pembantu untuk Merender Tabel ---
+        // Fungsi ini bertugas membuat elemen tabel HTML secara dinamis.
+        function renderTable(data) {
+            const tableContainer = document.getElementById('tableContainer');
+            
+            // Kita buat string HTML untuk tabel secara keseluruhan.
+            let tableHtml = `
+                <table class="min-w-full bg-white border-collapse">
+                    <thead class="bg-gray-800 text-white sticky top-0">
+                        <tr>
+            `;
+
+            // Buat header tabel dari array `displayColumns`
+            displayColumns.forEach(header => {
+                tableHtml += `<th class="p-4 text-left border-b border-gray-300">${header.toUpperCase()}</th>`;
+            });
+            tableHtml += `
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            // Lakukan perulangan pada setiap baris data
+            data.forEach(item => {
+                tableHtml += `<tr>`;
+                
+                // Lakukan perulangan pada setiap kolom data yang ingin ditampilkan
+                displayColumns.forEach(colName => {
+                    const cellValue = (item[colName] !== undefined && item[colName] !== null) ? item[colName] : '';
+                    tableHtml += `<td class="p-4 border-b border-gray-200">${cellValue}</td>`;
+                });
+                tableHtml += `</tr>`;
+            });
+
+            tableHtml += `
+                    </tbody>
+                </table>
+            `;
+            
+            // Setelah tabel selesai dibuat, kita tambahkan (append) ke "wadah"
+            tableContainer.innerHTML = tableHtml;
+        }
+
+        // --- Event Listener ---
+        // Bagian ini memastikan bahwa kode JavaScript kita berjalan
+        // hanya setelah seluruh halaman HTML selesai dimuat.
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('Dokumen siap! Memulai pengambilan data...');
+            loadData(); // Panggil fungsi utama kita
+        });
+    </script>
+</body>
+</html>

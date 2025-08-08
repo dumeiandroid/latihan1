@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+<body>
+    <ul id="daftar-buah"></ul>
+    <script>
+    	const fruits = ['Apel', 'Pisang', 'Jeruk', 'Mangga']; // Array data
+
+const list = document.getElementById('daftar-buah'); // Elemen induk
+
+fruits.forEach(fruit => {
+  const listItem = document.createElement('li'); // Membuat elemen <li>
+  listItem.textContent = fruit; // Mengisi teks dari array
+  list.appendChild(listItem); // Menambahkan <li> ke dalam <ul>
+});
+    </script>
+</body>
+</html>

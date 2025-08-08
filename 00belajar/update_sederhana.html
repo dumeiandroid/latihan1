@@ -1,0 +1,163 @@
+<!-- 
+  File ini berfungsi untuk memperbarui data yang sudah ada di API.
+  Akan mengambil ID dari URL, memuat data, dan menampilkan formulir yang sudah terisi.
+-->
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manajemen Data - Perbarui Data</title>
+    <!-- Memuat Tailwind CSS untuk styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-xl mx-auto bg-white rounded-xl shadow-lg p-6">
+        <div class="flex items-center mb-6 border-b pb-4">
+            <h1 class="text-2xl font-bold text-yellow-600">
+                <i class="fas fa-edit mr-2"></i>Perbarui Data
+            </h1>
+        </div>
+        
+        <form id="updateDataForm" onsubmit="event.preventDefault(); updateData();" class="space-y-4">
+            <input type="hidden" id="dataId">
+            <div id="formFields" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Input field akan dibuat oleh JavaScript -->
+            </div>
+            
+            <div class="flex justify-end space-x-2 mt-6">
+                <a href="index_crud.html" class="bg-gray-300 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-400 transition">Batal</a>
+                <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+                    <i class="fas fa-save mr-1"></i>Update Data
+                </button>
+            </div>
+        </form>
+    </div>
+    
+    <!-- Wadah untuk notifikasi -->
+    <div id="alertContainer" class="fixed bottom-4 right-4 z-[9999]"></div>
+
+    <script>
+        // --- Konfigurasi ---
+        const apiBaseUrl = 'https://lidan-co-id.pages.dev/api/contacts';
+        const currentTable = 'data_latihan';
+        const numXFields = 20;
+        let dataId = null;
+
+        // --- Fungsi Pembantu (Alert) ---
+        function showAlert(message, type) {
+            const alertContainer = document.getElementById('alertContainer');
+            const icon = type === 'success' ? 'fas fa-check-circle' : 'fas fa-times-circle';
+            const bgColor = type === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800';
+            
+            const alertHtml = `
+                <div class="flex items-center px-4 py-3 rounded-lg shadow-md mb-2 ${bgColor}">
+                    <i class="${icon} mr-2"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            alertContainer.insertAdjacentHTML('beforeend', alertHtml);
+            
+            setTimeout(() => {
+                const firstAlert = alertContainer.querySelector('div');
+                if (firstAlert) {
+                    firstAlert.remove();
+                }
+            }, 3000);
+        }
+
+        // --- Fungsi Utama ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            dataId = urlParams.get('id');
+            if (dataId) {
+                generateFormFields();
+                loadDataToForm(dataId);
+            } else {
+                showAlert('ID data tidak ditemukan di URL.', 'danger');
+            }
+        });
+        
+        // Buat field formulir secara dinamis
+        function generateFormFields() {
+            const formContainer = document.getElementById('formFields');
+            let fieldsHtml = '';
+            for (let i = 1; i <= numXFields; i++) {
+                const fieldName = `x_${i < 10 ? '0' : ''}${i}`;
+                fieldsHtml += `
+                    <div>
+                        <label for="${fieldName}" class="block text-sm font-medium text-gray-700">${fieldName.toUpperCase()}</label>
+                        <input type="text" id="${fieldName}" name="${fieldName}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                `;
+            }
+            formContainer.innerHTML = fieldsHtml;
+        }
+
+        // Ambil data dari API dan isi formulir
+        async function loadDataToForm(id) {
+            try {
+                const response = await fetch(`${apiBaseUrl}/${id}?table=${currentTable}`, {
+                    method: 'GET',
+                    headers: {'X-Table-Name': currentTable}
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Error memuat data');
+                }
+                
+                const responseData = await response.json();
+                
+                if (responseData.data) {
+                    document.getElementById('dataId').value = responseData.data.id_x;
+                    for (let i = 1; i <= numXFields; i++) {
+                        const fieldName = `x_${i < 10 ? '0' : ''}${i}`;
+                        const inputElement = document.getElementById(fieldName);
+                        if (inputElement) {
+                            inputElement.value = responseData.data[fieldName] || '';
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('Error memuat data:', error);
+                showAlert('Error memuat data untuk diedit!', 'danger');
+            }
+        }
+
+        // Kirim data yang diperbarui ke API
+        async function updateData() {
+            const formData = {};
+            const formInputs = document.querySelectorAll('#updateDataForm input[type="text"]');
+            formInputs.forEach(input => {
+                formData[input.name] = input.value;
+            });
+
+            try {
+                const response = await fetch(`${apiBaseUrl}/${dataId}?table=${currentTable}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Table-Name': currentTable
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (response.ok) {
+                    showAlert('Data berhasil diperbarui!', 'success');
+                    // Kembali ke halaman utama setelah berhasil update
+                    window.location.href = 'index_crud.html';
+                } else {
+                    showAlert('Error memperbarui data!', 'danger');
+                }
+            } catch (error) {
+                console.error('Error memperbarui data:', error);
+                showAlert('Error memperbarui data!', 'danger');
+            }
+        }
+    </script>
+</body>
+</html>

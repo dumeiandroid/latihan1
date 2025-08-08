@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+<body>
+	
+	<script>
+		// new_index_crud.js
+// Skrip ini menggabungkan semua operasi CRUD (Create, Read, Update, Delete)
+// dan mencetak hasilnya ke konsol.
+
+const apiUrl = 'https://lidan-co-id.pages.dev/api/contacts_filter_dinamis';
+const tableName = 'data_latihan';
+
+/**
+ * Mengambil dan mencetak semua data.
+ */
+async function readAllData() {
+  try {
+    console.log('--- READ DATA ---');
+    console.log(`Mengambil data dari tabel '${tableName}'...`);
+
+    const response = await fetch(`${apiUrl}?table=${tableName}`);
+    if (!response.ok) throw new Error(`Kesalahan HTTP! Status: ${response.status}`);
+    const result = await response.json();
+
+    if (result.success && result.data.length > 0) {
+      console.log('Data berhasil diambil:');
+      console.log(result.data);
+    } else {
+      console.log('Data berhasil diambil, tetapi tidak ada record ditemukan.');
+    }
+  } catch (error) {
+    console.error('Terjadi kesalahan saat mengambil data:', error);
+  }
+}
+
+/**
+ * Menambahkan data baru.
+ * @param {object} newData - Objek data baru.
+ */
+async function createNewData(newData) {
+  try {
+    console.log('\n--- CREATE DATA ---');
+    console.log(`Menambahkan data baru ke tabel '${tableName}'...`);
+
+    const response = await fetch(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Table-Name': tableName
+      },
+      body: JSON.stringify(newData)
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || `Kesalahan HTTP! Status: ${response.status}`);
+    }
+    const result = await response.json();
+    console.log('Data berhasil ditambahkan:', result);
+  } catch (error) {
+    console.error('Terjadi kesalahan saat menambahkan data:', error);
+  }
+}
+
+/**
+ * Memperbarui data yang sudah ada.
+ * @param {number} id - ID dari data yang akan diperbarui.
+ * @param {object} updatedData - Objek data yang akan diperbarui.
+ */
+async function updateExistingData(id, updatedData) {
+  try {
+    console.log('\n--- UPDATE DATA ---');
+    console.log(`Memperbarui data dengan ID ${id} di tabel '${tableName}'...`);
+
+    const response = await fetch(`${apiUrl}?table=${tableName}&id_x=${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(updatedData)
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || `Kesalahan HTTP! Status: ${response.status}`);
+    }
+    const result = await response.json();
+    console.log('Data berhasil diperbarui:', result);
+  } catch (error) {
+    console.error('Terjadi kesalahan saat memperbarui data:', error);
+  }
+}
+
+/**
+ * Menghapus data yang sudah ada.
+ * @param {number} id - ID dari data yang akan dihapus.
+ */
+async function deleteExistingData(id) {
+  try {
+    console.log('\n--- DELETE DATA ---');
+    console.log(`Menghapus data dengan ID ${id} dari tabel '${tableName}'...`);
+
+    const response = await fetch(`${apiUrl}?table=${tableName}&id_x=${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || `Kesalahan HTTP! Status: ${response.status}`);
+    }
+    const result = await response.json();
+    console.log('Data berhasil dihapus:', result);
+  } catch (error) {
+    console.error('Terjadi kesalahan saat menghapus data:', error);
+  }
+}
+
+// Menjalankan semua operasi secara berurutan untuk demonstrasi
+async function runAllOperations() {
+  await readAllData();
+
+  // Tambahkan data baru
+  const newRecord = { "x_01": "CRUD Baru", "x_02": "Alamat Baru" };
+  await createNewData(newRecord);
+
+  // Perbarui data yang baru dibuat (asumsi ID terakhir adalah 1)
+  const idToUpdate = 3; 
+  const updatedRecord = { "x_01": "CRUD Diperbarui", "x_02": "Alamat Diperbarui" };
+  await updateExistingData(idToUpdate, updatedRecord);
+
+  // Hapus data yang baru dibuat
+  const idToDelete = 3;
+  await deleteExistingData(idToDelete);
+
+  // Baca lagi untuk melihat perubahannya
+  await readAllData();
+}
+
+// Menjalankan semua operasi
+runAllOperations();
+
+	</script>
+</body>
+</html>

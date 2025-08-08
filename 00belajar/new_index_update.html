@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+<body>
+	
+	<script>
+		// new_index_update.js
+// Skrip ini memperbarui data yang sudah ada di API dan mencetak respons ke konsol.
+
+// Fungsi asinkron untuk memperbarui data
+async function updateData() {
+  const apiUrl = 'https://lidan-co-id.pages.dev/api/contacts_filter_dinamis';
+  const tableName = 'data_latihan';
+  // Tentukan ID dari data yang akan diperbarui
+  const dataId = 3; // Ganti dengan ID yang valid
+
+  // Data yang akan diperbarui
+  const updatedData = {
+    "x_01": "Nama Diperbarui",
+    "x_02": "Alamat Diperbarui"
+  };
+
+  try {
+    console.log(`Memperbarui data dengan ID ${dataId} di tabel '${tableName}'...`);
+
+    // Melakukan permintaan PUT ke API
+    const response = await fetch(`${apiUrl}?table=${tableName}&id_x=${dataId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(updatedData)
+    });
+
+    // Memeriksa jika respons tidak berhasil
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || `Kesalahan HTTP! Status: ${response.status}`);
+    }
+
+    const result = await response.json();
+    console.log('Data berhasil diperbarui:');
+    console.log(result); // Mencetak respons dari API
+  } catch (error) {
+    console.error('Terjadi kesalahan saat memperbarui data:', error);
+  }
+}
+
+// Menjalankan fungsi
+updateData();
+
+	</script>
+</body>
+</html>

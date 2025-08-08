@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+<body>
+	
+	<script>
+		// new_index_tambah.js
+// Skrip ini menambahkan data baru ke API dan mencetak respons ke konsol.
+
+// Fungsi asinkron untuk menambahkan data baru
+async function addData() {
+  const apiUrl = 'https://lidan-co-id.pages.dev/api/contacts_filter_dinamis';
+  const tableName = 'data_latihan';
+
+  // Data baru yang akan dikirim
+  const newData = {
+    "x_01": "Nama Baru",
+    "x_02": "Alamat Baru"
+  };
+
+  try {
+    console.log(`Menambahkan data baru ke tabel '${tableName}'...`);
+
+    // Melakukan permintaan POST ke API
+    const response = await fetch(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Table-Name': tableName // Menggunakan header untuk nama tabel
+      },
+      body: JSON.stringify(newData)
+    });
+
+    // Memeriksa jika respons tidak berhasil
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || `Kesalahan HTTP! Status: ${response.status}`);
+    }
+
+    const result = await response.json();
+    console.log('Data berhasil ditambahkan:');
+    console.log(result); // Mencetak respons dari API
+  } catch (error) {
+    console.error('Terjadi kesalahan saat menambahkan data:', error);
+  }
+}
+
+// Menjalankan fungsi
+addData();
+
+	</script>
+</body>
+</html>

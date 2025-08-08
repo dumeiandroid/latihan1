@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Profil Pemeriksaan Psikologis</title>
+    <style>
+        body {
+            color: black;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #7000E0;
+            background-image: url('images/bg1.jpg');
+            background-size: 100% 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        .container {
+            color: black;
+            background: white;
+            width: 280mm;
+            padding: 20px;
+            border: 1px solid black;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: 20px auto;
+        }
+        .container-page2 {
+            position: relative;
+            height: 365mm;
+            overflow: hidden;
+        }
+        .container-page2::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://latihan1.pages.dev/01/test/gambar/logo1.png');
+            background-size: 70%;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0.1;
+            z-index: 0;
+        }
+        .container-page2 > * {
+            position: relative;
+            z-index: 1;
+        }
+        .custom-header {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            align-items: center;
+            margin-bottom: 20px;
+            background-color: #5F4EDA;
+            padding: 10px;
+            border-radius: 8px;
+        }
+        .logo {
+            width: 130px;
+            height: auto;
+            margin-right: 10px;
+        }
+        .info-container {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-left: -80px;
+            color: white;
+        }
+        .header-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            margin: 2px 0;
+        }
+        .header-subtitle {
+            font-size: 18px;
+            font-style: italic;
+            color: #e0f7fa;
+            margin: 2px 0;
+        }
+        .info-container a {
+            color: #e0f7fa;
+            text-decoration: underline;
+        }
+        h2 {
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table.profile-table {
+            border-top: 3px double black;
+            border-bottom: 3px double black;
+        }
+        table.profile-table td {
+            border: none;
+            padding: 5px;
+        }
+        table.profile-table td:first-child {
+            width: 200px;
+        }
+        table.profile-table td:nth-child(2) {
+            width: 20px;
+        }
+        h3 {
+            text-align: center;
+        }
+        table.psychological-table th, table.psychological-table td {
+            padding: 8px;
+            border: 1px solid black;
+            text-align: left;
+        }
+        table.psychological-table th {
+            text-align: center;
+            background-color: #f2f2f2;
+        }
+        .section-header {
+            font-weight: bold;
+            color: white;
+            background-color: black;
+            text-align: center;
+        }
+        .highlight {
+            background-color: #d1e7dd;
+            text-align: center;
+        }
+        .notes {
+            margin-top: 10px;
+        }
+        .strength-weakness {
+            margin-top: 20px;
+        }
+        .custom-list {
+            margin-left: 10px;
+            margin-top: 5px;
+            padding: 0;
+        }
+        .signature {
+            margin-top: 20px;
+            text-align: right;
+        }
+        .signature p {
+            margin-top: -12px;
+        }
+        .signature img {
+            max-width: 20%;
+            height: auto;
+        }
+        .download-button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007BFF;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        @media print {
+            body {
+                background-color: white;
+            }
+            .container, .container-page2 {
+                color: black !important;
+            }
+            .info-container {
+                color: black;
+            }
+            .header-title, .header-subtitle, .info-container a {
+                color: inherit;
+            }
+            .no-download {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="downloadContent1">
+        <div class="custom-header">
+            <img src="https://latihan1.pages.dev/01/test/gambar/logo1.png" alt="Logo" class="logo"/>
+            <div class="info-container">
+                <div class="header-title">PT. LIDAN INDAH ABADI</div>
+                <div class="header-subtitle">LIDAN PSIKOLOGI</div>
+                <div>Regus Forum Nine, Lantai 9 CIMB NIAGA PLAZA</div>
+                <div>Jalan Imam Bonjol No.9, Medan 20159, Sumatera Utara</div>
+                <div>Telepon: +62851-5960-1400</div>
+                <div>
+                    Website: <a href="http://www.lidan.co.id">www.lidan.co.id</a>, Email: 
+                    <a href="mailto:cs@lidan.co.id">cs@lidan.co.id</a>
+                </div>
+            </div>
+        </div>
+        <h2>PROFIL PEMERIKSAAN PSIKOLOGIS</h2>
+        <table class="profile-table">
+            <tr>
+                <td>Nama</td>
+                <td>:</td>
+                <td>Roy Vivianna Nindy</td>
+            </tr>
+            <tr>
+                <td>Jenis Kelamin</td>
+                <td>:</td>
+                <td>Laki-laki</td>
+            </tr>
+            <tr>
+                <td>Usia</td>
+                <td>:</td>
+                <td>20</td>
+            </tr>
+            <tr>
+                <td>Pendidikan</td>
+                <td>:</td>
+                <td>S1 Ekonomi</td>
+            </tr>
+            <tr>
+                <td>Posisi</td>
+                <td>:</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Tanggal Pemeriksaan</td>
+                <td>:</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Tujuan Pemeriksaan</td>
+                <td>:</td>
+                <td></td>
+            </tr>
+        </table>
+        <h3>Aspek Psikologis</h3>
+        <table class="psychological-table">
+            <thead>
+                <tr>
+                    <th rowspan="2" style="width: 250px;">Aspek Psikologis</th>
+                    <th rowspan="2" style="width: 400px;">Keterangan</th>
+                    <th colspan="10">Skala</th>
+                </tr>
+                <tr>
+                    <th colspan="4">K</th>
+                    <th colspan="2">C</th>
+                    <th colspan="2">B</th>
+                    <th colspan="2">BS</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td colspan="12" class="section-header">KEMAMPUAN</td>
+                </tr>
+                <tr>
+                    <td>Kemampuan Umum</td>
+                    <td>Mampu menemukan solusi untuk berbagai masalah dengan efektif.</td>
+                    <td colspan="4"></td>
+                    <td colspan="2" class="highlight">✔</td>
+                    <td colspan="2"></td>
+                    <td colspan="2"></td>
+                </tr>
+                <tr>
+                    <td>Daya Tangkap Visual</td>
+                    <td>Cepat mengenali pola dan perbedaan di lingkungan sekitar.</td>
+                    <td colspan="4"></td>
+                    <td colspan="2" class="highlight">✔</td>
+                    <td colspan="2"></td>
+                    <td colspan="2"></td>
+                </tr>
+                <tr>
+                    <td>Kemampuan Berpikir Logis</td>
+                    <td>Mampu membuat keputusan berdasarkan alasan yang jelas dalam situasi tertentu.</td>
+                    <td colspan="4"></td>
+                    <td colspan="2" class="highlight">✔</td>
+                    <td colspan="2"></td>
+                    <td colspan="2"></td>
+                </tr>
+                <tr>
+                    <td>Kemampuan Berpikir Abstrak</td>
+                    <td>Mampu melihat hubungan antara berbagai hal dan memahami konsekuensi dari tindakan.</td>
+                    <td colspan="4" class="highlight">✔</td>
+                    <td colspan="2"></td>
+                    <td colspan="2"></td>
+                    <td colspan="2"></td>
+                </tr>
+                <tr>
+                    <td>Penalaran Verbal</td>
+                    <td>Mampu berkomunikasi dengan jelas dan efektif dalam interaksi.</td>
+                    <td colspan="4" class="highlight">✔</td>
+                    <td colspan="2"></td>
+                    <td colspan="2"></td>
+                    <td colspan="2"></td>
+                </tr>
+                <tr>
+                    <td>Penalaran Numerik</td>
+                    <td>Kemampuan memahami proses hitung dan berpikir teratur</td>
+                    <td colspan="4" class="highlight">✔</td>
+                    <td colspan="2"></td>
+                    <td colspan="2"></td>
+                    <td colspan="2"></td>
+                </tr>
+                <tr>
+                    <td colspan="12" class="section-header">KEPRIBADIAN</td>
+                </tr>
+                <tr>
+                    <td>Hasrat Berprestasi</td>
+                    <td>Keinginan untuk mencapai dan meningkatkan prestasi</td>
+                    <td colspan="4"></td>
+                    <td colspan="2"></td>
+                    <td colspan="2" class="highlight">✔</td>
+                    <td colspan="2"></td>
+                </tr>
+                <tr>
+                    <td>Daya Tahan Stress</td>
+                    <td>Kemampuan mempertahankan kinerja</td>
+                    <td colspan="4"></td>
+                    <td colspan="2"></td>
+                    <td colspan="2"></td>
+                    <td colspan="2" class="highlight">✔</td>
+                </tr>
+                <tr>
+                    <td>Kepercayaan Diri</td>
+                    <td>Adanya keyakinan terhadap kemampuan yang dimiliki</td>
+                    <td colspan="4"></td>
+                    <td colspan="2"></td>
+                    <td colspan="2"></td>
+                    <td colspan="2" class="highlight">✔</td>
+                </tr>
+                <tr>
+                    <td>Relasi Sosial</td>
+                    <td>Kemampuan membina hubungan dengan orang lain</td>
+                    <td colspan="4"></td>
+                    <td colspan="2"></td>
+                    <td colspan="2" class="highlight">✔</td>
+                    <td colspan="2"></td>
+                </tr>
+                <tr>
+                    <td>Kerjasama</td>
+                    <td>Kemampuan bekerjasama individu atau berkelompok</td>
+                    <td colspan="4"></td>
+                    <td colspan="2"></td>
+                    <td colspan="2"></td>
+                    <td colspan="2" class="highlight">✔</td>
+                </tr>
+                <tr>
+                    <td colspan="12" class="section-header">SIKAP KERJA</td>
+                </tr>
+                <tr>
+                    <td>Sistematika Kerja</td>
+                    <td>Kemampuan membuat perencanaan & prioritas kerja</td>
+                    <td colspan="4"></td>
+                    <td colspan="2"></td>
+                    <td colspan="2" class="highlight">✔</td>
+                    <td colspan="2"></td>
+                </tr>
+                <tr>
+                    <td>Inisiatif</td>
+                    <td>Kemampuan mengambil tindakan yang diperlukan</td>
+                    <td colspan="4"></td>
+                    <td colspan="2"></td>
+                    <td colspan="2"></td>
+                    <td colspan="2" class="highlight">✔</td>
+                </tr>
+                <tr>
+                    <td>Kemandirian</td>
+                    <td>Kemampuan mengambil sikap dan bekerja sendiri</td>
+                    <td colspan="4"></td>
+                    <td colspan="2"></td>
+                    <td colspan="2"></td>
+                    <td colspan="2" class="highlight">✔</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="notes">
+            *Keterangan : K = Kurang ; C = Cukup ; B = Baik ; BS = Baik Sekali
+        </div>
+    </div>
+
+    <div class="container container-page2" id="downloadContent2">
+        <div class="strength-weakness">
+            <p><strong>Intelligence Quotient (IQ) :</strong></p>
+            <ul class="custom-list">
+                <li>Intelligence Quotient / IQ = 70</li>
+            </ul>
+            <p><strong>Strengths/Kelebihan:</strong></p>
+            <ul class="custom-list">
+                <li>Kemampuan bekerjasama individu atau berkelompok.</li>
+                <li>Kemampuan mengambil sikap dan bekerja sendiri.</li>
+                <li>Adanya keyakinan terhadap kemampuan yang dimiliki.</li>
+            </ul>
+            <p><strong>Weaknesses/Kelemahan:</strong></p>
+            <ul class="custom-list">
+                <li>Kurang sabar dalam mendengarkan pandangan orang lain, yang menghambat komunikasi.</li>
+                <li>Tantangan dalam menerjemahkan ide-ide abstrak ke dalam praktik.</li>
+                <li>Memerlukan waktu lebih lama untuk memahami konsep matematika yang lebih rumit.</li>
+            </ul>
+            <p><strong>Recommendation/Rekomendasi:</strong></p>
+            <ul class="custom-list">
+                <li>Sangat bermanfaat untuk melatih keterampilan mendengarkan aktif melalui kegiatan role-playing, yang dapat meningkatkan kemampuan untuk menghargai pandangan orang lain dan memperbaiki komunikasi.</li>
+                <li>Disarankan untuk melakukan proyek kecil yang akan membantu menerapkan ide-ide abstrak ke dalam praktik nyata, sehingga dapat belajar dari pengalaman dan meningkatkan kemampuan penerapan ide.</li>
+                <li>Disarankan untuk berlatih secara rutin dengan soal-soal matematika yang lebih kompleks, agar dapat meningkatkan kecepatan dan pemahaman dalam konsep yang rumit.</li>
+            </ul>
+
+            <h4>Arah Minat Pendidikan / Pekerjaan</h4>
+            <ul class="custom-list">
+                <li><strong>PERSUASIVE<br></strong>Keterangan: Minat ini berhubungan dengan kemampuan berkomunikasi dan mempengaruhi orang lain, mencakup profesi seperti ahli komunikasi yang merancang strategi komunikasi efektif, serta marketing yang mempromosikan produk dan layanan kepada konsumen.</li>
+                <li><strong>MECHANICAL<br></strong>Keterangan: Minat ini terkait dengan ilmu mekanik dan teknik, yang mencakup berbagai disiplin seperti teknik mesin yang merancang dan memproduksi mesin, serta teknik sipil yang merencanakan dan membangun infrastruktur seperti jembatan dan gedung.</li>
+                <li><strong>OUTDOOR<br></strong>Keterangan: Minat ini melibatkan berbagai aktivitas yang dilakukan di luar ruangan, seperti kegiatan outbound yang meningkatkan keterampilan tim, travelling untuk menjelajahi tempat-tempat baru, dan eksplorasi pertambangan yang memberikan wawasan tentang sumber daya alam serta teknik penambangan.</li>
+                <li><strong>SOCIAL SERVICE<br></strong>Keterangan: Minat ini berkaitan dengan pelayanan sosial dan komunitas, mencakup peran sebagai sukarelawan yang memberikan bantuan kepada yang membutuhkan, pekerja sosial yang membantu individu dan keluarga dalam kesulitan, serta psikolog yang memberikan dukungan mental dan emosional.</li>
+                <li><strong>AESTHETIC<br></strong>Keterangan: Minat ini mencakup kemampuan kreatif dalam seni dan desain, termasuk profesi seperti pelukis yang menciptakan karya seni visual, seniman patung yang membuat patung dari berbagai bahan, serta arsitek yang merancang bangunan dengan mempertimbangkan fungsi dan estetika.</li>
+            </ul>
+        </div>
+        <br>
+        <div class="signature">
+            <p><strong>Medan, </strong></p>
+            <p>Psikolog,</p>
+            <img src="https://latihan1.pages.dev/01/test/gambar/ttd.png" alt="Psychologist signature"/>
+            <p><strong>Dr. Karina M. Brahmana, M.Psi, Psikolog</strong></p>
+            <p>No SIPP: 20070136-2021-02-0799</p>
+            <br>
+            <img class="no-download" src="https://latihan1.pages.dev/01/test/gambar/medsos.png" alt="Social media icons"/>
+        </div>
+    </div>
+    
+    <button class="download-button no-download" id="downloadBtn">Download PDF</button>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script>
+        document.getElementById('downloadBtn').onclick = function() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('p', 'mm', 'a4');
+            const imgWidth = doc.internal.pageSize.getWidth();
+            const margin = 10;
+            const content1 = document.getElementById('downloadContent1');
+            const content2 = document.getElementById('downloadContent2');
+            
+            // Sembunyikan elemen yang tidak ingin diunduh
+            const noDownloadElements = document.querySelectorAll('.no-download');
+            noDownloadElements.forEach(el => el.style.display = 'none');
+
+            // Tambahkan gambar header halaman pertama
+            const headerImg1 = new Image();
+            headerImg1.src = 'https://latihan1.pages.dev/01/test/gambar/01d.jpg';
+            headerImg1.onload = () => {
+                const headerHeight1 = (headerImg1.height * imgWidth) / headerImg1.width;
+                doc.addImage(headerImg1, 'JPEG', 0, 0, imgWidth, headerHeight1);
+
+                html2canvas(content1).then(canvas => {
+                    const imgData = canvas.toDataURL('image/png');
+                    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                    
+                    doc.addImage(imgData, 'PNG', 0, headerHeight1, imgWidth, imgHeight);
+
+                    doc.addPage();
+                    
+                    // Tambahkan gambar header halaman kedua
+                    const headerImg2 = new Image();
+                    headerImg2.src = 'https://latihan1.pages.dev/01/test/gambar/01d.jpg';
+                    headerImg2.onload = () => {
+                        const headerHeight2 = (headerImg2.height * imgWidth) / headerImg2.width;
+                        doc.addImage(headerImg2, 'JPEG', 0, 0, imgWidth, headerHeight2);
+                        
+                        html2canvas(content2).then(canvas2 => {
+                            const imgData2 = canvas2.toDataURL('image/png');
+                            const imgHeight2 = (canvas2.height * imgWidth) / canvas2.width;
+                            doc.addImage(imgData2, 'PNG', 0, headerHeight2, imgWidth, imgHeight2);
+                            doc.save('profil-pemeriksaan-psikologis.pdf');
+                            noDownloadElements.forEach(el => el.style.display = ''); // Tampilkan kembali elemen
+                        });
+                    };
+                });
+            };
+        };
+    </script>
+
+</body>
+</html>
